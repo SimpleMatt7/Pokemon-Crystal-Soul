@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 4: testi che citavano specie tolte corretti (Brock, Rocco, museo, mosse eccelse,
-casa di Copiona), catena della Sfera Rossa spenta, BPS 64 KB. Prossimo: rifiniture (nome, banner, titolo). §11).
+Ultimo aggiornamento: 2026-09-30 (rifiniture: nome deciso, titolo in stile SoulSilver (Lugia, cielo azzurro), Ho-Oh/Lugia
+lv 60, `tools/gfx.py` (grafica DS → PNG). In corso: logo "Versione Crystal Soul". §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -45,7 +45,9 @@ partendo dalla ROM ITA).
 | D21 | **Celebi** al santuario del Bosco di Lecci **dopo la Lega**, catturato con la lotta "fatidica" (`ScrCmd_686`, esiste nel gioco ma non è usata): Celebi ha il flag evento ⇒ **il viaggio nel passato funziona** senza patch al codice | Scelta utente + proposta Claude |
 | D25 | **Pichu Spunzorecchio** sbloccabile: dopo la Lega, Pichu qualsiasi in testa alla squadra al santuario. Fatto **solo nello script** (`GetPartyMonSpecies` al posto di `FollowerPokeIsEventTrigger EVENT_SPIKY_EARED_PICHU`): nessuna patch al codice | Scelta utente |
 | D26 | Script modificati come **diff** sui sorgenti della decomp (`data/scripts/scr_seq_NNNN.diff`), assemblati da `tools/scrasm.py` | Nel repo solo differenze; assemblatore verificato 965/965 byte per byte |
-| D28 | Nome provvisorio **"Pokémon Crystal Soul"** nel banner del DS (`data/design/banner.csv`). Candidati dell'utente: Pokémon Crystal Soul / Pokémon Anima Cristallo / Pokémon Versione Crystal Soul | Da decidere |
+| D28 | Nome: **"Pokémon Crystal Soul"** nel banner del DS, **"Versione Crystal Soul"** nel logo del titolo | Scelta utente 2026-09-30 |
+| D31 | **Titolo in versione SoulSilver**: Lugia e cielo azzurro cristallo (il titolo legge la versione da gGameVersion = 0x020F566C; patch `ldrb r1,[r0]` → `mov r1,#8` nell'overlay 60, in codice.csv). Ho-Oh resta nell'intro (HG), Suicune è già nella scena 3 dell'intro | Richiesta utente: vedere sia Ho-Oh sia Lugia, sfondo azzurro |
+| D32 | **Ho-Oh e Lugia al livello 60** come in Cristallo (HG: 45/70), script 0021 e 0104 | Richiesta utente |
 | D29 | **Versione inglese possibile**: `python tools/build.py --base IPKE` applica lo stesso design alla ROM USA (dati e script sono identici tra IPKI e IPKE); servono solo i testi in `data/testi/ENG/` | Verificato 2026-09-29: build IPKE con verifica a zero |
 | D30 | **Pokédex di Johto = le 251**: tolte le 5 evoluzioni gen 4 e rinumerato 1-251 (a/1/3/8; lista "johto" = membro 12 di a/0/7/4 e a/2/1/4, il gioco ne legge la lunghezza come size/2). Codice (`data/design/codice.csv`, per contesto di byte, vale anche per USA): completamento con 249 catturati (era 254 = 256 - Mew - Celebi), messaggio di Oak "completo" sopra 248 (era 253) | Coerenza; senza le soglie il diploma sarebbe irraggiungibile |
 | D27 | Flag nostri nel blocco **0x51F-0x54F** (mai usato né da script né dal codice C): `FLAG_PCN_CELEBI_CAUGHT` = 0x54E; Rocco: `FLAG_PCN_STEVEN_GREEN/RED/BLUE` = 0x54B-0x54D | Serve un flag permanente; MAPTEMP si azzera cambiando mappa |
@@ -206,7 +208,13 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       Lasciati: citazioni delle sole regioni (Hoenn/Sinnoh esistono ancora), testi irraggiungibili (Sinjoh, Rotom,
       Shaymin, Manaphy, Piazza Wi-Fi, forme), discorso di Rocco sul suo Beldum/Metagross.
 3. Pubblicazione della BPS in `patches/`: dopo i test.
-4. Rifiniture: nome definitivo (D28), icona del banner e schermata del titolo (grafica).
+4. Rifiniture (in corso):
+   a. Logo "Versione Crystal Soul": comporre dal logo SS (membro 1 di a/0/4/6, 8bpp, tavolozza 2) con lettere
+      del logo HG (membro 3, tavolozza 4) ricolorate; C e Y da disegnare. Serve l'import PNG → NCGR/NSCR in gfx.py.
+   b. Menu "oro" dopo il titolo: nel menu principale (main_menu.c, a/1/1/3) non c'è niente di dipendente dalla
+      versione; chiedere all'utente uno screenshot della schermata intesa.
+   c. Intro: scena 1 con Lugia (risorse SS in a/2/6/2, scelte a compilazione): più delicato, per ultimo.
+   d. Icona del banner.
 
 ## 12. Problemi aperti
 - Nessuno bloccante.

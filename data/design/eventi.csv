@@ -13,3 +13,5 @@ statico,T03 (Plumbeopoli; Pietrenigma evento),LATIAS|LATIOS,,40,solo evento,puli
 regalo,D51R0201 (Rovine di Sinjoh; Arceus evento),DIALGA|PALKIA|GIRATINA,,1,solo evento,pulizia: specie via sostituzioni.csv
 scambio,a/1/1/2 #12 Iron,BELDUM,MAGNEMITE,,,dà Beldum -> Magnemite (sostituzioni.csv)
 scambio,a/1/1/2 #11 Hornlette (chiede),BONSLY,GEODUDE,,,chiede Bonsly -> Geodude (comune; Sudowoodo è un incontro unico)
+statico,D17R0110 (Torre di Latta),HO_OH,HO_OH,60,come l'originale,livello come in Cristallo (HG: 45)
+statico,D40R0107 (Isole Vorticose),LUGIA,LUGIA,60,come l'originale,livello come in Cristallo (HG: 70)

@@ -3,3 +3,4 @@
 file,contesto,posizione,da,a,motivo
 arm9/arm9.bin,08b500f023f8fe2801d3012008bd,6,fe,f9,Pokedex_JohtoDexIsComplete: completo con 249 catturati (251 - Mew - Celebi) invece di 254
 arm9/arm9.bin,f42801d82c207047fd2801d82d207047,8,fd,f8,GetOakJohtoDexRating: messaggio di Pokédex completo sopra 248 invece di 253
+arm9_overlays/ov060.bin,07480178b32080002150,2,0178,0821,Titolo: gameVersion = SoulSilver (Lugia; cielo azzurro) al posto di gGameVersion; il resto del gioco resta HeartGold
