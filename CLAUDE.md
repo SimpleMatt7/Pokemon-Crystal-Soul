@@ -20,7 +20,8 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 - `work/`, `out/` (ignorate) — estrazioni e ROM generate.
 - `tools/` — script: `roms.py` (trova/verifica ROM), `ndsfs.py` (lettura FNT/FAT/NARC), `probe.py` (audit specie > 251),
   `get_tools.py` (scarica dsrom con SHA256), `roundtrip.py` (estrai/ricostruisci/confronta), `find_nature_table.py`,
-  `get_pret.py` (decomp pret in `work/pret`, commit fissato), `audit.py` (→ `docs/audit.md`), `items.py` (→ `docs/oggetti.md`).
+  `get_pret.py` (decomp pret in `work/pret`, commit fissato), `audit.py` (→ `docs/audit.md`), `items.py` (→ `docs/oggetti.md`),
+  `build.py` (costruisce la ROM), `bps.py` (patch BPS), `design*.py` (tabelle di design).
 - `tools/bin/` (ignorata) — binari esterni scaricati; non si versionano (decisione D14).
 - `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret). `data/design/`: tabelle di design
   della fase 3 (sostituzioni, selvatici, evoluzioni, oggetti, eventi); generatori `tools/design_subs.py`, `tools/design_wild.py`.
@@ -37,6 +38,8 @@ python tools/get_pret.py      # decomp pret (documentazione dei formati, script 
 python tools/audit.py         # report specie > 251 e matrice di ottenibilità → docs/audit.md
 python tools/items.py         # fonti degli oggetti (evolutivi, fossili, aromi) → docs/oggetti.md
 python tools/design.py        # applica data/design/*.csv in memoria e verifica (0 > 251, 251/251) → docs/design.md
+python tools/build.py         # costruisce out/PokemonCrystalNew_IPKI.nds + .bps (work/build, verifica sui file)
+python tools/bps.py applica ORIGINALE PATCH.bps USCITA   # applica una BPS (anche: crea)
 git config core.hooksPath tools/hooks   # una volta per clone: attiva l'hook anti-ROM
 ```
 

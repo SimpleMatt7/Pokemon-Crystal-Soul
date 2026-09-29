@@ -68,3 +68,22 @@ def parse_narc(b):
         raise ValueError("GMIF mancante")
     g = o + 8
     return [b[g + s:g + e] for s, e in entries]
+
+
+def pack_narc(files, template):
+    """Ricostruisce un NARC con i sotto-file dati, riusando header e BTNF di `template` (il NARC originale).
+    I dati in GMIF sono allineati a 4 byte con riempimento 0xFF, come negli archivi del gioco."""
+    o = 16
+    o += u32(template, o + 4)
+    btnf = template[o:o + u32(template, o + 4)]
+    data, fat = bytearray(), []
+    for f in files:
+        fat.append((len(data), len(data) + len(f)))
+        data += f
+        while len(data) % 4:
+            data += b"\xff"
+    btaf = b"BTAF" + struct.pack("<IHH", 12 + 8 * len(files), len(files), 0) + b"".join(struct.pack("<II", s, e) for s, e in fat)
+    gmif = b"GMIF" + struct.pack("<I", 8 + len(data)) + bytes(data)
+    body = btaf + btnf + gmif
+    header = template[:8] + struct.pack("<I", 16 + len(body)) + template[12:16]
+    return header + body

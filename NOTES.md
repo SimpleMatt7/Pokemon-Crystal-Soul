@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 3 — tabelle di design in `data/design/`, verifica `tools/design.py` →
-`docs/design.md`: 0 specie > 251, 251/251 ottenibili. Fase 3 chiusa; prossimo: fase 4 build, vedi §11).
+Ultimo aggiornamento: 2026-09-29 (fase 4 in corso: `tools/build.py` applica tutte le modifiche ai dati e produce
+`out/PokemonCrystalNew_IPKI.nds` + BPS (24 KB); mancano script e Pokédex di Johto; vedi §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -14,7 +14,7 @@ partendo dalla ROM ITA).
       (0x6C area sicura, 0x15E header). Mancano: avvio di `out/roundtrip_IPKI.nds` in melonDS e apertura IPKI in DSPRE (utente).
 - [x] Fase 2 — audit completo in sola lettura (`docs/audit.md`, `docs/oggetti.md`; §5b).
 - [x] Fase 3 — tabelle di design in `data/design/` (verificate in memoria: 0 > 251, 251/251).
-- [ ] Fase 4 — `build.py`: applica le tabelle, ricostruisce, genera BPS; audit = 0 specie > 251, 251/251 ottenibili.
+- [~] Fase 4 — `build.py`: dati fatti (verifica sui file costruiti: 0 > 251); da fare script (assemblatore), Pokédex di Johto, patch codice Pichu.
 - [ ] Fase 5 — opzioni meccaniche (nature neutre?).
 - [ ] Fase 6 — playtest dell'utente con checklist.
 - [ ] Fase 7 — estensioni (SoulSilver, versione EN, Uovo Strano).
@@ -183,15 +183,23 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 `get_tools.py` → `roundtrip.py` → `probe.py`, ripresa con Claude Code).
 
 ## 11. Prossimi passi
-1. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS; aprire IPKI in DSPRE 2.3.2 (verifica di base, ancora da fare).
-2. Fase 3 (quasi chiusa). Tabelle in `data/design/`:
-   `sostituzioni.csv` (242 righe, `tools/design_subs.py`), `selvatici.csv` (594 righe, `tools/design_wild.py`: D16, D18, D23),
-   `evoluzioni.csv` (D7, D8), `oggetti.csv` (D9, D19, oggetti D7 usabili come pietre), `eventi.csv` (D17, D20-D22, vaganti, scambi).
-   `python tools/design.py` le applica in memoria → `docs/design.md`. Fase 3 chiusa (D20, D21, D25 decisi il 2026-09-29).
-3. Fase 4 — `build.py`: scrivere le tabelle nella ROM (NARC, overlay 1 per Spaccaroccia, script), adattare livelli/mosse
-   degli allenatori, rinumerare il Pokédex di Johto, generare la BPS. Script: capire come ricompilare gli script
-   (assemblatore nostro dai .s della decomp o DSPRE).
-4. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
+1. **Utente** (fatto 2026-09-29): `out/roundtrip_IPKI.nds` parte in melonDS e IPKI si apre in DSPRE.
+2. **Utente**: provare `out/PokemonCrystalNew_IPKI.nds` (solo modifiche ai dati) con la checklist in chat del 2026-09-29.
+3. Fase 4 — build (`python tools/build.py`, ~20 s): copia work/IPKI → work/build, applica evoluzioni, selvatici,
+   Bottintesta, Safari, Gara, Pokéathlon, allenatori (sostituto + adattamento al livello + mosse dal learnset se
+   personalizzate), scambi, Parco Lotta (specie + mosse a lv 100), strumenti a terra (scr_seq_0141), Spaccaroccia
+   (ov001), oggetti D7 usabili come pietre (a/0/1/7: campi uso copiati dalla Pietrafocaia). Riesegue l'audit sui file
+   costruiti, poi dsrom → `out/PokemonCrystalNew_IPKI.nds` e `tools/bps.py` → `.bps` (verificata riapplicandola).
+   Da fare, nell'ordine:
+   a. **Assemblatore di script** dai `.s` della decomp usando le macro di `asm/macros/script.inc` (get_pret scarica
+      `asm/macros`); test: riassemblare tutti gli script originali e confrontarli byte per byte con a/0/1/2.
+   b. Script: Rocco (D17) e Oak (D22) con tutte e 3 le Poké Ball; Mew (D20) con condizione "Lega battuta";
+      Celebi (D21) con `ScrCmd_686`; vaganti Lati tolti; Pichu (D25).
+   c. Patch al codice per D25 (controllo EVENT_SPIKY_EARED_PICHU in ScrCmd, arm9).
+   d. Pokédex di Johto: togliere le 5 voci gen 4 (a/1/3/8 + liste di ordinamento in a/0/7/4, che dipende dalla lingua).
+4. Pubblicazione della BPS in `patches/`: decidere dopo i test (contiene solo differenze, ma include pezzi di codice
+   ricompresso dell'overlay 1).
+5. Opzionale: provare dspre-mcp su IPKI se servirà per gli script di evento.
 
 ## 12. Problemi aperti
 - Nessuno bloccante.
