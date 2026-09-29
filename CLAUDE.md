@@ -18,16 +18,21 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 ## Struttura
 - `roms/` (ignorata) — ROM originali, `.nds` o `.zip`; riconosciute tramite SHA1 (`tools/roms.py`).
 - `work/`, `out/` (ignorate) — estrazioni e ROM generate.
-- `tools/` — script: `roms.py` (trova/verifica ROM), `ndsfs.py` (lettura FNT/FAT/NARC), `probe.py` (audit specie > 251).
+- `tools/` — script: `roms.py` (trova/verifica ROM), `ndsfs.py` (lettura FNT/FAT/NARC), `probe.py` (audit specie > 251),
+  `get_tools.py` (scarica dsrom con SHA256), `roundtrip.py` (estrai/ricostruisci/confronta), `find_nature_table.py`.
+- `tools/bin/` (ignorata) — binari esterni scaricati; non si versionano (decisione D14).
 - `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret).
+- `docs/` — `SETUP.md` (setup da zero su un altro PC).
 - `patches/` — patch BPS pubblicabili (quando esisteranno).
 
 ## Comandi utili
 ```
 python tools/roms.py          # verifica le ROM in roms/
+python tools/get_tools.py     # scarica dsrom 0.8.0 in tools/bin/ (hash verificato)
+python tools/roundtrip.py     # estrai IPKI in work/, ricostruisci in out/, confronta (atteso: solo 4 byte CRC)
 python tools/probe.py         # dove compaiono specie > 251 (evoluzioni, selvatici, allenatori)
 git config core.hooksPath tools/hooks   # una volta per clone: attiva l'hook anti-ROM
 ```
 
 ## Setup su un nuovo PC
-Vedi NOTES.md → "Setup su un nuovo PC".
+Passo passo: [docs/SETUP.md](docs/SETUP.md).

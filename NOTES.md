@@ -1,6 +1,6 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 0 completata, fase 1 da iniziare).
+Ultimo aggiornamento: 2026-09-29 (fase 1 completata lato script; restano 2 verifiche manuali dell'utente, §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -9,7 +9,8 @@ partendo dalla ROM ITA).
 
 ## 2. Stato attuale
 - [x] Fase 0 — repository, `.gitignore`, hook anti-ROM, CLAUDE.md/NOTES.md, script di lettura ROM.
-- [ ] Fase 1 — toolchain e round-trip (estrai → ricostruisci → confronta) sulla ROM ITA.
+- [x] Fase 1 — toolchain e round-trip sulla ROM ITA: **OK**, differenze solo nei 4 byte di CRC dell'header
+      (0x6C area sicura, 0x15E header). Mancano: avvio di `out/roundtrip_IPKI.nds` in melonDS e apertura IPKI in DSPRE (utente).
 - [ ] Fase 2 — audit completo in sola lettura (vedi §6).
 - [ ] Fase 3 — tabelle di design (nuove distribuzioni, allenatori sostitutivi, regali).
 - [ ] Fase 4 — `build.py`: applica le tabelle, ricostruisce, genera BPS; audit = 0 specie > 251, 251/251 ottenibili.
@@ -33,6 +34,8 @@ partendo dalla ROM ITA).
 | D11 | **Mew** alla **Torre Inclusa** al posto di Groudon (provvisorio, l'utente non ha ancora scelto) | Riusa mappa ed evento esistenti che comunque vanno ripuliti |
 | D12 | Parco Lotta: **solo ripulire** i set di Pokémon (nessuna Torre Lotta stile Crystal) | Costo; rivalutare dopo l'audit |
 | D13 | Contenuti Crystal: **solo pulizia**; Uovo Strano come extra opzionale finale | HGSS ha già trama di Suicune/Eusine, Ragazze Kimono, protagonista femminile |
+| D14 | Tool esterni **non** versionati: `tools/get_tools.py` li scarica a versione fissata con SHA256 verificato | Stessa riproducibilità senza binari nella history (ogni versione × OS resterebbe per sempre nel repo; l'hook blocca > 512 KB). Licenze permetterebbero la ridistribuzione (dsrom MIT, DSPRE AGPL) ma non serve |
+| D15 | Estrazione/ricostruzione con **dsrom 0.8.0** (CLI), non DSPRE | Scriptabile, multipiattaforma, round-trip verificato su IPKI; DSPRE resta per ispezione visiva |
 
 ## 4. Alternative scartate
 - **pret/pokeheartgold (decomp)**: WIP, compila solo USA, serve MWCC (msys2/wine); usarla = perdere l'italiano. Tenuta come *documentazione dei formati*.
@@ -68,7 +71,10 @@ partendo dalla ROM ITA).
 - **O1 — Nature neutre.** Le nature (gen 3+) danno +10% a una statistica e -10% a un'altra (5 su 25 sono neutre).
   Nel motore c'è la tabella `gNatureStatMods[25][5]` (s8, valori +1/0/-1; `src/pokemon.c` della decomp pret).
   Azzerandola nella ARM9 le nature restano solo un'etichetta senza effetto sulle statistiche. Modifica solo di dati,
-  individuabile per firma di byte (indipendente dalla lingua). Da confermare in fase 1/2 (posizione in ARM9, eventuali altri usi della tabella, es. colore delle statistiche nel sommario).
+  individuabile per firma di byte (indipendente dalla lingua).
+  **Verificato (fase 1):** su IPKI la tabella compare **una sola volta**, in `work/IPKI/arm9/arm9.bin` (decompresso)
+  all'offset `0xFF5B1` (`tools/find_nature_table.py`). Da verificare: altre funzioni che la leggono (es. colore delle
+  statistiche nel riepilogo: se usa la stessa tabella diventa neutro anch'esso, il che è coerente).
   Non si possono "rimuovere" dal menu senza modificare codice. Decisione dell'utente dopo la verifica.
 - Mew: luogo definitivo (provvisorio: Torre Inclusa).
 - Uovo Strano (Crystal): extra finale.
@@ -79,7 +85,7 @@ partendo dalla ROM ITA).
 | Python | 3.12+ (qui 3.14.6) | script del progetto, solo stdlib |
 | Git | 2.4x+ | |
 | DSPRE Reloaded | 2.3.2 (13/09/2026); canary Avalonia win/linux | https://github.com/DS-Pokemon-Rom-Editor/DSPRE — Windows + .NET Framework 4.8; supporto ITA "Extensive"; solo GUI |
-| ds-rom (`dsrom`) | 0.8.0 | https://github.com/AetiasHax/ds-rom — estrazione/ricostruzione da CLI (fase 1) |
+| ds-rom (`dsrom`) | 0.8.0 (MIT) | https://github.com/AetiasHax/ds-rom — estrazione/ricostruzione da CLI. Binari ufficiali Windows/Linux x86_64 (scaricati da `get_tools.py`); macOS: compilare con cargo (docs/SETUP.md). Ignora `RUST_LOG`: il log verboso viene catturato dagli script. Estrazione IPKI: `work/IPKI/{arm9,arm7,arm9_overlays,files,banner}` + `config.yaml`; i NARC sono in `files/a/...` |
 | dspre-mcp | — (push 12/09/2026) | https://github.com/webadeva/dspre-mcp — opzionale; validato solo su HG inglese; Node ≥ 22.18; usarlo solo dopo round-trip su IPKI |
 | melonDS | ultima | test di gioco; risoluzione interna 3D aumentabile |
 | PKHeX | opzionale | verifica salvataggi |
@@ -94,18 +100,16 @@ partendo dalla ROM ITA).
 Tutte rev0. Non confrontate con il DAT No-Intro (non accessibile).
 
 ## 10. Setup su un nuovo PC
-1. Installare Git e Python ≥ 3.12. (Windows: anche DSPRE 2.3.2 portable; melonDS.)
-2. `git clone https://github.com/SimpleMatt7/Pokemon-Crystal-New.git` e `git switch dev`.
-3. Nel clone: `git config user.name "SimpleMatt7"`, `git config user.email "9123042+SimpleMatt7@users.noreply.github.com"`,
-   `git config core.hooksPath tools/hooks`.
-4. Copiare le proprie ROM (`.nds` o `.zip`) in `roms/` e lanciare `python tools/roms.py`: deve dire `OK` per IPKI.
-5. Aprire Claude Code nella cartella: leggerà CLAUDE.md → NOTES.md.
+Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, clone, config locale git, ROM,
+`get_tools.py` → `roundtrip.py` → `probe.py`, ripresa con Claude Code).
 
 ## 11. Prossimi passi
-1. Fase 1: script che scarica `dsrom` (con verifica hash) in `tools/bin/`; estrazione IPKI in `work/`; ricostruzione;
-   confronto byte a byte (atteso: differenze solo nei CRC dell'header).
-2. Fase 1: l'utente apre IPKI in DSPRE e conferma che si carica (Windows).
+1. (Fatto) Primo push di `main` e `dev` su GitHub come SimpleMatt7; da qui in avanti si lavora e si pusha su `dev`.
+2. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS fino al menu/intro (verifica che i CRC di header
+   non ricalcolati non diano problemi); aprire la ROM IPKI in DSPRE 2.3.2 e confermare che carica senza errori.
 3. Fase 2: estendere `probe.py` → audit completo (§6), report in `docs/audit.md` (solo nomi/ID, nessun dato binario).
+   Leggere i dati da `work/IPKI/files/` invece che dalla ROM in memoria.
+4. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
 
 ## 12. Problemi aperti
 - Nessuno bloccante.
