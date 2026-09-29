@@ -10,6 +10,7 @@ Uso: python tools/design.py
 """
 import collections
 import csv
+import re
 import struct
 import sys
 from pathlib import Path
@@ -97,12 +98,26 @@ def main():
                 s = S(s); log["allenatori"] += 1
             p2.append((s, lv))
         trainers.append((i, c, n, p2))
+    # scambi: righe dedicate di eventi.csv ("a/1/1/2 #N Nome (chiede)" = specie chiesta, altrimenti data), poi sostituzioni
+    trade_fix = {}
+    for r in rows("eventi.csv"):
+        m = re.match(r"a/1/1/2 #(\d+)", r["dove"]) if r["tipo"] == "scambio" else None
+        if m:
+            trade_fix[(int(m.group(1)), "(chiede)" in r["dove"])] = (spc(r["da"]), spc(r["a"]))
     trades = []
-    for n, ask, give in audit.read_trades():
-        if ask > 251:
-            ask = S(ask); log["scambi"] += 1
-        if give > 251:
-            give = S(give); log["scambi"] += 1
+    for i, (n, ask, give) in enumerate(audit.read_trades()):
+        for is_ask in (True, False):
+            cur = ask if is_ask else give
+            if (i, is_ask) in trade_fix:
+                old_, new_ = trade_fix[(i, is_ask)]
+                assert cur == old_, (n, sp(cur), sp(old_))
+                cur = new_; log["scambi"] += 1
+            elif cur > 251:
+                cur = S(cur); log["scambi"] += 1
+            if is_ask:
+                ask = cur
+            else:
+                give = cur
         trades.append((n, ask, give))
     frontier = {}
     for a, (d, c) in audit.read_frontier().items():
