@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-30 (rifiniture: nome deciso, titolo in stile SoulSilver (Lugia, cielo azzurro), Ho-Oh/Lugia
-lv 60, `tools/gfx.py` (grafica DS → PNG). In corso: logo "Versione Crystal Soul". §11).
+Ultimo aggiornamento: 2026-09-30 (rifiniture: titolo SoulSilver (Lugia, cielo azzurro) con logo "Versione Crystal Soul"
+generato da `tools/logo.py`; Ho-Oh/Lugia lv 60. Da chiarire: schermata "oro" dopo il titolo. §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -209,8 +209,11 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       Shaymin, Manaphy, Piazza Wi-Fi, forme), discorso di Rocco sul suo Beldum/Metagross.
 3. Pubblicazione della BPS in `patches/`: dopo i test.
 4. Rifiniture (in corso):
-   a. Logo "Versione Crystal Soul": comporre dal logo SS (membro 1 di a/0/4/6, 8bpp, tavolozza 2) con lettere
-      del logo HG (membro 3, tavolozza 4) ricolorate; C e Y da disegnare. Serve l'import PNG → NCGR/NSCR in gfx.py.
+   a. (Fatto) Logo: `tools/logo.py` parte dal logo SS della ROM (membro 1 di a/0/4/6, tavolozza 2), cancella
+      "ARGENTO" e scrive "CRYSTAL" con lettere nostre (maschere nello script) colorate con la sfumatura della E
+      originale; riga grande: "SOUL" + ala di Lugia centrati, senza "SILVER". build.py lo codifica (294 tile, <= 459)
+      nei membri 1 e 0 (la mappa 0 era condivisa col logo HG, che non si usa più). Ritocchi possibili: trattino
+      spurio sopra "SOUL", distanza ala/L.
    b. Menu "oro" dopo il titolo: nel menu principale (main_menu.c, a/1/1/3) non c'è niente di dipendente dalla
       versione; chiedere all'utente uno screenshot della schermata intesa.
    c. Intro: scena 1 con Lugia (risorse SS in a/2/6/2, scelte a compilazione): più delicato, per ultimo.
