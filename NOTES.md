@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
 Ultimo aggiornamento: 2026-09-29 (fase 3 — tabelle di design in `data/design/`, verifica `tools/design.py` →
-`docs/design.md`: 0 specie > 251, 251/251 ottenibili. Aperto: forma dell'evento Celebi; vedi §11).
+`docs/design.md`: 0 specie > 251, 251/251 ottenibili. Fase 3 chiusa; prossimo: fase 4 build, vedi §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -13,7 +13,7 @@ partendo dalla ROM ITA).
 - [x] Fase 1 — toolchain e round-trip sulla ROM ITA: **OK**, differenze solo nei 4 byte di CRC dell'header
       (0x6C area sicura, 0x15E header). Mancano: avvio di `out/roundtrip_IPKI.nds` in melonDS e apertura IPKI in DSPRE (utente).
 - [x] Fase 2 — audit completo in sola lettura (`docs/audit.md`, `docs/oggetti.md`; §5b).
-- [~] Fase 3 — tabelle di design in `data/design/` (verificate in memoria: 0 > 251, 251/251). Manca: dettaglio evento Celebi.
+- [x] Fase 3 — tabelle di design in `data/design/` (verificate in memoria: 0 > 251, 251/251).
 - [ ] Fase 4 — `build.py`: applica le tabelle, ricostruisce, genera BPS; audit = 0 specie > 251, 251/251 ottenibili.
 - [ ] Fase 5 — opzioni meccaniche (nature neutre?).
 - [ ] Fase 6 — playtest dell'utente con checklist.
@@ -41,8 +41,9 @@ partendo dalla ROM ITA).
 | D17 | Rocco (T11R0701) regala **Chikorita/Cyndaquil/Totodile** al posto di Treecko/Torchic/Mudkip | Scelta utente (2026-09-29) |
 | D18 | I 12 sciami gen 3-4 vengono **sostituiti** con specie gen 1-2 (gli 8 sciami gen 1-2 restano) | Scelta utente (2026-09-29) |
 | D19 | Kabuto: **Domofossile al posto del Frammento Blu** nella tabella Spaccaroccia delle Rovine d'Alfa (come SS); Fossilunghia della Grotta Falesia → Fossilhelix/Ambra Vecchia | Scelta utente (2026-09-29) |
-| D20 | **Mew** alla Torre Inclusa al posto di Groudon (lv 50; anche le stanze Kyogre/Rayquaza, irraggiungibili in HG) | Scelta utente; conferma D11 |
-| D21 | **Celebi** al santuario del Bosco di Lecci **dopo la Lega** (forma dell'evento da definire: cattura o regalo) | Scelta utente; precisa D10 |
+| D20 | **Mew** alla Torre Inclusa al posto di Groudon (lv 50), **sbloccato dopo la Lega** (non più con la Sfera Rossa dopo Red). Anche le stanze Kyogre/Rayquaza (irraggiungibili in HG) → Mew | Scelta utente 2026-09-29: dopo Red era troppo tardi. L'ingresso (Percorso 47) è raggiungibile già a metà gioco |
+| D21 | **Celebi** al santuario del Bosco di Lecci **dopo la Lega**, catturato con la lotta "fatidica" (`ScrCmd_686`, esiste nel gioco ma non è usata): Celebi ha il flag evento ⇒ **il viaggio nel passato funziona** senza patch al codice | Scelta utente + proposta Claude |
+| D25 | **Pichu Spunzorecchio** sbloccabile: dopo la Lega, Pichu qualsiasi al santuario. Serve una piccola patch al codice (il controllo vuole un Pichu cromatico con flag evento, nessun comando di script lo può dare) | Scelta utente |
 | D22 | Oak (Kanto) e Rocco (Johto, D17) lasciano **tutte e 3 le Poké Ball**: si possono prendere tutti gli starter | Scelta utente (2026-09-29) |
 | D23 | Radio Suono Hoenn/Sinnoh **neutra**: le sue specie = slot erba 2/4 (giorno) della stessa mappa | Proposta Claude, scelta di minimo impatto (la radio non può avere specie 0) |
 | D24 | Tutte le altre specie > 251 (allenatori, Parco Lotta, Pokéathlon, Bottintesta, Safari, Gara) con la **tabella globale** `data/design/sostituzioni.csv` (242 righe riviste) | Coerenza; starter e leggendari mai negli incontri casuali |
@@ -186,8 +187,7 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 2. Fase 3 (quasi chiusa). Tabelle in `data/design/`:
    `sostituzioni.csv` (242 righe, `tools/design_subs.py`), `selvatici.csv` (594 righe, `tools/design_wild.py`: D16, D18, D23),
    `evoluzioni.csv` (D7, D8), `oggetti.csv` (D9, D19, oggetti D7 usabili come pietre), `eventi.csv` (D17, D20-D22, vaganti, scambi).
-   `python tools/design.py` le applica in memoria → `docs/design.md`. Aperto: **evento Celebi** (cattura statica vs regalo;
-   il viaggio nel passato richiede un Celebi "incontro fatidico": vedi chat 2026-09-29).
+   `python tools/design.py` le applica in memoria → `docs/design.md`. Fase 3 chiusa (D20, D21, D25 decisi il 2026-09-29).
 3. Fase 4 — `build.py`: scrivere le tabelle nella ROM (NARC, overlay 1 per Spaccaroccia, script), adattare livelli/mosse
    degli allenatori, rinumerare il Pokédex di Johto, generare la BPS. Script: capire come ricompilare gli script
    (assemblatore nostro dai .s della decomp o DSPRE).
