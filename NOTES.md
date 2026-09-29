@@ -37,6 +37,9 @@ partendo dalla ROM ITA).
 | D13 | Contenuti Crystal: **solo pulizia**; Uovo Strano come extra opzionale finale | HGSS ha già trama di Suicune/Eusine, Ragazze Kimono, protagonista femminile |
 | D14 | Tool esterni **non** versionati: `tools/get_tools.py` li scarica a versione fissata con SHA256 verificato | Stessa riproducibilità senza binari nella history (ogni versione × OS resterebbe per sempre nel repo; l'hook blocca > 512 KB). Licenze permetterebbero la ridistribuzione (dsrom MIT, DSPRE AGPL) ma non serve |
 | D15 | Estrazione/ricostruzione con **dsrom 0.8.0** (CLI), non DSPRE | Scriptabile, multipiattaforma, round-trip verificato su IPKI; DSPRE resta per ispezione visiva |
+| D16 | Le 10 esclusive SS (Vulpix, Meowth, Ledyba, Teddiursa, Delibird, Skarmory + evoluzioni) diventano **selvatiche nelle aree dove stanno in SoulSilver** | Scelta utente (2026-09-29): la più fedele |
+| D17 | Rocco (T11R0701) regala **Chikorita/Cyndaquil/Totodile** al posto di Treecko/Torchic/Mudkip | Scelta utente (2026-09-29) |
+| D18 | I 12 sciami gen 3-4 vengono **sostituiti** con specie gen 1-2 (gli 8 sciami gen 1-2 restano) | Scelta utente (2026-09-29) |
 
 ## 4. Alternative scartate
 - **pret/pokeheartgold (decomp)**: WIP, compila solo USA, serve MWCC (msys2/wine); usarla = perdere l'italiano. Tenuta come *documentazione dei formati*.
@@ -117,7 +120,11 @@ partendo dalla ROM ITA).
   - Strumenti che servono solo a evoluzioni gen 4 (Protezione, Elettritore, Magmatore, Dubbiodisco, Rasoartiglio,
     Rasozanna, Pietra Ovale, Pietrabrillo/Neropietra/Pietralbore, Terrorpanno) restano innocui una volta tolte le
     evoluzioni (D8); si possono sostituire con altro se si vuole.
-- **Audit corretto**: un solo starter di Johto; fossili solo se presenti nelle tabelle Spaccaroccia; cercava
+- **Starter di Kanto**: anche Oak (T01R0301, dopo aver battuto Red) ne dà **uno solo su 3** (le altre Poké Ball
+  spariscono). L'audit ora tratta Oak e Rocco come scelte "1 su 3" ⇒ **216/251** (una famiglia per scelta).
+  Catena post-game: Red → Oak (starter di Kanto) → Sig. Pokémon (Sfera Rossa, R30R0201) → Torre Inclusa (Groudon).
+  Celebi: HGSS non ha la GS Ball; l'evento del santuario di Lecci richiede un Celebi evento ⇒ D10 richiede un incontro nuovo.
+- **Audit corretto** (primo giro): un solo starter di Johto; fossili solo se presenti nelle tabelle Spaccaroccia; cercava
   `ITEM_UP_GRADE` invece di `ITEM_UPGRADE`. Risultato: **222/251** (con 1 famiglia di starter). Mancano 23 + 6 starter:
   esclusive SS (10), evoluzioni per scambio (9, D7), **Kabuto, Kabutops**, Mew, Celebi, + 2 famiglie di starter
   (idea: Rocco dà Chikorita/Cyndaquil/Totodile al posto degli starter di Hoenn). Nessuna delle 222 dipende solo da
@@ -173,8 +180,9 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
    non ricalcolati non diano problemi); aprire la ROM IPKI in DSPRE 2.3.2 e confermare che carica senza errori.
 3. Fase 2 completata (`docs/audit.md`, `docs/oggetti.md`). Dopo `git pull` su un altro PC, rilanciare
    `python tools/get_pret.py` (la sparse checkout ora include eventdata, itemdata e tutto `src/`).
-4. Fase 3 — decisioni utente in arrivo: dove mettere le 10 esclusive SS, Kabuto (Domofossile nella tabella Spaccaroccia
-   delle Rovine? o selvatico), Mew/Celebi, starter di Rocco.
+4. Fase 3 — decise D16-D18. Ancora aperte (proposte in chat 2026-09-29): Kabuto (Domofossile al posto di un
+   frammento nella tabella Spaccaroccia delle Rovine, come in SS), Mew (Torre Inclusa, fine post-game), Celebi
+   (incontro nuovo al santuario di Lecci), starter mancanti (Oak e Rocco che danno tutte e 3 le Poké Ball, una alla volta).
 5. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
 
 ## 12. Problemi aperti
