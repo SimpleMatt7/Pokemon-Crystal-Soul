@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 4: Pokédex di Johto a 251 voci (rinumerato) + soglie di completamento nel codice;
-script completi; editor dei testi; banner provvisorio; build anche da IPKE. §11).
+Ultimo aggiornamento: 2026-09-29 (fase 4: testi che citavano specie tolte corretti (Brock, Rocco, museo, mosse eccelse,
+casa di Copiona), catena della Sfera Rossa spenta, BPS 64 KB. Prossimo: rifiniture (nome, banner, titolo). §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -197,8 +197,14 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
    banner. `build.py --base IPKE` per la versione USA.
    Da fare:
    a. (Fatto: Pokédex di Johto, D30.) Il Pokédex Nazionale resta a 493 posti: le voci oltre 251 non si vedranno mai.
-   b. BPS più piccola: confronto file per file (ora 300 KB perché gli script cambiano lunghezza).
-   c. Testi che citano specie o regioni tolte (es. radio Suono Hoenn/Sinnoh, NPC): cercarli con msg.py.
+   b. (Fatto) BPS: corrispondenze a passo 4 dentro i file che cambiano (FAT) → 64 KB.
+   c. (Fatto 2026-09-29) Testi: ricerca di nomi di specie 252-493 e di "Hoenn"/"Sinnoh" in tutti gli 829 archivi.
+      Corretti (data/testi/ITA): Brock nella Grotta Diglett (scambio con Geodude), Rocco (scambio: Magnemite), museo di
+      Plumbeopoli (Cuorugiada senza Lati), mosse eccelse (solo starter di Kanto/Johto), casa di Copiona (la bambola che
+      si muove è un Ditto: sprite in oggetti_mappa.csv, verso in scr_seq_0841; arredi Cherrim/Nosepass senza nome).
+      Oak: niente più catena della Sfera Rossa (i suoi testi su Groudon/Kyogre non si vedono più).
+      Lasciati: citazioni delle sole regioni (Hoenn/Sinnoh esistono ancora), testi irraggiungibili (Sinjoh, Rotom,
+      Shaymin, Manaphy, Piazza Wi-Fi, forme), discorso di Rocco sul suo Beldum/Metagross.
 3. Pubblicazione della BPS in `patches/`: dopo i test.
 4. Rifiniture: nome definitivo (D28), icona del banner e schermata del titolo (grafica).
 
