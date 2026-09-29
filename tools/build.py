@@ -346,6 +346,25 @@ def apply_code(c):
         p.write_bytes(bytes(b)); c.log["codice"] += 1
 
 
+def apply_title_logo(c):
+    """Logo "Versione Crystal Soul" (tools/logo.py) al posto del logo SoulSilver (membro 1) di a/0/4/6;
+    la mappa 0 è condivisa tra i loghi HG e SS: il titolo usa la versione SS (D31)."""
+    import logo
+    from gfx import maybe_lz
+    n = Narc(logo.TITLE_NARC)
+    g, glz = maybe_lz(bytes(n.files[logo.SS_LOGO]))
+    s, slz = maybe_lz(bytes(n.files[logo.LOGO_SCR]))
+    assert not glz and not slz, "logo compresso: non previsto"
+    img, _ = logo.build_logo(base=SRC.name)
+    ng, ns, ntiles = logo.encode(img, g, s)
+    orig_tiles = len(logo.gfx.ncgr(g)[1])
+    assert ntiles <= max(orig_tiles, 459), f"logo: {ntiles} tile, troppi (originale {orig_tiles})"
+    n.files[logo.SS_LOGO] = bytearray(ng)
+    n.files[logo.LOGO_SCR] = bytearray(ns)
+    n.save()
+    c.log["logo (tile)"] = ntiles
+
+
 def apply_texts(c, lang="ITA"):
     import msg
     n = Narc(msg.MSG_NARC)
@@ -415,7 +434,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_title_logo, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
