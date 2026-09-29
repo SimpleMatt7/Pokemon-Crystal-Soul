@@ -1,0 +1,5 @@
+# Modifiche al codice (istruzioni Thumb). Il contesto (esadecimale) deve comparire una sola volta nel file:
+# niente offset fissi, così vale anche per la ROM USA. Si sostituiscono i byte a partire da `posizione` nel contesto.
+file,contesto,posizione,da,a,motivo
+arm9/arm9.bin,08b500f023f8fe2801d3012008bd,6,fe,f9,Pokedex_JohtoDexIsComplete: completo con 249 catturati (251 - Mew - Celebi) invece di 254
+arm9/arm9.bin,f42801d82c207047fd2801d82d207047,8,fd,f8,GetOakJohtoDexRating: messaggio di Pokédex completo sopra 248 invece di 253
