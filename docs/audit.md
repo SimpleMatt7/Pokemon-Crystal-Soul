@@ -639,7 +639,7 @@ Voci lette da a/1/3/8: 256. Specie > 251 presenti: 5 — Sceptile, Torchic, Tree
 
 ## Oggetti per evoluzioni/allevamento negli script
 
-Solo oggetti dati o trovati tramite script. Negozi, oggetti nascosti e premi PL stanno nel codice: da verificare a parte.
+Solo oggetti citati per costante negli script. Quadro completo (a terra, nascosti, negozi, Spaccaroccia, premi): `docs/oggetti.md` (`python tools/items.py`).
 | Oggetto | Script | Tenuto da selvatici |
 |---|---|---|
 | ITEM_ARMOR_FOSSIL | 0755_T03R0101 | - |
@@ -654,12 +654,13 @@ Solo oggetti dati o trovati tramite script. Negozi, oggetti nascosti e premi PL 
 | ITEM_OLD_AMBER | 0755_T03R0101 | - |
 | ITEM_ROOT_FOSSIL | 0755_T03R0101 | - |
 | ITEM_SKULL_FOSSIL | 0755_T03R0101 | - |
+| ITEM_UPGRADE | 0837_T11R0701 | - |
 | ITEM_DRAGON_SCALE | - | Dragonair, Dragonite, Dratini, Horsea, Kingdra, Seadra |
 
 
 ## Matrice di ottenibilità #001-#251 (una partita, HeartGold, senza scambi né eventi)
 
-**Ottenibili: 230/251.** Mancanti: 21.
+**Ottenibili: 222/251** (contando una sola famiglia di starter). Mancanti: 23 + le 6 specie delle 2 famiglie di starter non scelte.
 
 | # | Specie | Stato | Fonti |
 |---|---|---|---|
@@ -800,11 +801,11 @@ Solo oggetti dati o trovati tramite script. Negozi, oggetti nascosti e premi PL 
 | 135 | Jolteon | ok | evoluzione da Eevee |
 | 136 | Flareon | ok | evoluzione da Eevee |
 | 137 | Porygon | ok | regalo [0804_T07R0501] |
-| 138 | Omanyte | ok | fossile HELIX_FOSSIL rianimato [T03R0101] (ottenimento fossile: DA VERIFICARE) |
+| 138 | Omanyte | ok | fossile HELIX_FOSSIL (Spaccaroccia) rianimato [T03R0101] |
 | 139 | Omastar | ok | evoluzione da Omanyte |
-| 140 | Kabuto | ok | fossile DOME_FOSSIL rianimato [T03R0101] (ottenimento fossile: DA VERIFICARE) |
-| 141 | Kabutops | ok | evoluzione da Kabuto |
-| 142 | Aerodactyl | ok | fossile OLD_AMBER rianimato [T03R0101] (ottenimento fossile: DA VERIFICARE) |
+| 140 | Kabuto | MANCA | - |
+| 141 | Kabutops | MANCA | - |
+| 142 | Aerodactyl | ok | fossile OLD_AMBER (Spaccaroccia) rianimato [T03R0101] |
 | 143 | Snorlax | ok | statico [0197_R11]; statico [0199_R12] |
 | 144 | Articuno | ok | statico [0014_D11R0105] |
 | 145 | Zapdos | ok | statico [0191_R10] |
@@ -814,15 +815,15 @@ Solo oggetti dati o trovati tramite script. Negozi, oggetti nascosti e premi PL 
 | 149 | Dragonite | ok | evoluzione da Dragonair |
 | 150 | Mewtwo | ok | statico [0011_D03R0103] |
 | 151 | Mew | MANCA | - |
-| 152 | Chikorita | ok | starter (1 dei 3) |
-| 153 | Bayleef | ok | evoluzione da Chikorita |
-| 154 | Meganium | ok | evoluzione da Bayleef |
-| 155 | Cyndaquil | ok | starter (1 dei 3) |
-| 156 | Quilava | ok | evoluzione da Cyndaquil |
-| 157 | Typhlosion | ok | evoluzione da Quilava |
-| 158 | Totodile | ok | starter (1 dei 3) |
-| 159 | Croconaw | ok | evoluzione da Totodile |
-| 160 | Feraligatr | ok | evoluzione da Croconaw |
+| 152 | Chikorita | starter 1 su 3 | starter (1 famiglia su 3) |
+| 153 | Bayleef | starter 1 su 3 | starter (1 famiglia su 3) |
+| 154 | Meganium | starter 1 su 3 | starter (1 famiglia su 3) |
+| 155 | Cyndaquil | starter 1 su 3 | starter (1 famiglia su 3) |
+| 156 | Quilava | starter 1 su 3 | starter (1 famiglia su 3) |
+| 157 | Typhlosion | starter 1 su 3 | starter (1 famiglia su 3) |
+| 158 | Totodile | starter 1 su 3 | starter (1 famiglia su 3) |
+| 159 | Croconaw | starter 1 su 3 | starter (1 famiglia su 3) |
+| 160 | Feraligatr | starter 1 su 3 | starter (1 famiglia su 3) |
 | 161 | Sentret | ok | safari; selvatico |
 | 162 | Furret | ok | safari (bonus oggetti); selvatico |
 | 163 | Hoothoot | ok | bottintesta; selvatico |

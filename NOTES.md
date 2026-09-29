@@ -1,6 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 2: primo giro di `tools/audit.py` eseguito → `docs/audit.md`; vedi §5b e §11).
+Ultimo aggiornamento: 2026-09-29 (fase 2: fonti degli oggetti con `tools/items.py` → `docs/oggetti.md`; audit corretto
+per starter e fossili → 222/251; vedi §5b e §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -87,7 +88,27 @@ partendo dalla ROM ITA).
   identiche): **230/251 ottenibili**. Mancanti (21): esclusive SS (Vulpix, Ninetales, Meowth, Persian, Ledyba, Ledian,
   Teddiursa, Ursaring, Delibird, Skarmory), evoluzioni per scambio (Alakazam, Machamp, Golem, Gengar, Politoed, Slowking,
   Scizor, Kingdra, Porygon2), Mew, Celebi. Limite noto: i 3 starter di Johto sono contati tutti come ottenibili
-  (in realtà 1 su 3) — da correggere nella matrice.
+  (in realtà 1 su 3) — da correggere nella matrice. → **Corretto** (vedi sotto).
+
+- **Fonti degli oggetti** (`tools/items.py` → `docs/oggetti.md`; controlli tutti OK: tabella oggetti nascosti trovata
+  in arm9, 491/491 mappe con oggetti a terra/nascosti uguali tra decomp e ROM, 14/14 tabelle del negozio Pokéathlon e
+  3 tabelle Spaccaroccia trovate byte per byte nella ROM ITA):
+  - Tutti gli **oggetti evolutivi delle 251** sono ottenibili in HG: pietre base (a terra, nonno di Bill R25R0101,
+    negozio Pokéathlon), Pietrasolare (Pokéathlon, solo dopo il Nazionale), Roccia di Re (Pozzo Slowpoke + Pokéathlon),
+    Metallopatina (M/N Acqua + Pokéathlon), **Squama Drago** (a terra al Monte Scodella 2F + Pokéathlon dopo il
+    Nazionale), **Upgrade** (regalo della guardia a Zafferanopoli, T11R0701). ⇒ D7 fattibile in una partita.
+  - **Fossili**: solo con Spaccaroccia. Rovine d'Alfa (30% di oggetto per roccia): Fossilhelix 10%, Ambra Vecchia 10%.
+    **Il Domofossile in HG non esiste** (è nella tabella SS) ⇒ Kabuto/Kabutops mancano. Grotta Falesia: Fossilunghia
+    (gen 3, da togliere). Radice/Corazza/Cranio: nessuna fonte in HG.
+  - **Aromi** (D9): 9 strumenti a terra, uno per mappa (R15, R38, R47, T06, D01R0101, D03R0101/0102, D38R0102, D41R0102).
+    Per toglierli basta cambiare l'oggetto delle voci di scr_seq_0141 corrispondenti.
+  - Strumenti che servono solo a evoluzioni gen 4 (Protezione, Elettritore, Magmatore, Dubbiodisco, Rasoartiglio,
+    Rasozanna, Pietra Ovale, Pietrabrillo/Neropietra/Pietralbore, Terrorpanno) restano innocui una volta tolte le
+    evoluzioni (D8); si possono sostituire con altro se si vuole.
+- **Audit corretto**: un solo starter di Johto; fossili solo se presenti nelle tabelle Spaccaroccia; cercava
+  `ITEM_UP_GRADE` invece di `ITEM_UPGRADE`. Risultato: **222/251** (con 1 famiglia di starter). Mancano 23 + 6 starter:
+  esclusive SS (10), evoluzioni per scambio (9, D7), **Kabuto, Kabutops**, Mew, Celebi, + 2 famiglie di starter
+  (idea: Rocco dà Chikorita/Cyndaquil/Totodile al posto degli starter di Hoenn).
 
 ## 6. Da verificare (fase 2)
 - Safari di Johto: secondo Serebii ~25-30 specie gen3-4 su 80+, sbloccate con oggetti + giorni. Formato dati ignoto.
@@ -95,7 +116,7 @@ partendo dalla ROM ITA).
 - Script: regali (Rocco → starter Hoenn), leggendari statici (Torre Inclusa: Groudon; Rovine di Sinjoh: Dialga/Palkia/Giratina), vaganti (Latios/Latias), scambi di gioco, evento Santuario di Lecci.
 - Quando si sbloccano i suoni Hoenn/Sinnoh della radio.
 - Pokédex di Johto (256 voci): include evoluzioni gen 4? L'ordine è un dato modificabile?
-- Ottenibilità in una partita di: Metallopatina, Squama Drago, Roccia di Re, Upgrade, pietre; Aromi (da togliere).
+- ~~Ottenibilità in una partita di: Metallopatina, Squama Drago, Roccia di Re, Upgrade, pietre; Aromi~~ → fatto (§5b).
 - Disponibilità reale 1-251 in una sola cartuccia (esclusivi di versione, 2 starter Johto mancanti, fossili).
 - Parco Lotta: formato dei set Pokémon.
 - Percorsi NARC equivalenti su SoulSilver (alcuni differiscono).
@@ -140,11 +161,13 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 1. (Fatto) Primo push di `main` e `dev` su GitHub come SimpleMatt7; da qui in avanti si lavora e si pusha su `dev`.
 2. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS fino al menu/intro (verifica che i CRC di header
    non ricalcolati non diano problemi); aprire la ROM IPKI in DSPRE 2.3.2 e confermare che carica senza errori.
-3. Fase 2 (in corso): eseguire `python tools/get_pret.py` e poi `python tools/audit.py` → `docs/audit.md`
-   (solo nomi/ID). Rivedere l'output: controlli di coerenza ROM↔decomp tutti OK? matrice 251, mancanti attesi Mew/Celebi +
-   altri? Poi committare get_pret.py, audit.py, docs/audit.md. Punti aperti: fonte dei fossili e degli oggetti evolutivi
-   (codice: negozi/nascosti), tabelle 2-3 della Gara, archivi a/0/6/6 e a/2/5/8, formato allenatori del Parco Lotta.
-4. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
+3. Fase 2 (in corso). Fatto: audit (`tools/audit.py` → `docs/audit.md`) e fonti degli oggetti (`tools/items.py` →
+   `docs/oggetti.md`). Rimane: quando si sbloccano radio Hoenn/Sinnoh, sciami e tabelle 2-3 della Gara Pigliamosche;
+   archivi a/0/6/6 e a/2/5/8; formato allenatori del Parco Lotta.
+   Dopo `git pull`, rilanciare `python tools/get_pret.py` (la sparse checkout ora include eventdata, itemdata, src/).
+4. Fase 3 — decisioni utente in arrivo: dove mettere le 10 esclusive SS, Kabuto (Domofossile nella tabella Spaccaroccia
+   delle Rovine? o selvatico), Mew/Celebi, starter di Rocco.
+5. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
 
 ## 12. Problemi aperti
 - Nessuno bloccante.

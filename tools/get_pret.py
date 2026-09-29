@@ -22,6 +22,9 @@ SPARSE = [
     "files/poketool/trainer",
     "files/data/mushi",
     "files/application/zukanlist/zkn_data",
+    "files/fielddata/eventdata",           # eventi di zona: strumenti a terra (script 7000+)
+    "files/itemtool/itemdata",             # item_data.csv (prezzi)
+    "src/data/fieldmap",                   # hidden_items.h; in cone mode include anche i .c di src/ (mart, fossili)
 ]
 
 
