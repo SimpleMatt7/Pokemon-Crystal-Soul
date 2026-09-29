@@ -26,7 +26,8 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | Safari — bonus oggetti | 222 | 57 | 61 |
 | Gara Pigliamosche | 10 | 6 | 11 |
 | Allenatori | 65 | 67 | 99 |
-| Scambi in gioco (ricevuti) | 0 | 0 | 10 |
+| Scambi in gioco (ricevuti) | 1 | 0 | 1 |
+| Scambi in gioco (richiesti) | 0 | 1 | 1 |
 | Script (regali/statici/vaganti) | 12 | 3 | 11 |
 | Parco Lotta set A, allenatori a/1/2/8 (altra struttura, codice non decompilato) | 229 | 243 | 197 |
 | Parco Lotta set B, allenatori a/2/0/2 (Torre Lotta, unk_0204B538.c) | 228 | 243 | 197 |
@@ -591,19 +592,19 @@ Tabelle con alberi: 60. Voci con specie > 251: 192.
 
 | NPC | Chiede | Dà |
 |---|---|---|
-| Rocky (Onix) | #1450333877 | **#1313033298** |
-| Muscle (Machop) | #2117284659 | **#933904** |
-| Billy (Voltorb) | #401605616 | **#475152** |
-| Doris (Dodrio) | #117567500 | **#402448** |
-| Sprints (Rapidash) | #1611948308 | **#402448** |
-| Rusty (Steelix) | #276906256 | **#402448** |
-| Shuckie (Shuckle, prestito) | #722479632 | **#402448** |
-| Kenya (Spearow, prestito) | #535830512 | **#2920464** |
-| Maggie (Magneton) | #51355726 | **#250384** |
-| Paul (Xatu) | #946847792 | **#264720** |
-| Volty (Pikachu) | #2683338736 | **#2502672** |
-| Hornlette (Rhyhorn) | #1309216512 | **#436752** |
-| Iron (Beldum) | #1811951711 | **#442896** |
+| Rocky (Onix) | Bellsprout | Onix |
+| Muscle (Machop) | Drowzee | Machop |
+| Billy (Voltorb) | Krabby | Voltorb |
+| Doris (Dodrio) | Dragonair | Dodrio |
+| Sprints (Rapidash) | Gloom | Rapidash |
+| Rusty (Steelix) | Steelix | Steelix |
+| Shuckie (Shuckle, prestito) | Shuckle | Shuckle |
+| Kenya (Spearow, prestito) | Spearow | Spearow |
+| Maggie (Magneton) | Dugtrio | Magneton |
+| Paul (Xatu) | Haunter | Xatu |
+| Volty (Pikachu) | Pikachu | Pikachu |
+| Hornlette (Rhyhorn) | **Bonsly** | Rhyhorn |
+| Iron (Beldum) | Forretress | **Beldum** |
 
 
 ## Script: regali, incontri statici, uova, vaganti
@@ -727,11 +728,11 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 018 | Pidgeot | ok | evoluzione da Pidgeotto |
 | 019 | Rattata | ok | safari; selvatico |
 | 020 | Raticate | ok | safari; safari (bonus oggetti); selvatico |
-| 021 | Spearow | ok | bottintesta; safari; selvatico |
+| 021 | Spearow | ok | bottintesta; safari; scambio (Kenya (Spearow, prestito)); selvatico |
 | 022 | Fearow | ok | safari; safari (bonus oggetti); selvatico |
 | 023 | Ekans | ok | regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari |
 | 024 | Arbok | ok | safari |
-| 025 | Pikachu | ok | selvatico |
+| 025 | Pikachu | ok | scambio (Volty (Pikachu)); selvatico |
 | 026 | Raichu | ok | evoluzione da Pikachu |
 | 027 | Sandshrew | ok | regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari; selvatico |
 | 028 | Sandslash | ok | safari; selvatico |
@@ -772,7 +773,7 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 063 | Abra | ok | regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari; selvatico |
 | 064 | Kadabra | ok | selvatico |
 | 065 | Alakazam | MANCA | evoluzione TRADE (impossibile da solo) |
-| 066 | Machop | ok | safari; selvatico |
+| 066 | Machop | ok | safari; scambio (Muscle (Machop)); selvatico |
 | 067 | Machoke | ok | safari; safari (bonus oggetti); selvatico |
 | 068 | Machamp | MANCA | evoluzione TRADE (impossibile da solo) |
 | 069 | Bellsprout | ok | safari; safari (bonus oggetti); selvatico |
@@ -784,14 +785,14 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 075 | Graveler | ok | safari; selvatico |
 | 076 | Golem | MANCA | evoluzione TRADE (impossibile da solo) |
 | 077 | Ponyta | ok | safari (bonus oggetti); selvatico |
-| 078 | Rapidash | ok | selvatico |
+| 078 | Rapidash | ok | scambio (Sprints (Rapidash)); selvatico |
 | 079 | Slowpoke | ok | safari; selvatico |
 | 080 | Slowbro | ok | safari; safari (bonus oggetti); selvatico |
 | 081 | Magnemite | ok | safari; selvatico |
-| 082 | Magneton | ok | safari; safari (bonus oggetti); selvatico |
+| 082 | Magneton | ok | safari; safari (bonus oggetti); scambio (Maggie (Magneton)); selvatico |
 | 083 | Farfetchd | ok | safari; safari (bonus oggetti); selvatico |
 | 084 | Doduo | ok | safari; safari (bonus oggetti); selvatico |
-| 085 | Dodrio | ok | safari (bonus oggetti); selvatico |
+| 085 | Dodrio | ok | safari (bonus oggetti); scambio (Doris (Dodrio)); selvatico |
 | 086 | Seel | ok | selvatico |
 | 087 | Dewgong | ok | selvatico |
 | 088 | Grimer | ok | safari; selvatico |
@@ -801,12 +802,12 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 092 | Gastly | ok | safari; selvatico |
 | 093 | Haunter | ok | safari; selvatico |
 | 094 | Gengar | MANCA | evoluzione TRADE (impossibile da solo) |
-| 095 | Onix | ok | safari; selvatico |
+| 095 | Onix | ok | safari; scambio (Rocky (Onix)); selvatico |
 | 096 | Drowzee | ok | safari; selvatico |
 | 097 | Hypno | ok | safari; safari (bonus oggetti); selvatico |
 | 098 | Krabby | ok | safari; safari (bonus oggetti); selvatico |
 | 099 | Kingler | ok | safari; safari (bonus oggetti); selvatico |
-| 100 | Voltorb | ok | safari (bonus oggetti); selvatico |
+| 100 | Voltorb | ok | safari (bonus oggetti); scambio (Billy (Voltorb)); selvatico |
 | 101 | Electrode | ok | selvatico; statico [0090_D35R0103] |
 | 102 | Exeggcute | ok | bottintesta |
 | 103 | Exeggutor | ok | evoluzione da Exeggcute |
@@ -817,7 +818,7 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 108 | Lickitung | ok | safari; safari (bonus oggetti); selvatico |
 | 109 | Koffing | ok | safari; selvatico |
 | 110 | Weezing | ok | safari |
-| 111 | Rhyhorn | ok | safari; safari (bonus oggetti); selvatico |
+| 111 | Rhyhorn | ok | safari; safari (bonus oggetti); scambio (Hornlette (Rhyhorn)); selvatico |
 | 112 | Rhydon | ok | safari (bonus oggetti) |
 | 113 | Chansey | ok | safari (bonus oggetti); sciame erba (dopo il Nazionale); selvatico |
 | 114 | Tangela | ok | bottintesta; selvatico |
@@ -884,7 +885,7 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 175 | Togepi | ok | uovo regalo [0858_T22FS0101] |
 | 176 | Togetic | ok | evoluzione da Togepi |
 | 177 | Natu | ok | bottintesta; selvatico |
-| 178 | Xatu | ok | evoluzione da Natu |
+| 178 | Xatu | ok | scambio (Paul (Xatu)) |
 | 179 | Mareep | ok | safari (bonus oggetti); selvatico; uovo regalo [0860_T22PC0101] |
 | 180 | Flaaffy | ok | selvatico |
 | 181 | Ampharos | ok | evoluzione da Flaaffy |
@@ -914,12 +915,12 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 205 | Forretress | ok | evoluzione da Pineco |
 | 206 | Dunsparce | ok | sciame erba (dopo il Nazionale); selvatico |
 | 207 | Gligar | ok | selvatico |
-| 208 | Steelix | ok | selvatico; evoluzione TRADE_ITEM (impossibile da solo) |
+| 208 | Steelix | ok | scambio (Rusty (Steelix)); selvatico; evoluzione TRADE_ITEM (impossibile da solo) |
 | 209 | Snubbull | ok | sciame erba (dopo il Nazionale); selvatico |
 | 210 | Granbull | ok | evoluzione da Snubbull |
 | 211 | Qwilfish | ok | sciame pesca (dopo il Nazionale); selvatico |
 | 212 | Scizor | MANCA | evoluzione TRADE_ITEM (impossibile da solo) |
-| 213 | Shuckle | ok | safari (bonus oggetti); selvatico |
+| 213 | Shuckle | ok | safari (bonus oggetti); scambio (Shuckie (Shuckle, prestito)); selvatico |
 | 214 | Heracross | ok | bottintesta |
 | 215 | Sneasel | ok | selvatico |
 | 216 | Teddiursa | MANCA | - |

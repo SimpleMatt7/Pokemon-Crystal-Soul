@@ -239,8 +239,10 @@ TRADE_NAMES = ["Rocky (Onix)", "Muscle (Machop)", "Billy (Voltorb)", "Doris (Dod
 
 
 def read_trades():
-    out = []  # (nome, dai, ricevi)
-    for i, f in enumerate(parse_narc((ROM / "data/tradelist.narc").read_bytes())):
+    """Scambi con NPC: a/1/1/2 (struct NPCTrade da 0x54 byte, include/npc_trade.h): specie data a 0x00,
+    specie chiesta a 0x4C. (data/tradelist.narc NON contiene gli scambi: è grafica.)"""
+    out = []  # (nome, chiesta, data)
+    for i, f in enumerate(narc("a/1/1/2")):
         give, ask = struct.unpack_from("<I", f, 0)[0], struct.unpack_from("<I", f, 0x4C)[0]
         out.append((TRADE_NAMES[i] if i < len(TRADE_NAMES) else f"#{i}", ask, give))
     return out
@@ -455,6 +457,7 @@ def main():
     add("Gara Pigliamosche", (s for t, s in bug))
     add("Allenatori", (s for i, c, n, party in trainers for s, _ in party))
     add("Scambi in gioco (ricevuti)", (give for _, _, give in trades))
+    add("Scambi in gioco (richiesti)", (ask for _, ask, _ in trades))
     add("Script (regali/statici/vaganti)", (s for f, cmd, sps, note in scripts for s in sps))
     for a, (desc, c) in frontier.items():
         add(f"Parco Lotta {desc}", c.elements())
@@ -518,7 +521,8 @@ def main():
              for i, c, n, party in trainers if any(s > 251 for s, _ in party)])
 
     r.h(2, "Scambi in gioco")
-    r.table(["NPC", "Chiede", "Dà"], [(n, sp(a), f"**{sp(g)}**" if g > 251 else sp(g)) for n, a, g in trades])
+    r.table(["NPC", "Chiede", "Dà"], [(n, f"**{sp(a)}**" if a > 251 else sp(a), f"**{sp(g)}**" if g > 251 else sp(g))
+                                      for n, a, g in trades])
 
     r.h(2, "Script: regali, incontri statici, uova, vaganti")
     r.table(["Script", "Comando", "Specie", "Note"],

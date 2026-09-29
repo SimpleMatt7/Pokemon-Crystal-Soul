@@ -1,0 +1,246 @@
+# Sostituzione globale specie > #251 → #001-#251 (allenatori, Parco Lotta, Pokéathlon, radio, Bottintesta,
+# Safari, Gara). Bozza da tools/design_subs.py; correzioni a mano in sostituto_id + rivisto=sì.
+# Le fonti con una scelta dedicata (selvatici.csv, eventi.csv) hanno la precedenza.
+id,specie,tipo,stadio,bst,sostituto_id,sostituto,tipo_sost,stadio_sost,bst_sost,rivisto,nota
+252,Treecko,Erba,0,310,1,Bulbasaur,Erba/Veleno,0,318,sì,rivisto a mano
+253,Grovyle,Erba,1,405,2,Ivysaur,Erba/Veleno,1,405,sì,rivisto a mano
+254,Sceptile,Erba,2,530,3,Venusaur,Erba/Veleno,2,525,sì,rivisto a mano
+255,Torchic,Fuoco,0,310,4,Charmander,Fuoco,0,309,sì,rivisto a mano
+256,Combusken,Fuoco/Lotta,1,405,5,Charmeleon,Fuoco,1,405,sì,rivisto a mano
+257,Blaziken,Fuoco/Lotta,2,530,6,Charizard,Fuoco/Volante,2,534,sì,rivisto a mano
+258,Mudkip,Acqua,0,310,7,Squirtle,Acqua,0,314,sì,rivisto a mano
+259,Marshtomp,Acqua/Terra,1,405,8,Wartortle,Acqua,1,405,sì,rivisto a mano
+260,Swampert,Acqua/Terra,2,535,9,Blastoise,Acqua,2,530,sì,rivisto a mano
+261,Poochyena,Buio,0,220,228,Houndour,Buio/Fuoco,0,330,sì,
+262,Mightyena,Buio,1,420,197,Umbreon,Buio,1,525,sì,
+263,Zigzagoon,Normale,0,240,161,Sentret,Normale,0,215,sì,rivisto a mano
+264,Linoone,Normale,1,420,162,Furret,Normale,1,415,sì,
+265,Wurmple,Coleottero,0,195,10,Caterpie,Coleottero,0,195,sì,
+266,Silcoon,Coleottero,1,205,11,Metapod,Coleottero,1,205,sì,
+267,Beautifly,Coleottero/Volante,2,385,12,Butterfree,Coleottero/Volante,2,385,sì,
+268,Cascoon,Coleottero,1,205,11,Metapod,Coleottero,1,205,sì,
+269,Dustox,Coleottero/Veleno,2,385,15,Beedrill,Coleottero/Veleno,2,385,sì,
+270,Lotad,Acqua/Erba,0,220,60,Poliwag,Acqua,0,300,sì,rivisto a mano
+271,Lombre,Acqua/Erba,1,340,61,Poliwhirl,Acqua,1,385,sì,
+272,Ludicolo,Acqua/Erba,2,480,186,Politoed,Acqua,2,500,sì,
+273,Seedot,Erba,0,220,43,Oddish,Erba/Veleno,0,320,sì,rivisto a mano
+274,Nuzleaf,Erba/Buio,1,340,44,Gloom,Erba/Veleno,1,395,sì,rivisto a mano
+275,Shiftry,Erba/Buio,2,480,45,Vileplume,Erba/Veleno,2,480,sì,rivisto a mano
+276,Taillow,Normale/Volante,0,270,21,Spearow,Normale/Volante,0,262,sì,
+277,Swellow,Normale/Volante,1,430,22,Fearow,Normale/Volante,1,442,sì,
+278,Wingull,Acqua/Volante,0,270,116,Horsea,Acqua,0,295,sì,
+279,Pelipper,Acqua/Volante,1,430,226,Mantine,Acqua/Volante,1,465,sì,
+280,Ralts,Psico,0,198,63,Abra,Psico,0,310,sì,
+281,Kirlia,Psico,1,278,64,Kadabra,Psico,1,400,sì,rivisto a mano
+282,Gardevoir,Psico,2,518,65,Alakazam,Psico,2,490,sì,
+283,Surskit,Coleottero/Acqua,0,269,204,Pineco,Coleottero,0,290,sì,
+284,Masquerain,Coleottero/Volante,1,414,12,Butterfree,Coleottero/Volante,2,385,sì,rivisto a mano
+285,Shroomish,Erba,0,295,46,Paras,Coleottero/Erba,0,285,sì,rivisto a mano
+286,Breloom,Erba/Lotta,1,460,47,Parasect,Coleottero/Erba,1,405,sì,rivisto a mano
+287,Slakoth,Normale,0,280,216,Teddiursa,Normale,0,330,sì,rivisto a mano
+288,Vigoroth,Normale,1,440,217,Ursaring,Normale,1,500,sì,rivisto a mano
+289,Slaking,Normale,2,670,143,Snorlax,Normale,1,540,sì,rivisto a mano
+290,Nincada,Coleottero/Terra,0,266,165,Ledyba,Coleottero/Volante,0,265,sì,
+291,Ninjask,Coleottero/Volante,1,456,193,Yanma,Coleottero/Volante,0,390,sì,rivisto a mano
+292,Shedinja,Coleottero/Spettro,1,236,213,Shuckle,Coleottero/Roccia,0,505,sì,rivisto a mano
+293,Whismur,Normale,0,240,209,Snubbull,Normale,0,300,sì,rivisto a mano
+294,Loudred,Normale,1,360,210,Granbull,Normale,1,450,sì,rivisto a mano
+295,Exploud,Normale,2,480,115,Kangaskhan,Normale,0,490,sì,rivisto a mano
+296,Makuhita,Lotta,0,237,236,Tyrogue,Lotta,0,210,sì,
+297,Hariyama,Lotta,1,474,57,Primeape,Lotta,1,455,sì,
+298,Azurill,Normale,0,190,183,Marill,Acqua,1,250,sì,rivisto a mano
+299,Nosepass,Roccia,0,375,95,Onix,Roccia/Terra,0,385,sì,
+300,Skitty,Normale,0,260,52,Meowth,Normale,0,290,sì,rivisto a mano
+301,Delcatty,Normale,1,380,53,Persian,Normale,1,440,sì,rivisto a mano
+302,Sableye,Buio/Spettro,0,380,198,Murkrow,Buio/Volante,0,405,sì,
+303,Mawile,Acciaio,0,380,227,Skarmory,Acciaio/Volante,0,465,sì,
+304,Aron,Acciaio/Roccia,0,330,74,Geodude,Roccia/Terra,0,300,sì,rivisto a mano
+305,Lairon,Acciaio/Roccia,1,430,75,Graveler,Roccia/Terra,1,390,sì,rivisto a mano
+306,Aggron,Acciaio/Roccia,2,530,208,Steelix,Acciaio/Terra,1,510,sì,rivisto a mano
+307,Meditite,Lotta/Psico,0,280,56,Mankey,Lotta,0,305,sì,
+308,Medicham,Lotta/Psico,1,410,106,Hitmonlee,Lotta,1,455,sì,
+309,Electrike,Elettro,0,295,179,Mareep,Elettro,0,280,sì,
+310,Manectric,Elettro,1,475,135,Jolteon,Elettro,1,525,sì,rivisto a mano
+311,Plusle,Elettro,0,405,25,Pikachu,Elettro,1,300,sì,rivisto a mano
+312,Minun,Elettro,0,405,25,Pikachu,Elettro,1,300,sì,rivisto a mano
+313,Volbeat,Coleottero,0,400,166,Ledian,Coleottero/Volante,1,390,sì,rivisto a mano
+314,Illumise,Coleottero,0,400,49,Venomoth,Coleottero/Veleno,1,450,sì,rivisto a mano
+315,Roselia,Erba/Veleno,1,400,44,Gloom,Erba/Veleno,1,395,sì,rivisto a mano (no starter nel Safari)
+316,Gulpin,Veleno,0,302,23,Ekans,Veleno,0,288,sì,
+317,Swalot,Veleno,1,467,110,Weezing,Veleno,1,490,sì,
+318,Carvanha,Acqua/Buio,0,305,90,Shellder,Acqua,0,305,sì,
+319,Sharpedo,Acqua/Buio,1,460,130,Gyarados,Acqua/Volante,1,540,sì,rivisto a mano
+320,Wailmer,Acqua,0,400,79,Slowpoke,Acqua/Psico,0,315,sì,rivisto a mano
+321,Wailord,Acqua,1,500,131,Lapras,Acqua/Ghiaccio,0,535,sì,rivisto a mano
+322,Numel,Fuoco/Terra,0,305,218,Slugma,Fuoco,0,250,sì,rivisto a mano
+323,Camerupt,Fuoco/Terra,1,460,219,Magcargo,Fuoco/Roccia,1,410,sì,rivisto a mano
+324,Torkoal,Fuoco,0,470,126,Magmar,Fuoco,1,495,sì,rivisto a mano
+325,Spoink,Psico,0,330,96,Drowzee,Psico,0,328,sì,
+326,Grumpig,Psico,1,470,122,Mr-Mime,Psico,1,460,sì,
+327,Spinda,Normale,0,360,190,Aipom,Normale,0,360,sì,
+328,Trapinch,Terra,0,290,27,Sandshrew,Terra,0,300,sì,
+329,Vibrava,Terra/Drago,1,340,207,Gligar,Terra/Volante,0,430,sì,rivisto a mano
+330,Flygon,Terra/Drago,2,520,232,Donphan,Terra,1,500,sì,
+331,Cacnea,Erba,0,335,191,Sunkern,Erba,0,180,sì,rivisto a mano
+332,Cacturne,Erba/Buio,1,475,71,Victreebel,Erba/Veleno,2,480,sì,rivisto a mano
+333,Swablu,Normale/Volante,0,310,84,Doduo,Normale/Volante,0,310,sì,
+334,Altaria,Drago/Volante,1,490,148,Dragonair,Drago,1,420,sì,rivisto a mano
+335,Zangoose,Normale,0,458,234,Stantler,Normale,0,465,sì,
+336,Seviper,Veleno,0,458,24,Arbok,Veleno,1,438,sì,
+337,Lunatone,Roccia/Psico,0,440,178,Xatu,Psico/Volante,1,470,sì,rivisto a mano
+338,Solrock,Roccia/Psico,0,440,142,Aerodactyl,Roccia/Volante,0,515,sì,
+339,Barboach,Acqua/Terra,0,288,60,Poliwag,Acqua,0,300,sì,
+340,Whiscash,Acqua/Terra,1,468,195,Quagsire,Acqua/Terra,1,430,sì,
+341,Corphish,Acqua,0,308,98,Krabby,Acqua,0,325,sì,rivisto a mano (no starter nel Safari)
+342,Crawdaunt,Acqua/Buio,1,468,99,Kingler,Acqua,1,475,sì,
+343,Baltoy,Terra/Psico,0,300,104,Cubone,Terra,0,320,sì,
+344,Claydol,Terra/Psico,1,500,105,Marowak,Terra,1,425,sì,rivisto a mano
+345,Lileep,Roccia/Erba,0,355,138,Omanyte,Roccia/Acqua,0,355,sì,
+346,Cradily,Roccia/Erba,1,495,139,Omastar,Roccia/Acqua,1,495,sì,
+347,Anorith,Roccia/Coleottero,0,355,140,Kabuto,Roccia/Acqua,0,355,sì,
+348,Armaldo,Roccia/Coleottero,1,495,141,Kabutops,Roccia/Acqua,1,495,sì,
+349,Feebas,Acqua,0,200,129,Magikarp,Acqua,0,200,sì,
+350,Milotic,Acqua,1,540,134,Vaporeon,Acqua,1,525,sì,
+351,Castform,Normale,0,420,206,Dunsparce,Normale,0,415,sì,
+352,Kecleon,Normale,0,440,128,Tauros,Normale,0,490,sì,rivisto a mano
+353,Shuppet,Spettro,0,295,92,Gastly,Spettro/Veleno,0,310,sì,
+354,Banette,Spettro,1,455,200,Misdreavus,Spettro,0,435,sì,
+355,Duskull,Spettro,0,295,92,Gastly,Spettro/Veleno,0,310,sì,
+356,Dusclops,Spettro,1,455,93,Haunter,Spettro/Veleno,1,405,sì,
+357,Tropius,Erba/Volante,0,460,189,Jumpluff,Erba/Volante,2,450,sì,
+358,Chimecho,Psico,1,425,202,Wobbuffet,Psico,1,405,sì,
+359,Absol,Buio,0,465,215,Sneasel,Buio/Ghiaccio,0,430,sì,
+360,Wynaut,Psico,0,260,202,Wobbuffet,Psico,1,405,sì,rivisto a mano
+361,Snorunt,Ghiaccio,0,300,238,Smoochum,Ghiaccio/Psico,0,305,sì,
+362,Glalie,Ghiaccio,1,480,124,Jynx,Ghiaccio/Psico,1,455,sì,
+363,Spheal,Ghiaccio/Acqua,0,290,86,Seel,Acqua,0,325,sì,rivisto a mano
+364,Sealeo,Ghiaccio/Acqua,1,410,87,Dewgong,Acqua/Ghiaccio,1,475,sì,rivisto a mano
+365,Walrein,Ghiaccio/Acqua,2,530,131,Lapras,Acqua/Ghiaccio,0,535,sì,rivisto a mano
+366,Clamperl,Acqua,0,345,120,Staryu,Acqua,0,340,sì,
+367,Huntail,Acqua,1,485,171,Lanturn,Acqua/Elettro,1,460,sì,rivisto a mano
+368,Gorebyss,Acqua,1,485,121,Starmie,Acqua/Psico,1,520,sì,rivisto a mano
+369,Relicanth,Acqua/Roccia,0,485,222,Corsola,Acqua/Roccia,0,380,sì,
+370,Luvdisc,Acqua,0,330,86,Seel,Acqua,0,325,sì,
+371,Bagon,Drago,0,300,147,Dratini,Drago,0,300,sì,
+372,Shelgon,Drago,1,420,148,Dragonair,Drago,1,420,sì,
+373,Salamence,Drago/Volante,2,600,149,Dragonite,Drago/Volante,2,600,sì,
+374,Beldum,Acciaio/Psico,0,300,81,Magnemite,Elettro/Acciaio,0,325,sì,rivisto a mano
+375,Metang,Acciaio/Psico,1,420,82,Magneton,Elettro/Acciaio,1,465,sì,rivisto a mano
+376,Metagross,Acciaio/Psico,2,600,212,Scizor,Coleottero/Acciaio,1,500,sì,rivisto a mano
+377,Regirock,Roccia,0,580,243,Raikou,Elettro,0,580,sì,
+378,Regice,Ghiaccio,0,580,144,Articuno,Ghiaccio/Volante,0,580,sì,
+379,Registeel,Acciaio,0,580,244,Entei,Fuoco,0,580,sì,
+380,Latias,Drago/Psico,0,600,151,Mew,Psico,0,600,sì,
+381,Latios,Drago/Psico,0,600,151,Mew,Psico,0,600,sì,
+382,Kyogre,Acqua,0,670,245,Suicune,Acqua,0,580,sì,
+383,Groudon,Terra,0,670,150,Mewtwo,Psico,0,680,sì,
+384,Rayquaza,Drago/Volante,0,680,249,Lugia,Psico/Volante,0,680,sì,
+385,Jirachi,Acciaio/Psico,0,600,251,Celebi,Psico/Erba,0,600,sì,
+386,Deoxys,Psico,0,600,151,Mew,Psico,0,600,sì,
+387,Turtwig,Erba,0,318,152,Chikorita,Erba,0,318,sì,rivisto a mano
+388,Grotle,Erba,1,405,153,Bayleef,Erba,1,405,sì,rivisto a mano
+389,Torterra,Erba/Terra,2,525,154,Meganium,Erba,2,525,sì,rivisto a mano
+390,Chimchar,Fuoco,0,309,155,Cyndaquil,Fuoco,0,309,sì,rivisto a mano
+391,Monferno,Fuoco/Lotta,1,405,156,Quilava,Fuoco,1,405,sì,rivisto a mano
+392,Infernape,Fuoco/Lotta,2,534,157,Typhlosion,Fuoco,2,534,sì,rivisto a mano
+393,Piplup,Acqua,0,314,158,Totodile,Acqua,0,314,sì,rivisto a mano
+394,Prinplup,Acqua,1,405,159,Croconaw,Acqua,1,405,sì,rivisto a mano
+395,Empoleon,Acqua/Acciaio,2,530,160,Feraligatr,Acqua,2,530,sì,rivisto a mano
+396,Starly,Normale/Volante,0,245,16,Pidgey,Normale/Volante,0,251,sì,
+397,Staravia,Normale/Volante,1,340,17,Pidgeotto,Normale/Volante,1,349,sì,
+398,Staraptor,Normale/Volante,2,475,18,Pidgeot,Normale/Volante,2,469,sì,
+399,Bidoof,Normale,0,250,19,Rattata,Normale,0,253,sì,rivisto a mano
+400,Bibarel,Normale/Acqua,1,410,20,Raticate,Normale,1,413,sì,rivisto a mano
+401,Kricketot,Coleottero,0,194,10,Caterpie,Coleottero,0,195,sì,
+402,Kricketune,Coleottero,1,384,168,Ariados,Coleottero/Veleno,1,390,sì,
+403,Shinx,Elettro,0,263,179,Mareep,Elettro,0,280,sì,
+404,Luxio,Elettro,1,363,180,Flaaffy,Elettro,1,365,sì,
+405,Luxray,Elettro,2,523,181,Ampharos,Elettro,2,500,sì,
+406,Budew,Erba/Veleno,0,280,69,Bellsprout,Erba/Veleno,0,300,sì,rivisto a mano
+407,Roserade,Erba/Veleno,2,505,71,Victreebel,Erba/Veleno,2,480,sì,rivisto a mano
+408,Cranidos,Roccia,0,350,138,Omanyte,Roccia/Acqua,0,355,sì,
+409,Rampardos,Roccia,1,495,139,Omastar,Roccia/Acqua,1,495,sì,
+410,Shieldon,Roccia/Acciaio,0,350,140,Kabuto,Roccia/Acqua,0,355,sì,
+411,Bastiodon,Roccia/Acciaio,1,495,141,Kabutops,Roccia/Acqua,1,495,sì,
+412,Burmy,Coleottero,0,224,167,Spinarak,Coleottero/Veleno,0,250,sì,
+413,Wormadam,Coleottero/Erba,1,424,47,Parasect,Coleottero/Erba,1,405,sì,
+414,Mothim,Coleottero/Volante,1,424,49,Venomoth,Coleottero/Veleno,1,450,sì,rivisto a mano
+415,Combee,Coleottero/Volante,0,244,165,Ledyba,Coleottero/Volante,0,265,sì,
+416,Vespiquen,Coleottero/Volante,1,474,205,Forretress,Coleottero/Acciaio,1,465,sì,
+417,Pachirisu,Elettro,0,405,100,Voltorb,Elettro,0,330,sì,
+418,Buizel,Acqua,0,330,98,Krabby,Acqua,0,325,sì,
+419,Floatzel,Acqua,1,495,55,Golduck,Acqua,1,500,sì,
+420,Cherubi,Erba,0,275,187,Hoppip,Erba/Volante,0,250,sì,
+421,Cherrim,Erba,1,450,114,Tangela,Erba,0,435,sì,
+422,Shellos,Acqua,0,325,118,Goldeen,Acqua,0,320,sì,
+423,Gastrodon,Acqua/Terra,1,475,195,Quagsire,Acqua/Terra,1,430,sì,
+424,Ambipom,Normale,1,482,190,Aipom,Normale,0,360,sì,rivisto a mano
+425,Drifloon,Spettro/Volante,0,348,92,Gastly,Spettro/Veleno,0,310,sì,
+426,Drifblim,Spettro/Volante,1,498,94,Gengar,Spettro/Veleno,2,500,sì,
+427,Buneary,Normale,0,350,133,Eevee,Normale,0,325,sì,rivisto a mano
+428,Lopunny,Normale,1,480,40,Wigglytuff,Normale,2,425,sì,rivisto a mano
+429,Mismagius,Spettro,1,495,200,Misdreavus,Spettro,0,435,sì,rivisto a mano
+430,Honchkrow,Buio/Volante,1,505,198,Murkrow,Buio/Volante,0,405,sì,rivisto a mano
+431,Glameow,Normale,0,310,52,Meowth,Normale,0,290,sì,rivisto a mano
+432,Purugly,Normale,1,452,53,Persian,Normale,1,440,sì,rivisto a mano
+433,Chingling,Psico,0,285,177,Natu,Psico/Volante,0,320,sì,
+434,Stunky,Veleno/Buio,0,329,88,Grimer,Veleno,0,325,sì,
+435,Skuntank,Veleno/Buio,1,479,89,Muk,Veleno,1,500,sì,
+436,Bronzor,Acciaio/Psico,0,300,102,Exeggcute,Erba/Psico,0,325,sì,
+437,Bronzong,Acciaio/Psico,1,500,208,Steelix,Acciaio/Terra,1,510,sì,
+438,Bonsly,Roccia,0,290,185,Sudowoodo,Roccia,1,410,sì,rivisto a mano
+439,Mime-Jr,Psico,0,310,122,Mr-Mime,Psico,1,460,sì,rivisto a mano
+440,Happiny,Normale,0,220,113,Chansey,Normale,1,450,sì,rivisto a mano
+441,Chatot,Normale/Volante,0,411,83,Farfetchd,Normale/Volante,0,352,sì,rivisto a mano
+442,Spiritomb,Spettro/Buio,0,485,200,Misdreavus,Spettro,0,435,sì,
+443,Gible,Drago/Terra,0,300,246,Larvitar,Roccia/Terra,0,300,sì,rivisto a mano
+444,Gabite,Drago/Terra,1,410,247,Pupitar,Roccia/Terra,1,410,sì,rivisto a mano
+445,Garchomp,Drago/Terra,2,600,248,Tyranitar,Roccia/Buio,2,600,sì,rivisto a mano
+446,Munchlax,Normale,0,390,143,Snorlax,Normale,1,540,sì,rivisto a mano
+447,Riolu,Lotta,0,285,66,Machop,Lotta,0,305,sì,
+448,Lucario,Lotta/Acciaio,1,525,68,Machamp,Lotta,2,505,sì,
+449,Hippopotas,Terra,0,330,231,Phanpy,Terra,0,330,sì,
+450,Hippowdon,Terra,1,525,28,Sandslash,Terra,1,450,sì,
+451,Skorupi,Veleno/Coleottero,0,330,109,Koffing,Veleno,0,340,sì,
+452,Drapion,Veleno/Buio,1,500,89,Muk,Veleno,1,500,sì,
+453,Croagunk,Veleno/Lotta,0,300,32,Nidoran-M,Veleno,0,273,sì,rivisto a mano
+454,Toxicroak,Veleno/Lotta,1,490,34,Nidoking,Veleno/Terra,2,495,sì,rivisto a mano
+455,Carnivine,Erba,0,454,114,Tangela,Erba,0,435,sì,
+456,Finneon,Acqua,0,330,223,Remoraid,Acqua,0,300,sì,
+457,Lumineon,Acqua,1,460,119,Seaking,Acqua,1,450,sì,
+458,Mantyke,Acqua/Volante,0,345,226,Mantine,Acqua/Volante,1,465,sì,rivisto a mano
+459,Snover,Erba/Ghiaccio,0,334,220,Swinub,Ghiaccio/Terra,0,250,sì,rivisto a mano
+460,Abomasnow,Erba/Ghiaccio,1,494,103,Exeggutor,Erba/Psico,1,520,sì,
+461,Weavile,Buio/Ghiaccio,1,510,215,Sneasel,Buio/Ghiaccio,0,430,sì,rivisto a mano
+462,Magnezone,Elettro/Acciaio,2,535,82,Magneton,Elettro/Acciaio,1,465,sì,rivisto a mano
+463,Lickilicky,Normale,1,515,108,Lickitung,Normale,0,385,sì,rivisto a mano
+464,Rhyperior,Terra/Roccia,2,535,112,Rhydon,Terra/Roccia,1,485,sì,rivisto a mano
+465,Tangrowth,Erba,1,535,114,Tangela,Erba,0,435,sì,rivisto a mano
+466,Electivire,Elettro,2,540,125,Electabuzz,Elettro,1,490,sì,rivisto a mano
+467,Magmortar,Fuoco,2,540,126,Magmar,Fuoco,1,495,sì,rivisto a mano
+468,Togekiss,Normale/Volante,2,545,176,Togetic,Normale/Volante,1,405,sì,rivisto a mano
+469,Yanmega,Coleottero/Volante,1,515,193,Yanma,Coleottero/Volante,0,390,sì,rivisto a mano
+470,Leafeon,Erba,1,525,196,Espeon,Psico,1,525,sì,rivisto a mano
+471,Glaceon,Ghiaccio,1,525,134,Vaporeon,Acqua,1,525,sì,rivisto a mano
+472,Gliscor,Terra/Volante,1,510,207,Gligar,Terra/Volante,0,430,sì,rivisto a mano
+473,Mamoswine,Ghiaccio/Terra,2,530,221,Piloswine,Ghiaccio/Terra,1,450,sì,rivisto a mano
+474,Porygon-Z,Normale,2,535,233,Porygon2,Normale,1,515,sì,rivisto a mano
+475,Gallade,Psico/Lotta,2,518,65,Alakazam,Psico,2,490,sì,
+476,Probopass,Roccia/Acciaio,1,525,76,Golem,Roccia/Terra,2,485,sì,
+477,Dusknoir,Spettro,2,525,94,Gengar,Spettro/Veleno,2,500,sì,
+478,Froslass,Ghiaccio/Spettro,1,480,124,Jynx,Ghiaccio/Psico,1,455,sì,
+479,Rotom,Elettro/Spettro,0,440,125,Electabuzz,Elettro,1,490,sì,
+480,Uxie,Psico,0,580,251,Celebi,Psico/Erba,0,600,sì,
+481,Mesprit,Psico,0,580,151,Mew,Psico,0,600,sì,
+482,Azelf,Psico,0,580,150,Mewtwo,Psico,0,680,sì,
+483,Dialga,Acciaio/Drago,0,680,250,Ho-Oh,Fuoco/Volante,0,680,sì,
+484,Palkia,Acqua/Drago,0,680,245,Suicune,Acqua,0,580,sì,
+485,Heatran,Fuoco/Acciaio,0,600,244,Entei,Fuoco,0,580,sì,
+486,Regigigas,Normale,0,670,150,Mewtwo,Psico,0,680,sì,
+487,Giratina,Spettro/Drago,0,680,249,Lugia,Psico/Volante,0,680,sì,
+488,Cresselia,Psico,0,600,251,Celebi,Psico/Erba,0,600,sì,
+489,Phione,Acqua,0,480,245,Suicune,Acqua,0,580,sì,
+490,Manaphy,Acqua,0,600,245,Suicune,Acqua,0,580,sì,
+491,Darkrai,Buio,0,600,243,Raikou,Elettro,0,580,sì,
+492,Shaymin,Erba,0,600,251,Celebi,Psico/Erba,0,600,sì,
+493,Arceus,Normale,0,720,250,Ho-Oh,Fuoco/Volante,0,680,sì,

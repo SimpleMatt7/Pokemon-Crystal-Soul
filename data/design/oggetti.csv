@@ -1,0 +1,21 @@
+# Modifiche a oggetti e tabelle di oggetti.
+# tipo: a_terra = voce di scr_seq_0141 (strumento a terra, per costante di std_script.h);
+#       spaccaroccia = tabella del codice (overlay 1), indice 0-7;
+#       uso_pietra = l'oggetto diventa usabile dalla borsa su un Pokémon come una pietra (D7): dati oggetto a/0/1/7.
+tipo,dove,da,a,motivo
+a_terra,std_itemball_d03r0101_sea_incense,ITEM_SEA_INCENSE,ITEM_MYSTIC_WATER,D9 Aromi introvabili
+a_terra,std_itemball_r38_lax_incense,ITEM_LAX_INCENSE,ITEM_BRIGHTPOWDER,D9
+a_terra,std_itemball_r15_rose_incense,ITEM_ROSE_INCENSE,ITEM_MIRACLE_SEED,D9
+a_terra,std_itemball_d41r0102_pure_incense,ITEM_PURE_INCENSE,ITEM_CLEANSE_TAG,D9
+a_terra,std_itemball_d01r0101_rock_incense,ITEM_ROCK_INCENSE,ITEM_HARD_STONE,D9
+a_terra,std_itemball_d03r0102_odd_incense,ITEM_ODD_INCENSE,ITEM_TWISTEDSPOON,D9
+a_terra,std_itemball_t06_luck_incense,ITEM_LUCK_INCENSE,ITEM_AMULET_COIN,D9
+a_terra,std_itemball_r47_wave_incense,ITEM_WAVE_INCENSE,ITEM_PEARL,D9
+a_terra,std_itemball_d38r0102_full_incense,ITEM_FULL_INCENSE,ITEM_QUICK_CLAW,D9
+spaccaroccia,RuinsOfAlph:4,ITEM_BLUE_SHARD,ITEM_DOME_FOSSIL,Kabuto (come in SoulSilver)
+spaccaroccia,CliffCave:5,ITEM_CLAW_FOSSIL,ITEM_HELIX_FOSSIL,fossile gen 3 tolto
+spaccaroccia,CliffCave:6,ITEM_CLAW_FOSSIL,ITEM_OLD_AMBER,fossile gen 3 tolto
+uso_pietra,ITEM_METAL_COAT,,,D7
+uso_pietra,ITEM_DRAGON_SCALE,,,D7
+uso_pietra,ITEM_KINGS_ROCK,,,D7
+uso_pietra,ITEM_UPGRADE,,,D7
