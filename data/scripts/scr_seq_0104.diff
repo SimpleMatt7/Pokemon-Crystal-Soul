@@ -1,0 +1,14 @@
+--- a/scr_seq_0104_D40R0107.s
++++ b/scr_seq_0104_D40R0107.s
+@@ -76,9 +76,9 @@
+ 	Compare VAR_SPECIAL_RESULT, 7
+ 	GoToIfNe _0134
+-	SetVar VAR_SPECIAL_x8004, 70
++	SetVar VAR_SPECIAL_x8004, 60  @ livello come in Cristallo
+ 	GoTo _013A
+ 
+ _0134:
+-	SetVar VAR_SPECIAL_x8004, 45
++	SetVar VAR_SPECIAL_x8004, 60  @ livello come in Cristallo
+ _013A:
+ 	SetFlag FLAG_ENGAGING_STATIC_POKEMON
