@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 4: script completi (Rocco e Oak con tutti e 3 gli starter, Mew, Celebi, Pichu,
-Lati tolti), editor dei testi `tools/msg.py` (829/829), banner "Pokémon Crystal Soul" (provvisorio), build anche da IPKE (USA). §11).
+Ultimo aggiornamento: 2026-09-29 (fase 4: Pokédex di Johto a 251 voci (rinumerato) + soglie di completamento nel codice;
+script completi; editor dei testi; banner provvisorio; build anche da IPKE. §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -47,6 +47,7 @@ partendo dalla ROM ITA).
 | D26 | Script modificati come **diff** sui sorgenti della decomp (`data/scripts/scr_seq_NNNN.diff`), assemblati da `tools/scrasm.py` | Nel repo solo differenze; assemblatore verificato 965/965 byte per byte |
 | D28 | Nome provvisorio **"Pokémon Crystal Soul"** nel banner del DS (`data/design/banner.csv`). Candidati dell'utente: Pokémon Crystal Soul / Pokémon Anima Cristallo / Pokémon Versione Crystal Soul | Da decidere |
 | D29 | **Versione inglese possibile**: `python tools/build.py --base IPKE` applica lo stesso design alla ROM USA (dati e script sono identici tra IPKI e IPKE); servono solo i testi in `data/testi/ENG/` | Verificato 2026-09-29: build IPKE con verifica a zero |
+| D30 | **Pokédex di Johto = le 251**: tolte le 5 evoluzioni gen 4 e rinumerato 1-251 (a/1/3/8; lista "johto" = membro 12 di a/0/7/4 e a/2/1/4, il gioco ne legge la lunghezza come size/2). Codice (`data/design/codice.csv`, per contesto di byte, vale anche per USA): completamento con 249 catturati (era 254 = 256 - Mew - Celebi), messaggio di Oak "completo" sopra 248 (era 253) | Coerenza; senza le soglie il diploma sarebbe irraggiungibile |
 | D27 | Flag nostri nel blocco **0x51F-0x54F** (mai usato né da script né dal codice C): `FLAG_PCN_CELEBI_CAUGHT` = 0x54E; Rocco: `FLAG_PCN_STEVEN_GREEN/RED/BLUE` = 0x54B-0x54D | Serve un flag permanente; MAPTEMP si azzera cambiando mappa |
 | D22 | Oak (Kanto) e Rocco (Johto, D17) lasciano **tutte e 3 le Poké Ball**: si possono prendere tutti gli starter | Scelta utente (2026-09-29) |
 | D23 | Radio Suono Hoenn/Sinnoh **neutra**: le sue specie = slot erba 2/4 (giorno) della stessa mappa | Proposta Claude, scelta di minimo impatto (la radio non può avere specie 0) |
@@ -195,7 +196,7 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
    0776, 0825, 0837 Rocco), testi (`msg.py`, nessuna modifica per ora: il menu di Rocco usa i colori delle pietre),
    banner. `build.py --base IPKE` per la versione USA.
    Da fare:
-   a. Pokédex di Johto: togliere le 5 voci gen 4 (a/1/3/8 + liste in a/0/7/4, che dipende dalla lingua).
+   a. (Fatto: Pokédex di Johto, D30.) Il Pokédex Nazionale resta a 493 posti: le voci oltre 251 non si vedranno mai.
    b. BPS più piccola: confronto file per file (ora 300 KB perché gli script cambiano lunghezza).
    c. Testi che citano specie o regioni tolte (es. radio Suono Hoenn/Sinnoh, NPC): cercarli con msg.py.
 3. Pubblicazione della BPS in `patches/`: dopo i test.

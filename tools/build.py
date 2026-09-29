@@ -309,6 +309,43 @@ def apply_scripts(c):
     n.save()
 
 
+def apply_pokedex(c):
+    """Pokédex di Johto senza le specie > 251 (le 5 evoluzioni gen 4): tabella nazionale → Johto rinumerata
+    (a/1/3/8) e lista in ordine di Johto (membro 12 di a/0/7/4 e a/2/1/4, lunghezza letta dal gioco come size/2)."""
+    n = Narc("a/1/3/8")
+    lut = n.files[0]
+    num = {s: u16(lut, s * 2) for s in range(len(lut) // 2)}
+    order = sorted((j, s) for s, j in num.items() if j and s <= 251)
+    for s in num:
+        set16(lut, s * 2, 0)
+    for k, (j, s) in enumerate(order, 1):
+        set16(lut, s * 2, k)
+    c.log["Pokédex di Johto (voci)"] = len(order)
+    n.save()
+    for a in ("a/0/7/4", "a/2/1/4"):
+        n = Narc(a)
+        lst = struct.unpack(f"<{len(n.files[12]) // 2}H", n.files[12])
+        assert len(lst) == 256 and lst[0] == 152, f"{a}: lista di Johto inattesa"
+        new = [s for s in lst if s <= 251]
+        assert [s for _, s in order] == new, "ordine di Johto incoerente tra a/1/3/8 e la lista"
+        n.files[12] = bytearray(struct.pack(f"<{len(new)}H", *new))
+        n.save()
+
+
+def apply_code(c):
+    for r in rows("codice.csv"):
+        p = BUILD / r["file"]
+        b = bytearray(p.read_bytes())
+        ctx = bytes.fromhex(r["contesto"])
+        if b.count(ctx) != 1:
+            raise SystemExit(f"codice.csv: contesto trovato {b.count(ctx)} volte in {r['file']}: {r['motivo']}")
+        o = b.find(ctx) + int(r["posizione"])
+        da, a = bytes.fromhex(r["da"]), bytes.fromhex(r["a"])
+        assert b[o:o + len(da)] == da, r
+        b[o:o + len(a)] = a
+        p.write_bytes(bytes(b)); c.log["codice"] += 1
+
+
 def apply_texts(c, lang="ITA"):
     import msg
     n = Narc(msg.MSG_NARC)
@@ -349,6 +386,9 @@ def verify(c):
     left["Parco Lotta"] = sum(k for d, cc in audit.read_frontier().values() for s, k in cc.items() if s > 251)
     evo = audit.read_evolutions()
     left["evoluzioni verso > 251"] = sum(1 for s in range(1, 252) for m, p, t in evo[s] if t > 251)
+    dex = audit.read_johto_dex()
+    left["Pokédex di Johto: specie > 251"] = sum(1 for s in dex if s > 251)
+    left["Pokédex di Johto: numeri non 1..251"] = int(sorted(dex.values()) != list(range(1, 252)))
     left["evoluzioni solo con scambio"] = sum(1 for s in range(1, 252) for m, p, t in evo[s] if m in audit.EVO_IMPOSSIBLE_SOLO)
     audit.ROM = SRC / "files"
     return left
@@ -375,7 +415,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
@@ -383,7 +423,6 @@ def main():
     print("Verifica sui file costruiti (specie > 251 rimaste):", dict(left))
     if any(left.values()):
         sys.exit("ERRORE: restano specie > 251 o evoluzioni per scambio")
-    print("Non ancora applicati: Pokédex di Johto.")
 
     if args.no_rom:
         return
