@@ -1,0 +1,72 @@
+# === Contenuti protetti: NON devono mai finire nel repository ===
+
+# ROM e archivi (qualsiasi zip/7z/rar: possono contenere ROM)
+*.nds
+*.srl
+*.dsi
+*.zip
+*.7z
+*.rar
+roms/
+
+# Salvataggi e savestate (emulatori DS, PKHeX)
+*.sav
+*.dsv
+*.duc
+*.ds[0-9]
+*.mln
+*.ml[0-9]
+*.state
+*.pkm
+*.pk4
+battery/
+savestates/
+
+# Contenuti estratti dal gioco e output generati
+work/
+out/
+extracted/
+build/
+*_DSPRE_contents/
+*_dspre_contents/
+DSPRE_Projects/
+*.narc
+*.bin
+*.arc
+*.nclr
+*.ncgr
+*.ncer
+*.nanr
+*.nsbmd
+*.nsbtx
+*.sdat
+
+# Backup
+*.bak
+*.backup
+*.orig
+backup/
+backups/
+
+# Patch generate: finiscono in patches/ solo se esplicitamente sbloccate (vedi NOTES.md)
+*.bps
+*.xdelta
+*.ips
+*.ups
+!patches/*.bps
+
+# Tool scaricati (si riscaricano con gli script)
+tools/bin/
+
+# Python / Node / OS
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Impostazioni locali di Claude Code
+.claude/settings.local.json
