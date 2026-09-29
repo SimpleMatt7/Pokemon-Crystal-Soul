@@ -1,0 +1,74 @@
+--- a/scr_seq_0837_T11R0701.s
++++ b/scr_seq_0837_T11R0701.s
+@@ -1,3 +1,7 @@
+ #include "constants/scrcmd.h"
++@ Pokémon Crystal New (D17, D22): Rocco regala gli starter di Johto, tutti e tre (un colore alla volta)
++#define FLAG_PCN_STEVEN_GREEN 0x54B
++#define FLAG_PCN_STEVEN_RED   0x54C
++#define FLAG_PCN_STEVEN_BLUE  0x54D
+ #include "fielddata/script/scr_seq/event_T11R0701.h"
+ #include "msgdata/msg/msg_0537_T11R0701.h"
+@@ -156,7 +160,9 @@
+ 	Compare VAR_SPECIAL_RESULT, 6
+ 	GoToIfEq _033B
++	CopyVar VAR_TEMP_x4003, VAR_SPECIAL_x8004
+ 	Compare VAR_SPECIAL_x8004, 0
+ 	GoToIfNe _0297
+-	SetVar VAR_SPECIAL_x8004, 252
++	GoToIfSet FLAG_PCN_STEVEN_GREEN, _PCN_ask_again
++	SetVar VAR_SPECIAL_x8004, SPECIES_CHIKORITA
+ 	GoTo _02B6
+ 
+@@ -164,9 +170,11 @@
+ 	Compare VAR_SPECIAL_x8004, 1
+ 	GoToIfNe _02B0
+-	SetVar VAR_SPECIAL_x8004, 255
++	GoToIfSet FLAG_PCN_STEVEN_RED, _PCN_ask_again
++	SetVar VAR_SPECIAL_x8004, SPECIES_CYNDAQUIL
+ 	GoTo _02B6
+ 
+ _02B0:
+-	SetVar VAR_SPECIAL_x8004, 258
++	GoToIfSet FLAG_PCN_STEVEN_BLUE, _PCN_ask_again
++	SetVar VAR_SPECIAL_x8004, SPECIES_TOTODILE
+ _02B6:
+ 	BufferSpeciesName 1, VAR_SPECIAL_x8004, 0, 0
+@@ -186,4 +194,13 @@
+ 	NPCMsg msg_0537_T11R0701_00022
+ 	CloseMsg
++	Compare VAR_TEMP_x4003, 0
++	CallIfEq _PCN_set_green
++	Compare VAR_TEMP_x4003, 1
++	CallIfEq _PCN_set_red
++	Compare VAR_TEMP_x4003, 2
++	CallIfEq _PCN_set_blue
++	GoToIfUnset FLAG_PCN_STEVEN_GREEN, _PCN_stay
++	GoToIfUnset FLAG_PCN_STEVEN_RED, _PCN_stay
++	GoToIfUnset FLAG_PCN_STEVEN_BLUE, _PCN_stay
+ 	GetPlayerFacing VAR_SPECIAL_RESULT
+ 	Compare VAR_SPECIAL_RESULT, 3
+@@ -203,4 +220,24 @@
+ 	ReleaseAll
+ 	End
++
++_PCN_stay:
++	ReleaseAll
++	End
++
++_PCN_set_green:
++	SetFlag FLAG_PCN_STEVEN_GREEN
++	Return
++
++_PCN_set_red:
++	SetFlag FLAG_PCN_STEVEN_RED
++	Return
++
++_PCN_set_blue:
++	SetFlag FLAG_PCN_STEVEN_BLUE
++	Return
++
++_PCN_ask_again:
++	NPCMsg msg_0537_T11R0701_00024
++	GoTo _022C
+ 
+ _033B:
