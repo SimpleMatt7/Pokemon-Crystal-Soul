@@ -703,19 +703,19 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 
 ## Matrice di ottenibilità #001-#251 (una partita, HeartGold, senza scambi né eventi)
 
-**Ottenibili: 222/251** (contando una sola famiglia di starter). Mancanti: 23 + le 6 specie delle 2 famiglie di starter non scelte.
+**Ottenibili: 216/251** (contando una famiglia per ogni scelta di starter). Mancanti: 23 + le 12 specie delle famiglie di starter non scelte (2 su 3 per Johto e per Kanto).
 
 | # | Specie | Stato | Fonti |
 |---|---|---|---|
-| 001 | Bulbasaur | ok | regalo [0740_T01R0301] |
-| 002 | Ivysaur | ok | evoluzione da Bulbasaur |
-| 003 | Venusaur | ok | evoluzione da Ivysaur |
-| 004 | Charmander | ok | regalo [0740_T01R0301] |
-| 005 | Charmeleon | ok | evoluzione da Charmander |
-| 006 | Charizard | ok | evoluzione da Charmeleon |
-| 007 | Squirtle | ok | regalo [0740_T01R0301] |
-| 008 | Wartortle | ok | evoluzione da Squirtle |
-| 009 | Blastoise | ok | evoluzione da Wartortle |
+| 001 | Bulbasaur | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 002 | Ivysaur | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 003 | Venusaur | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 004 | Charmander | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 005 | Charmeleon | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 006 | Charizard | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 007 | Squirtle | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 008 | Wartortle | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
+| 009 | Blastoise | starter 1 su 3 | starter di Kanto (Oak, dopo Red) (1 famiglia su 3) |
 | 010 | Caterpie | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); radio Hoenn (dopo il Nazionale); radio Sinnoh (dopo il Nazionale); selvatico |
 | 011 | Metapod | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); selvatico |
 | 012 | Butterfree | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); selvatico |
@@ -858,15 +858,15 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 149 | Dragonite | ok | evoluzione da Dragonair |
 | 150 | Mewtwo | ok | statico [0011_D03R0103] |
 | 151 | Mew | MANCA | - |
-| 152 | Chikorita | starter 1 su 3 | starter (1 famiglia su 3) |
-| 153 | Bayleef | starter 1 su 3 | starter (1 famiglia su 3) |
-| 154 | Meganium | starter 1 su 3 | starter (1 famiglia su 3) |
-| 155 | Cyndaquil | starter 1 su 3 | starter (1 famiglia su 3) |
-| 156 | Quilava | starter 1 su 3 | starter (1 famiglia su 3) |
-| 157 | Typhlosion | starter 1 su 3 | starter (1 famiglia su 3) |
-| 158 | Totodile | starter 1 su 3 | starter (1 famiglia su 3) |
-| 159 | Croconaw | starter 1 su 3 | starter (1 famiglia su 3) |
-| 160 | Feraligatr | starter 1 su 3 | starter (1 famiglia su 3) |
+| 152 | Chikorita | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 153 | Bayleef | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 154 | Meganium | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 155 | Cyndaquil | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 156 | Quilava | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 157 | Typhlosion | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 158 | Totodile | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 159 | Croconaw | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
+| 160 | Feraligatr | starter 1 su 3 | starter di Johto (1 famiglia su 3) |
 | 161 | Sentret | ok | safari; selvatico |
 | 162 | Furret | ok | safari (bonus oggetti); selvatico |
 | 163 | Hoothoot | ok | bottintesta; selvatico |

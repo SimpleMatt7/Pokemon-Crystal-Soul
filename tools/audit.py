@@ -394,8 +394,13 @@ def main():
         src[give].add(f"scambio ({name})")
     # Sinjoh (Arceus evento), Pichu spunzorecchio (Pichu evento), Lati statico di Plumbeopoli (Pietrenigma evento)
     event_only = {"D51R0201", "0092_D36R0101", "0750_T03"}
+    # regali "1 su 3": Oak dopo Red (T01R0301, starter di Kanto) e Rocco (T11R0701, oggi starter di Hoenn).
+    # Dopo la scelta le altre Poké Ball spariscono: si trattano come gruppi di starter, non come 3 regali.
+    choice_gifts = {"T01R0301": (1, 4, 7), "T11R0701": (252, 255, 258)}
     for f, cmd, species, note in scripts:
         if any(f.endswith(e) or f == e for e in event_only) or "evento" in note:
+            continue
+        if any(f.endswith(k) and set(species) <= set(v) for k, v in choice_gifts.items()):
             continue
         for s in species:
             src[s].add({"GiveMon": "regalo", "WildBattle": "statico", "GiveEgg": "uovo regalo",
@@ -409,16 +414,19 @@ def main():
 
     # chiusura: evoluzioni fattibili in solitario + allevamento
     obtain, via = closure({s for s in src if 1 <= s <= 493}, evo, personal)
-    # starter di Johto: se ne sceglie uno solo. Una famiglia ottenibile, le altre due contano come mancanti
-    starters = (152, 155, 158)
-    starter_fam = {}
-    for s in starters:
-        if s not in obtain:
-            fam, _ = closure({s}, evo, personal)
-            starter_fam[s] = {x for x in fam if x not in obtain and x <= 251}
-    starter_species = set().union(*starter_fam.values()) if starter_fam else set()
-    for s in starter_species:
-        src[s].add("starter (1 famiglia su 3)")
+    # gruppi "1 su 3": starter di Johto (inizio) e starter di Kanto (Oak dopo Red). Per ogni gruppo una famiglia è
+    # ottenibile, le altre due contano come mancanti
+    groups = {"starter di Johto": (152, 155, 158), "starter di Kanto (Oak, dopo Red)": (1, 4, 7)}
+    starter_fam = {}  # base → (gruppo, famiglia)
+    for g, bases in groups.items():
+        for s in bases:
+            if s not in obtain:
+                fam, _ = closure({s}, evo, personal)
+                starter_fam[s] = (g, {x for x in fam if x not in obtain and x <= 251})
+    starter_species = set().union(*(f for _, f in starter_fam.values())) if starter_fam else set()
+    for g, fam in starter_fam.values():
+        for s in fam:
+            src[s].add(f"{g} (1 famiglia su 3)")
 
     # ---------------------------------------------------------------- report
     r = Report()
@@ -558,10 +566,12 @@ def main():
         return x.startswith(("radio", "sciame", "safari (bonus")) or "dopo il Nazionale" in x
     uncond, _ = closure({s for s, v in src.items() if 1 <= s <= 493 and not all(conditional(x) for x in v)}, evo, personal)
     only_cond = [s for s in range(1, 252) if s in obtain and s not in uncond]
-    fam_size = max((len(f) for f in starter_fam.values()), default=0)
-    n_ok = 251 - len(missing) - len(starter_species) + fam_size
-    r.p(f"**Ottenibili: {n_ok}/251** (contando una sola famiglia di starter). Mancanti: {len(missing)}"
-        + (f" + le {len(starter_species) - fam_size} specie delle 2 famiglie di starter non scelte." if starter_species else "."))
+    one_per_group = sum(max(len(f) for gg, f in starter_fam.values() if gg == g)
+                        for g in {gg for gg, _ in starter_fam.values()})
+    n_ok = 251 - len(missing) - len(starter_species) + one_per_group
+    r.p(f"**Ottenibili: {n_ok}/251** (contando una famiglia per ogni scelta di starter). Mancanti: {len(missing)}"
+        + (f" + le {len(starter_species) - one_per_group} specie delle famiglie di starter non scelte "
+           "(2 su 3 per Johto e per Kanto)." if starter_species else "."))
     r.p()
     r.table(["#", "Specie", "Stato", "Fonti"],
             [(f"{s:03}", sp(s), "MANCA" if s in missing else "starter 1 su 3" if s in starter_species
@@ -572,7 +582,7 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(r.lines).lstrip() + "\n", encoding="utf-8")
     print(f"Report: {out.relative_to(ROOT)}")
-    print(f"Ottenibili {n_ok}/251 (1 famiglia di starter su 3); mancanti: {', '.join(sp(s) for s in missing)}")
+    print(f"Ottenibili {n_ok}/251 (1 famiglia per scelta di starter); mancanti: {', '.join(sp(s) for s in missing)}")
     for c, ok, d in checks:
         print(f"[{'OK' if ok else 'NO'}] {c}: {d}")
 
