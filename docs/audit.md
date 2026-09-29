@@ -7,6 +7,7 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | Controllo | Esito | Dettaglio |
 |---|---|---|
 | Nomi tabelle selvatici (gs_enc_data.json) | OK | 142 nomi / 142 tabelle |
+| Mappe degli sciami (sSwarmMapLUT): decomp = ROM | OK | 20 mappe, arm9.bin+0x108EE0 |
 | Layout Safari coerente con la decomp | OK | 12 aree |
 | Nomi allenatori (trainers.json) | OK | 738 nomi / 738 allenatori |
 | Squadre allenatori: decomp = ROM | OK | 738/738 identiche |
@@ -18,7 +19,8 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 |---|---|---|---|
 | Selvatici — slot normali | 0 | 0 | 0 |
 | Selvatici — radio Hoenn/Sinnoh | 225 | 199 | 19 |
-| Selvatici — sciami | 10 | 2 | 12 |
+| Selvatici — sciami attivi (20 mappe) | 10 | 2 | 12 |
+| Selvatici — sciami mai attivi (dato morto) | 0 | 0 | 0 |
 | Bottintesta | 112 | 80 | 9 |
 | Safari — base | 0 | 0 | 0 |
 | Safari — bonus oggetti | 222 | 57 | 61 |
@@ -26,10 +28,10 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | Allenatori | 65 | 67 | 99 |
 | Scambi in gioco (ricevuti) | 0 | 0 | 10 |
 | Script (regali/statici/vaganti) | 12 | 3 | 11 |
-| Parco Lotta set A (con allenatori a/1/2/8) | 229 | 243 | 197 |
-| Parco Lotta set B (con allenatori a/2/0/2) | 228 | 243 | 197 |
+| Parco Lotta set A, allenatori a/1/2/8 (altra struttura, codice non decompilato) | 229 | 243 | 197 |
+| Parco Lotta set B, allenatori a/2/0/2 (Torre Lotta, unk_0204B538.c) | 228 | 243 | 197 |
 | Parco Lotta set C (478, probabilmente noleggi Factory) | 130 | 101 | 229 |
-| Pokédex di Johto (voci) | 5 | 0 | 5 |
+| Pokédex di Johto (voci) | 0 | 5 | 5 |
 
 
 ## Evoluzioni verso specie > #251 (da rimuovere, D8)
@@ -69,6 +71,39 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | Seadra | Kingdra | TRADE_ITEM | ITEM_DRAGON_SCALE |
 | Scyther | Scizor | TRADE_ITEM | ITEM_METAL_COAT |
 | Porygon | Porygon2 | TRADE_ITEM | ITEM_UPGRADE |
+
+
+## Condizioni di sblocco (dal codice)
+
+- **Radio Suono Hoenn / Suono Sinnoh** (programma Musica Pokémon): solo con il Pokédex Nazionale, Hoenn il mercoledì, Sinnoh il giovedì (`pokemon_music.c`). Sostituiscono gli slot erba 2-5.
+- **Sciami**: attivati da Oak alla consegna del Pokédex Nazionale (`EnableMassOutbreaks`, P01R0101); ogni giorno una delle 20 mappe di `sSwarmMapLUT`. Gli sciami delle altre mappe non si attivano mai (dato morto).
+- **Pesca notturna** (`nightFish`): di notte sostituisce uno slot di Amo Buono/Super Amo, sempre attiva.
+- **Gara Pigliamosche**: tabella 0 prima del Nazionale; dopo, martedì/giovedì/sabato → tabelle 1/2/3 (`overlay_bug_contest.c`). Le specie gen 3-4 sono solo nelle tabelle 2-3.
+
+## Sciami attivi
+
+| Mappa | Tipo | Specie |
+|---|---|---|
+| D38R0101 | sciame erba | Marill |
+| D42R0102 | sciame erba | Dunsparce |
+| D46R0101 | sciame erba | **Kricketot** |
+| R01 | sciame erba | **Poochyena** |
+| R03 | sciame erba | **Baltoy** |
+| R09 | sciame erba | **Sableye** |
+| R12 | sciame pesca | **Relicanth** |
+| R13 | sciame erba | Chansey |
+| R25 | sciame erba | **Buneary** |
+| R27 | sciame surf | **Luvdisc** |
+| R32 | sciame pesca | Qwilfish |
+| R34 | sciame erba | **Ralts** |
+| R35 | sciame erba | Yanma |
+| R38 | sciame erba | Snubbull |
+| R44 | sciame pesca | Remoraid |
+| R45 | sciame erba | **Swablu** |
+| R47 | sciame erba | Ditto |
+| T06 | sciame surf | **Wingull** |
+| T22 | sciame pesca | **Whiscash** |
+| W19 | sciame surf | **Clamperl** |
 
 
 ## Selvatici: radio e sciami per mappa
@@ -195,21 +230,21 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | D45R0101 | radio Sinnoh | Chingling, Bronzor |
 | D46R0101 | radio Hoenn | Numel, Spoink |
 | D46R0101 | radio Sinnoh | Budew, Carnivine |
-| D46R0101 | sciami | Kricketot |
+| D46R0101 | sciame erba | Kricketot |
 | D47R0102 | radio Hoenn | Zigzagoon×2 |
 | D47R0102 | radio Sinnoh | Bidoof×2 |
 | D50R0101 | radio Hoenn | Makuhita, Absol |
 | D50R0101 | radio Sinnoh | Chingling, Bronzor |
 | R01 | radio Hoenn | Plusle, Minun |
 | R01 | radio Sinnoh | Shinx×2 |
-| R01 | sciami | Poochyena |
+| R01 | sciame erba | Poochyena |
 | R02 | radio Hoenn | Plusle, Minun |
 | R02 | radio Sinnoh | Shinx×2 |
 | R02R0101 | radio Hoenn | Plusle, Minun |
 | R02R0101 | radio Sinnoh | Shinx×2 |
 | R03 | radio Hoenn | Plusle, Minun |
 | R03 | radio Sinnoh | Shinx×2 |
-| R03 | sciami | Baltoy |
+| R03 | sciame erba | Baltoy |
 | R04 | radio Hoenn | Linoone, Whismur |
 | R04 | radio Sinnoh | Bidoof, Buizel |
 | R05 | radio Hoenn | Plusle, Minun |
@@ -222,12 +257,12 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | R08 | radio Sinnoh | Shinx×2 |
 | R09 | radio Hoenn | Linoone, Whismur |
 | R09 | radio Sinnoh | Bidoof, Buizel |
-| R09 | sciami | Sableye |
+| R09 | sciame erba | Sableye |
 | R10 | radio Hoenn | Linoone, Whismur |
 | R10 | radio Sinnoh | Bidoof, Buizel |
 | R11 | radio Hoenn | Plusle, Minun |
 | R11 | radio Sinnoh | Shinx×2 |
-| R12 | sciami | Relicanth |
+| R12 | sciame pesca | Relicanth |
 | R13 | radio Hoenn | Linoone, Whismur |
 | R13 | radio Sinnoh | Bidoof, Buizel |
 | R14 | radio Hoenn | Plusle, Minun |
@@ -246,12 +281,12 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | R24 | radio Sinnoh | Bidoof, Buizel |
 | R25 | radio Hoenn | Linoone, Whismur |
 | R25 | radio Sinnoh | Bidoof, Buizel |
-| R25 | sciami | Buneary |
+| R25 | sciame erba | Buneary |
 | R26 | radio Hoenn | Linoone, Whismur |
 | R26 | radio Sinnoh | Bidoof, Buizel |
 | R27 | radio Hoenn | Linoone, Whismur |
 | R27 | radio Sinnoh | Bidoof, Buizel |
-| R27 | sciami | Luvdisc |
+| R27 | sciame surf | Luvdisc |
 | R28 | radio Hoenn | Linoone, Whismur |
 | R28 | radio Sinnoh | Bidoof, Buizel |
 | R29 | radio Hoenn | Plusle, Minun |
@@ -266,7 +301,7 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | R33 | radio Sinnoh | Shinx×2 |
 | R34 | radio Hoenn | Linoone, Whismur |
 | R34 | radio Sinnoh | Bidoof, Buizel |
-| R34 | sciami | Ralts |
+| R34 | sciame erba | Ralts |
 | R35 | radio Hoenn | Linoone, Whismur |
 | R35 | radio Sinnoh | Bidoof, Buizel |
 | R36 | radio Hoenn | Plusle, Minun |
@@ -285,18 +320,18 @@ Generato da `python tools/audit.py`. Dati letti da `work/IPKI` (ROM ITA estratta
 | R44 | radio Sinnoh | Bidoof, Buizel |
 | R45 | radio Hoenn | Linoone, Whismur |
 | R45 | radio Sinnoh | Bidoof, Buizel |
-| R45 | sciami | Swablu |
+| R45 | sciame erba | Swablu |
 | R46 | radio Hoenn | Plusle, Minun |
 | R46 | radio Sinnoh | Shinx×2 |
 | R47 | radio Hoenn | Linoone, Whismur |
 | R47 | radio Sinnoh | Bidoof, Buizel |
 | R48 | radio Hoenn | Plusle, Minun |
 | R48 | radio Sinnoh | Shinx×2 |
-| T06 | sciami | Wingull |
-| T22 | sciami | Whiscash |
+| T06 | sciame surf | Wingull |
+| T22 | sciame pesca | Whiscash |
 | T31 | radio Hoenn | Linoone, Whismur |
 | T31 | radio Sinnoh | Bidoof, Buizel |
-| W19 | sciami | Clamperl |
+| W19 | sciame surf | Clamperl |
 | W21 | radio Hoenn | Linoone, Whismur |
 | W21 | radio Sinnoh | Bidoof, Buizel |
 
@@ -626,16 +661,24 @@ Tabelle con alberi: 60. Voci con specie > 251: 192.
 
 ## Parco Lotta (set di Pokémon)
 
+Formato set (16 byte): specie, 4 mosse, EV, natura, strumento, forma. Gli allenatori contengono solo indici dei set: per ripulire basta sostituire le specie (e le mosse) nei set gen 3-4.
+
 | Archivio | Descrizione | Set totali | Set gen 3 | Set gen 4 |
 |---|---|---|---|---|
-| a/1/2/9 | set A (con allenatori a/1/2/8) | 950 | 229 | 243 |
-| a/2/0/3 | set B (con allenatori a/2/0/2) | 950 | 228 | 243 |
+| a/1/2/9 | set A, allenatori a/1/2/8 (altra struttura, codice non decompilato) | 950 | 229 | 243 |
+| a/2/0/3 | set B, allenatori a/2/0/2 (Torre Lotta, unk_0204B538.c) | 950 | 228 | 243 |
 | a/2/0/4 | set C (478, probabilmente noleggi Factory) | 477 | 130 | 101 |
 
 
+## Altri archivi controllati
+
+- `a/0/6/6` (64×12 B): dati delle **bacche** (vasi di bacche, `overlay_16_022014A0.c`): i numeri non sono specie.
+- `a/2/5/8` (100×8 B): 3 specie + indice per voce; codice non decompilato. Ipotesi: squadre avversarie del Pokéathlon. Contiene qualche specie gen 3-4 (da ripulire per coerenza, non si catturano).
+- `a/2/5/4` = `photo_data` (foto dello studio fotografico).
+
 ## Pokédex di Johto
 
-Voci lette da a/1/3/8: 256. Specie > 251 presenti: 5 — Sceptile, Torchic, Treecko, Grovyle, Combusken.
+a/1/3/8 = tabella numero nazionale → numero di Johto. Voci: 256, numeri da 1 a 256. Specie > 251 presenti: 5 — Yanmega (J102), Ambipom (J124), Lickilicky (J181), Tangrowth (J183), Mamoswine (J197). Specie 1-251 assenti dal Pokédex di Johto: 0.
 
 ## Oggetti per evoluzioni/allevamento negli script
 
@@ -673,19 +716,19 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 007 | Squirtle | ok | regalo [0740_T01R0301] |
 | 008 | Wartortle | ok | evoluzione da Squirtle |
 | 009 | Blastoise | ok | evoluzione da Wartortle |
-| 010 | Caterpie | ok | bottintesta; gara coleottero t0; gara coleottero t1; radio Hoenn; radio Sinnoh; sciami; selvatico |
-| 011 | Metapod | ok | bottintesta; gara coleottero t0; gara coleottero t1; selvatico |
-| 012 | Butterfree | ok | bottintesta; gara coleottero t0; gara coleottero t1; selvatico |
-| 013 | Weedle | ok | gara coleottero t0; gara coleottero t1 |
-| 014 | Kakuna | ok | gara coleottero t0; gara coleottero t1 |
-| 015 | Beedrill | ok | gara coleottero t0; gara coleottero t1 |
-| 016 | Pidgey | ok | safari; sciami; selvatico |
-| 017 | Pidgeotto | ok | sciami; selvatico |
+| 010 | Caterpie | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); radio Hoenn (dopo il Nazionale); radio Sinnoh (dopo il Nazionale); selvatico |
+| 011 | Metapod | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); selvatico |
+| 012 | Butterfree | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); selvatico |
+| 013 | Weedle | ok | gara coleottero; gara coleottero t1 (dopo il Nazionale) |
+| 014 | Kakuna | ok | gara coleottero; gara coleottero t1 (dopo il Nazionale) |
+| 015 | Beedrill | ok | gara coleottero; gara coleottero t1 (dopo il Nazionale) |
+| 016 | Pidgey | ok | safari; selvatico |
+| 017 | Pidgeotto | ok | selvatico |
 | 018 | Pidgeot | ok | evoluzione da Pidgeotto |
-| 019 | Rattata | ok | safari; sciami; selvatico |
+| 019 | Rattata | ok | safari; selvatico |
 | 020 | Raticate | ok | safari; safari (bonus oggetti); selvatico |
-| 021 | Spearow | ok | bottintesta; safari; sciami; selvatico |
-| 022 | Fearow | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 021 | Spearow | ok | bottintesta; safari; selvatico |
+| 022 | Fearow | ok | safari; safari (bonus oggetti); selvatico |
 | 023 | Ekans | ok | regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari |
 | 024 | Arbok | ok | safari |
 | 025 | Pikachu | ok | selvatico |
@@ -693,9 +736,9 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 027 | Sandshrew | ok | regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari; selvatico |
 | 028 | Sandslash | ok | safari; selvatico |
 | 029 | Nidoran-F | ok | safari; selvatico |
-| 030 | Nidorina | ok | safari; sciami; selvatico |
+| 030 | Nidorina | ok | safari; selvatico |
 | 031 | Nidoqueen | ok | evoluzione da Nidorina |
-| 032 | Nidoran-M | ok | safari; sciami; selvatico |
+| 032 | Nidoran-M | ok | safari; selvatico |
 | 033 | Nidorino | ok | safari; selvatico |
 | 034 | Nidoking | ok | evoluzione da Nidorino |
 | 035 | Clefairy | ok | safari; safari (bonus oggetti); selvatico |
@@ -704,70 +747,70 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 038 | Ninetales | MANCA | - |
 | 039 | Jigglypuff | ok | safari; selvatico |
 | 040 | Wigglytuff | ok | evoluzione da Jigglypuff |
-| 041 | Zubat | ok | safari; sciami; selvatico |
-| 042 | Golbat | ok | safari; sciami; selvatico |
+| 041 | Zubat | ok | safari; selvatico |
+| 042 | Golbat | ok | safari; selvatico |
 | 043 | Oddish | ok | safari; selvatico |
 | 044 | Gloom | ok | safari; safari (bonus oggetti); selvatico |
 | 045 | Vileplume | ok | evoluzione da Gloom |
-| 046 | Paras | ok | gara coleottero t0; gara coleottero t1; safari; safari (bonus oggetti); selvatico |
+| 046 | Paras | ok | gara coleottero; gara coleottero t1 (dopo il Nazionale); safari; safari (bonus oggetti); selvatico |
 | 047 | Parasect | ok | safari (bonus oggetti); selvatico |
-| 048 | Venonat | ok | bottintesta; gara coleottero t0; gara coleottero t1; selvatico |
+| 048 | Venonat | ok | bottintesta; gara coleottero; gara coleottero t1 (dopo il Nazionale); selvatico |
 | 049 | Venomoth | ok | selvatico |
-| 050 | Diglett | ok | safari (bonus oggetti); sciami; selvatico |
+| 050 | Diglett | ok | safari (bonus oggetti); selvatico |
 | 051 | Dugtrio | ok | selvatico |
 | 052 | Meowth | MANCA | - |
 | 053 | Persian | MANCA | - |
-| 054 | Psyduck | ok | safari; sciami; selvatico |
+| 054 | Psyduck | ok | safari; selvatico |
 | 055 | Golduck | ok | safari; safari (bonus oggetti); selvatico |
-| 056 | Mankey | ok | sciami; selvatico |
+| 056 | Mankey | ok | selvatico |
 | 057 | Primeape | ok | selvatico |
 | 058 | Growlithe | ok | selvatico |
 | 059 | Arcanine | ok | evoluzione da Growlithe |
-| 060 | Poliwag | ok | safari; safari (bonus oggetti); sciami; selvatico |
-| 061 | Poliwhirl | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 060 | Poliwag | ok | safari; safari (bonus oggetti); selvatico |
+| 061 | Poliwhirl | ok | safari; safari (bonus oggetti); selvatico |
 | 062 | Poliwrath | ok | evoluzione da Poliwhirl |
 | 063 | Abra | ok | regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari; selvatico |
-| 064 | Kadabra | ok | sciami; selvatico |
+| 064 | Kadabra | ok | selvatico |
 | 065 | Alakazam | MANCA | evoluzione TRADE (impossibile da solo) |
 | 066 | Machop | ok | safari; selvatico |
 | 067 | Machoke | ok | safari; safari (bonus oggetti); selvatico |
 | 068 | Machamp | MANCA | evoluzione TRADE (impossibile da solo) |
-| 069 | Bellsprout | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 069 | Bellsprout | ok | safari; safari (bonus oggetti); selvatico |
 | 070 | Weepinbell | ok | safari (bonus oggetti); selvatico |
 | 071 | Victreebel | ok | evoluzione da Weepinbell |
-| 072 | Tentacool | ok | regalo [0878_T24PC0101]; safari; sciami; selvatico |
+| 072 | Tentacool | ok | regalo [0878_T24PC0101]; safari; selvatico |
 | 073 | Tentacruel | ok | selvatico |
-| 074 | Geodude | ok | safari; safari (bonus oggetti); sciami; selvatico |
-| 075 | Graveler | ok | safari; sciami; selvatico |
+| 074 | Geodude | ok | safari; safari (bonus oggetti); selvatico |
+| 075 | Graveler | ok | safari; selvatico |
 | 076 | Golem | MANCA | evoluzione TRADE (impossibile da solo) |
 | 077 | Ponyta | ok | safari (bonus oggetti); selvatico |
 | 078 | Rapidash | ok | selvatico |
-| 079 | Slowpoke | ok | safari; sciami; selvatico |
+| 079 | Slowpoke | ok | safari; selvatico |
 | 080 | Slowbro | ok | safari; safari (bonus oggetti); selvatico |
 | 081 | Magnemite | ok | safari; selvatico |
 | 082 | Magneton | ok | safari; safari (bonus oggetti); selvatico |
 | 083 | Farfetchd | ok | safari; safari (bonus oggetti); selvatico |
-| 084 | Doduo | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 084 | Doduo | ok | safari; safari (bonus oggetti); selvatico |
 | 085 | Dodrio | ok | safari (bonus oggetti); selvatico |
-| 086 | Seel | ok | sciami; selvatico |
-| 087 | Dewgong | ok | sciami; selvatico |
-| 088 | Grimer | ok | safari; sciami; selvatico |
+| 086 | Seel | ok | selvatico |
+| 087 | Dewgong | ok | selvatico |
+| 088 | Grimer | ok | safari; selvatico |
 | 089 | Muk | ok | safari (bonus oggetti); selvatico |
-| 090 | Shellder | ok | sciami; selvatico |
+| 090 | Shellder | ok | selvatico |
 | 091 | Cloyster | ok | evoluzione da Shellder |
 | 092 | Gastly | ok | safari; selvatico |
 | 093 | Haunter | ok | safari; selvatico |
 | 094 | Gengar | MANCA | evoluzione TRADE (impossibile da solo) |
-| 095 | Onix | ok | safari; sciami; selvatico |
-| 096 | Drowzee | ok | safari; sciami; selvatico |
+| 095 | Onix | ok | safari; selvatico |
+| 096 | Drowzee | ok | safari; selvatico |
 | 097 | Hypno | ok | safari; safari (bonus oggetti); selvatico |
-| 098 | Krabby | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 098 | Krabby | ok | safari; safari (bonus oggetti); selvatico |
 | 099 | Kingler | ok | safari; safari (bonus oggetti); selvatico |
 | 100 | Voltorb | ok | safari (bonus oggetti); selvatico |
 | 101 | Electrode | ok | selvatico; statico [0090_D35R0103] |
 | 102 | Exeggcute | ok | bottintesta |
 | 103 | Exeggutor | ok | evoluzione da Exeggcute |
-| 104 | Cubone | ok | safari; sciami; selvatico |
+| 104 | Cubone | ok | safari; selvatico |
 | 105 | Marowak | ok | safari; safari (bonus oggetti); selvatico |
 | 106 | Hitmonlee | ok | evoluzione da Tyrogue |
 | 107 | Hitmonchan | ok | evoluzione da Tyrogue |
@@ -775,27 +818,27 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 109 | Koffing | ok | safari; selvatico |
 | 110 | Weezing | ok | safari |
 | 111 | Rhyhorn | ok | safari; safari (bonus oggetti); selvatico |
-| 112 | Rhydon | solo condizionale | safari (bonus oggetti) |
-| 113 | Chansey | ok | safari (bonus oggetti); sciami; selvatico |
-| 114 | Tangela | ok | bottintesta; sciami; selvatico |
+| 112 | Rhydon | ok | safari (bonus oggetti) |
+| 113 | Chansey | ok | safari (bonus oggetti); sciame erba (dopo il Nazionale); selvatico |
+| 114 | Tangela | ok | bottintesta; selvatico |
 | 115 | Kangaskhan | ok | safari; selvatico |
-| 116 | Horsea | ok | sciami; selvatico |
+| 116 | Horsea | ok | selvatico |
 | 117 | Seadra | ok | selvatico |
-| 118 | Goldeen | ok | safari; safari (bonus oggetti); sciami; selvatico |
-| 119 | Seaking | ok | safari; safari (bonus oggetti); sciami; selvatico |
-| 120 | Staryu | ok | sciami; selvatico |
+| 118 | Goldeen | ok | safari; safari (bonus oggetti); selvatico |
+| 119 | Seaking | ok | safari; safari (bonus oggetti); selvatico |
+| 120 | Staryu | ok | selvatico |
 | 121 | Starmie | ok | evoluzione da Staryu |
 | 122 | Mr-Mime | ok | regalo [0804_T07R0501]; safari; safari (bonus oggetti); selvatico |
-| 123 | Scyther | ok | gara coleottero t0; gara coleottero t1; gara coleottero t2; gara coleottero t3 |
+| 123 | Scyther | ok | gara coleottero; gara coleottero t1 (dopo il Nazionale); gara coleottero t2 (dopo il Nazionale); gara coleottero t3 (dopo il Nazionale) |
 | 124 | Jynx | ok | selvatico |
 | 125 | Electabuzz | ok | safari (bonus oggetti); selvatico |
 | 126 | Magmar | ok | safari; safari (bonus oggetti); selvatico |
-| 127 | Pinsir | ok | gara coleottero t0; gara coleottero t1; gara coleottero t2; gara coleottero t3 |
-| 128 | Tauros | ok | safari; safari (bonus oggetti); sciami; selvatico |
-| 129 | Magikarp | ok | safari; sciami; selvatico |
-| 130 | Gyarados | ok | safari; safari (bonus oggetti); sciami; selvatico; statico [0938_T29] |
+| 127 | Pinsir | ok | gara coleottero; gara coleottero t1 (dopo il Nazionale); gara coleottero t2 (dopo il Nazionale); gara coleottero t3 (dopo il Nazionale) |
+| 128 | Tauros | ok | safari; safari (bonus oggetti); selvatico |
+| 129 | Magikarp | ok | safari; selvatico |
+| 130 | Gyarados | ok | safari; safari (bonus oggetti); selvatico; statico [0938_T29] |
 | 131 | Lapras | ok | safari; safari (bonus oggetti); statico [0058_D25R0103] |
-| 132 | Ditto | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 132 | Ditto | ok | safari; safari (bonus oggetti); sciame erba (dopo il Nazionale); selvatico |
 | 133 | Eevee | ok | regalo [0804_T07R0501]; regalo [0892_T25R0401] |
 | 134 | Vaporeon | ok | evoluzione da Eevee |
 | 135 | Jolteon | ok | evoluzione da Eevee |
@@ -810,7 +853,7 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 144 | Articuno | ok | statico [0014_D11R0105] |
 | 145 | Zapdos | ok | statico [0191_R10] |
 | 146 | Moltres | ok | statico [0106_D41R0105] |
-| 147 | Dratini | ok | regalo [0112_D44R0103]; regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari; safari (bonus oggetti); sciami; selvatico |
+| 147 | Dratini | ok | regalo [0112_D44R0103]; regalo [0906_T25R1101]; regalo [0910_T25SP0101]; safari; safari (bonus oggetti); selvatico |
 | 148 | Dragonair | ok | safari (bonus oggetti); selvatico |
 | 149 | Dragonite | ok | evoluzione da Dragonair |
 | 150 | Mewtwo | ok | statico [0011_D03R0103] |
@@ -840,59 +883,59 @@ Solo oggetti citati per costante negli script. Quadro completo (a terra, nascost
 | 174 | Igglybuff | ok | allevamento da Jigglypuff |
 | 175 | Togepi | ok | uovo regalo [0858_T22FS0101] |
 | 176 | Togetic | ok | evoluzione da Togepi |
-| 177 | Natu | ok | bottintesta; sciami; selvatico |
+| 177 | Natu | ok | bottintesta; selvatico |
 | 178 | Xatu | ok | evoluzione da Natu |
 | 179 | Mareep | ok | safari (bonus oggetti); selvatico; uovo regalo [0860_T22PC0101] |
-| 180 | Flaaffy | ok | sciami; selvatico |
+| 180 | Flaaffy | ok | selvatico |
 | 181 | Ampharos | ok | evoluzione da Flaaffy |
 | 182 | Bellossom | ok | evoluzione da Gloom |
-| 183 | Marill | ok | safari; sciami; selvatico |
+| 183 | Marill | ok | safari; sciame erba (dopo il Nazionale); selvatico |
 | 184 | Azumarill | ok | evoluzione da Marill |
 | 185 | Sudowoodo | ok | statico [0243_R36] |
 | 186 | Politoed | MANCA | evoluzione TRADE_ITEM (impossibile da solo) |
-| 187 | Hoppip | ok | safari; sciami; selvatico |
+| 187 | Hoppip | ok | safari; selvatico |
 | 188 | Skiploom | ok | safari; safari (bonus oggetti); selvatico |
-| 189 | Jumpluff | solo condizionale | safari (bonus oggetti) |
+| 189 | Jumpluff | ok | safari (bonus oggetti) |
 | 190 | Aipom | ok | bottintesta |
 | 191 | Sunkern | ok | safari; selvatico |
 | 192 | Sunflora | ok | evoluzione da Sunkern |
-| 193 | Yanma | ok | sciami; selvatico |
-| 194 | Wooper | ok | safari; safari (bonus oggetti); sciami; selvatico; uovo regalo [0860_T22PC0101] |
-| 195 | Quagsire | ok | safari; safari (bonus oggetti); sciami; selvatico |
+| 193 | Yanma | ok | sciame erba (dopo il Nazionale); selvatico |
+| 194 | Wooper | ok | safari; safari (bonus oggetti); selvatico; uovo regalo [0860_T22PC0101] |
+| 195 | Quagsire | ok | safari; safari (bonus oggetti); selvatico |
 | 196 | Espeon | ok | evoluzione da Eevee |
 | 197 | Umbreon | ok | evoluzione da Eevee |
 | 198 | Murkrow | ok | safari; safari (bonus oggetti); selvatico |
 | 199 | Slowking | MANCA | evoluzione TRADE_ITEM (impossibile da solo) |
 | 200 | Misdreavus | ok | safari; safari (bonus oggetti); selvatico |
-| 201 | Unown | ok | radio Hoenn; radio Sinnoh; sciami; selvatico |
+| 201 | Unown | ok | radio Hoenn (dopo il Nazionale); radio Sinnoh (dopo il Nazionale); selvatico |
 | 202 | Wobbuffet | ok | safari; safari (bonus oggetti); selvatico |
 | 203 | Girafarig | ok | safari; safari (bonus oggetti); selvatico |
 | 204 | Pineco | ok | bottintesta |
 | 205 | Forretress | ok | evoluzione da Pineco |
-| 206 | Dunsparce | ok | sciami; selvatico |
+| 206 | Dunsparce | ok | sciame erba (dopo il Nazionale); selvatico |
 | 207 | Gligar | ok | selvatico |
 | 208 | Steelix | ok | selvatico; evoluzione TRADE_ITEM (impossibile da solo) |
-| 209 | Snubbull | ok | sciami; selvatico |
+| 209 | Snubbull | ok | sciame erba (dopo il Nazionale); selvatico |
 | 210 | Granbull | ok | evoluzione da Snubbull |
-| 211 | Qwilfish | ok | sciami; selvatico |
+| 211 | Qwilfish | ok | sciame pesca (dopo il Nazionale); selvatico |
 | 212 | Scizor | MANCA | evoluzione TRADE_ITEM (impossibile da solo) |
 | 213 | Shuckle | ok | safari (bonus oggetti); selvatico |
 | 214 | Heracross | ok | bottintesta |
-| 215 | Sneasel | ok | sciami; selvatico |
+| 215 | Sneasel | ok | selvatico |
 | 216 | Teddiursa | MANCA | - |
 | 217 | Ursaring | MANCA | - |
 | 218 | Slugma | ok | selvatico; uovo regalo [0860_T22PC0101] |
 | 219 | Magcargo | ok | evoluzione da Slugma |
-| 220 | Swinub | ok | sciami; selvatico |
+| 220 | Swinub | ok | selvatico |
 | 221 | Piloswine | ok | evoluzione da Swinub |
 | 222 | Corsola | ok | selvatico |
-| 223 | Remoraid | ok | sciami; selvatico |
+| 223 | Remoraid | ok | sciame pesca (dopo il Nazionale); selvatico |
 | 224 | Octillery | ok | evoluzione da Remoraid |
 | 225 | Delibird | MANCA | - |
 | 226 | Mantine | ok | selvatico |
 | 227 | Skarmory | MANCA | - |
 | 228 | Houndour | ok | safari (bonus oggetti); selvatico |
-| 229 | Houndoom | solo condizionale | safari (bonus oggetti) |
+| 229 | Houndoom | ok | safari (bonus oggetti) |
 | 230 | Kingdra | MANCA | evoluzione TRADE_ITEM (impossibile da solo) |
 | 231 | Phanpy | ok | selvatico |
 | 232 | Donphan | ok | selvatico |
