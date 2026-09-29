@@ -72,7 +72,7 @@ partendo dalla ROM ITA).
   Set (16 B): specie, 4 mosse, EV, natura, strumento, forma. Allenatori (104 B): classe, numero set, indici dei set
   ⇒ per ripulire basta sostituire specie/mosse nei set gen 3-4, gli allenatori non si toccano.
 - Archivi residui: a/0/6/6 = dati delle **bacche** (falso positivo, non sono specie); a/2/5/8 (100 voci × 3 specie,
-  codice non decompilato; ipotesi: squadre avversarie del Pokéathlon, con 11 specie gen 4 tipo Lucario/Staraptor);
+  codice non decompilato; ipotesi: squadre avversarie del Pokéathlon, con 11 specie gen 3-4 tipo Swellow/Lucario/Staraptor);
   a/2/5/4 = photo_data.
 - **Gara Pigliamosche**: tabella 0 prima del Nazionale; dopo, martedì/giovedì/sabato → tabelle 1/2/3
   (`overlay_bug_contest.c`). Le specie gen 3-4 (Wurmple, Nincada, Kricketot, Combee, …) sono solo nelle tabelle 2-3.
