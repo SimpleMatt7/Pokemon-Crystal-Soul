@@ -19,6 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from ndsfs import parse_narc, u16  # noqa: E402
+import items as items_mod  # noqa: E402  (fonti degli oggetti: Spaccaroccia per i fossili)
 
 ROOT = Path(__file__).resolve().parent.parent
 ROM = ROOT / "work" / "IPKI" / "files"
@@ -290,7 +291,7 @@ def read_scripts():
 
 def script_items():
     """Oggetti di interesse dati/trovati negli script: {item_const: [file]}"""
-    wanted = re.compile(r"ITEM_(\w*(INCENSE|STONE)|METAL_COAT|DRAGON_SCALE|KINGS_ROCK|UP_GRADE|DUBIOUS_DISC|PROTECTOR|"
+    wanted = re.compile(r"ITEM_(\w*(INCENSE|STONE)|METAL_COAT|DRAGON_SCALE|KINGS_ROCK|UPGRADE|DUBIOUS_DISC|PROTECTOR|"
                         r"ELECTIRIZER|MAGMARIZER|RAZOR_FANG|RAZOR_CLAW|REAPER_CLOTH|DEEPSEA_\w+|PRISM_SCALE|\w*FOSSIL|OLD_AMBER)\b")
     out = collections.defaultdict(set)
     for p in (PRET / "files/fielddata/script/scr_seq").glob("*.s"):
@@ -300,6 +301,37 @@ def script_items():
 
 
 # ---------------------------------------------------------------- analisi ottenibilità
+def closure(start, evo, personal):
+    """Specie ottenibili partendo da `start` con evoluzioni fattibili in solitario e allevamento.
+    Ritorna (insieme, {specie: [come]})."""
+    obtain = set(start)
+    via = collections.defaultdict(set)
+    pre = {}
+    for s, lst in evo.items():
+        for m, prm, t in lst:
+            pre.setdefault(t, s)
+    changed = True
+    while changed:
+        changed = False
+        for s in list(obtain):
+            for m, prm, t in evo.get(s, []):
+                if m in EVO_IMPOSSIBLE_SOLO:
+                    via[t].add(f"evoluzione {m} (impossibile da solo)")
+                    continue
+                if t not in obtain:
+                    obtain.add(t); changed = True
+                    via[t].add(f"evoluzione da {sp(s)}")
+            eg = personal.get(s, (15, 15))
+            if 15 not in eg[:2]:  # 15 = gruppo uova "Sconosciuto"
+                base = s
+                while base in pre and pre[base] <= 493:
+                    base = pre[base]
+                if base not in obtain and 1 <= base <= 251:
+                    obtain.add(base); changed = True
+                    via[base].add(f"allevamento da {sp(s)}")
+    return obtain, via
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "docs" / "audit.md"))
@@ -342,39 +374,25 @@ def main():
         for s in species:
             src[s].add({"GiveMon": "regalo", "WildBattle": "statico", "GiveEgg": "uovo regalo",
                         "CreateRoamer": "vagante", "GiveTogepiEgg": "uovo regalo"}.get(cmd, cmd) + f" [{f}]")
-    for s in (152, 155, 158):
-        src[s].add("starter (1 dei 3)")
-    # fossili: rianimati al Museo di Plumbeopoli (script T03R0101). Come si ottiene il fossile non risulta
-    # dagli script (probabilmente codice): fonte segnata con riserva.
-    for it, s in {"HELIX_FOSSIL": 138, "DOME_FOSSIL": 140, "OLD_AMBER": 142}.items():
-        src[s].add(f"fossile {it} rianimato [T03R0101] (ottenimento fossile: DA VERIFICARE)")
+    # fossili: rianimati al Museo di Plumbeopoli (script T03R0101); il fossile si trova solo con Spaccaroccia
+    # (tabelle nel codice, lette e verificate da tools/items.py)
+    smash_items = {it for _, its, maps in items_mod.rock_smash([]) if maps for it, _ in its}
+    for it, s in {"ITEM_HELIX_FOSSIL": 138, "ITEM_DOME_FOSSIL": 140, "ITEM_OLD_AMBER": 142}.items():
+        if ITEM_BY_CONST[it] in smash_items:
+            src[s].add(f"fossile {it[5:]} (Spaccaroccia) rianimato [T03R0101]")
 
     # chiusura: evoluzioni fattibili in solitario + allevamento
-    obtain = {s for s in src if 1 <= s <= 493}
-    pre = {}
-    for s, lst in evo.items():
-        for m, prm, t in lst:
-            pre.setdefault(t, s)
-    changed = True
-    via = collections.defaultdict(set)
-    while changed:
-        changed = False
-        for s in list(obtain):
-            for m, prm, t in evo.get(s, []):
-                if m in EVO_IMPOSSIBLE_SOLO:
-                    via[t].add(f"evoluzione {m} (impossibile da solo)")
-                    continue
-                if t not in obtain:
-                    obtain.add(t); changed = True
-                    via[t].add(f"evoluzione da {sp(s)}")
-            eg = personal.get(s, (15, 15))
-            if 15 not in eg[:2]:  # 15 = gruppo uova "Sconosciuto"
-                base = s
-                while base in pre and pre[base] <= 493:
-                    base = pre[base]
-                if base not in obtain and 1 <= base <= 251:
-                    obtain.add(base); changed = True
-                    via[base].add(f"allevamento da {sp(s)}")
+    obtain, via = closure({s for s in src if 1 <= s <= 493}, evo, personal)
+    # starter di Johto: se ne sceglie uno solo. Una famiglia ottenibile, le altre due contano come mancanti
+    starters = (152, 155, 158)
+    starter_fam = {}
+    for s in starters:
+        if s not in obtain:
+            fam, _ = closure({s}, evo, personal)
+            starter_fam[s] = {x for x in fam if x not in obtain and x <= 251}
+    starter_species = set().union(*starter_fam.values()) if starter_fam else set()
+    for s in starter_species:
+        src[s].add("starter (1 famiglia su 3)")
 
     # ---------------------------------------------------------------- report
     r = Report()
@@ -468,11 +486,12 @@ def main():
         + (f" — {', '.join(sp(s) for s in extra)}" if extra else "") + ".")
 
     r.h(2, "Oggetti per evoluzioni/allevamento negli script")
-    r.p("Solo oggetti dati o trovati tramite script. Negozi, oggetti nascosti e premi PL stanno nel codice: da verificare a parte.")
+    r.p("Solo oggetti citati per costante negli script. Quadro completo (a terra, nascosti, negozi, Spaccaroccia, "
+        "premi): `docs/oggetti.md` (`python tools/items.py`).")
     held = collections.defaultdict(set)
     for s, (e1, e2, i1, i2) in personal.items():
         for it in (i1, i2):
-            if it and ITEMS.get(it, "") in {k for k in items} | {"ITEM_METAL_COAT", "ITEM_DRAGON_SCALE", "ITEM_KINGS_ROCK", "ITEM_UP_GRADE"}:
+            if it and ITEMS.get(it, "") in {k for k in items} | {"ITEM_METAL_COAT", "ITEM_DRAGON_SCALE", "ITEM_KINGS_ROCK", "ITEM_UPGRADE"}:
                 held[ITEMS[it]].add(sp(s))
     r.table(["Oggetto", "Script", "Tenuto da selvatici"],
             [(k, ", ".join(sorted(v)[:8]) + (" …" if len(v) > 8 else ""), ", ".join(sorted(held.get(k, []))) or "-")
@@ -480,20 +499,24 @@ def main():
             + [(k, "-", ", ".join(sorted(v))) for k, v in sorted(held.items()) if k not in items])
 
     r.h(2, "Matrice di ottenibilità #001-#251 (una partita, HeartGold, senza scambi né eventi)")
-    missing = [s for s in range(1, 252) if s not in obtain]
+    missing = [s for s in range(1, 252) if s not in obtain and s not in starter_species]
     only_cond = [s for s in range(1, 252) if s in obtain and s in src and not via[s]
                  and all(x.startswith(("radio", "sciami", "safari (bonus")) for x in src[s])]
-    r.p(f"**Ottenibili: {251 - len(missing)}/251.** Mancanti: {len(missing)}.")
+    fam_size = max((len(f) for f in starter_fam.values()), default=0)
+    n_ok = 251 - len(missing) - len(starter_species) + fam_size
+    r.p(f"**Ottenibili: {n_ok}/251** (contando una sola famiglia di starter). Mancanti: {len(missing)}"
+        + (f" + le {len(starter_species) - fam_size} specie delle 2 famiglie di starter non scelte." if starter_species else "."))
     r.p()
     r.table(["#", "Specie", "Stato", "Fonti"],
-            [(f"{s:03}", sp(s), "MANCA" if s in missing else ("solo condizionale" if s in only_cond else "ok"),
+            [(f"{s:03}", sp(s), "MANCA" if s in missing else "starter 1 su 3" if s in starter_species
+              else ("solo condizionale" if s in only_cond else "ok"),
               "; ".join(sorted(src.get(s, set())) + sorted(via.get(s, set()))) or "-") for s in range(1, 252)])
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(r.lines).lstrip() + "\n", encoding="utf-8")
     print(f"Report: {out.relative_to(ROOT)}")
-    print(f"Ottenibili {251 - len(missing)}/251; mancanti: {', '.join(sp(s) for s in missing)}")
+    print(f"Ottenibili {n_ok}/251 (1 famiglia di starter su 3); mancanti: {', '.join(sp(s) for s in missing)}")
     for c, ok, d in checks:
         print(f"[{'OK' if ok else 'NO'}] {c}: {d}")
 
