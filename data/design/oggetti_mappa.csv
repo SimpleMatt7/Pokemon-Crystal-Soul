@@ -1,0 +1,4 @@
+# Modifiche agli oggetti degli eventi di zona (a/0/3/2). zona = indice nel NARC (= numero del file zone_event della
+# decomp), oggetto = indice nella lista objects, campo = sprite (u16 a +2 nel record da 32 byte).
+zona,mappa,oggetto,campo,da,a,motivo
+476,D52R0101,0,sprite,SPRITE_FOLLOWER_MON_STATIC_GROUDON,SPRITE_FOLLOWER_MON_MEW,D20 Mew al posto di Groudon (non esiste uno sprite "statico" di Mew)

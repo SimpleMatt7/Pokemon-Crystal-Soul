@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 4 in corso: `tools/build.py` applica tutte le modifiche ai dati e produce
-`out/PokemonCrystalNew_IPKI.nds` + BPS (24 KB); mancano script e Pokédex di Johto; vedi §11).
+Ultimo aggiornamento: 2026-09-29 (fase 4: assemblatore di script `tools/scrasm.py` (965/965 identici alla ROM),
+patch agli script in `data/scripts/*.diff`; Mew, Celebi, Pichu, vaganti Lati fatti. Mancano: testi (Rocco), Oak, Pokédex; §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -43,7 +43,9 @@ partendo dalla ROM ITA).
 | D19 | Kabuto: **Domofossile al posto del Frammento Blu** nella tabella Spaccaroccia delle Rovine d'Alfa (come SS); Fossilunghia della Grotta Falesia → Fossilhelix/Ambra Vecchia | Scelta utente (2026-09-29) |
 | D20 | **Mew** alla Torre Inclusa al posto di Groudon (lv 50), **sbloccato dopo la Lega** (non più con la Sfera Rossa dopo Red). Anche le stanze Kyogre/Rayquaza (irraggiungibili in HG) → Mew | Scelta utente 2026-09-29: dopo Red era troppo tardi. L'ingresso (Percorso 47) è raggiungibile già a metà gioco |
 | D21 | **Celebi** al santuario del Bosco di Lecci **dopo la Lega**, catturato con la lotta "fatidica" (`ScrCmd_686`, esiste nel gioco ma non è usata): Celebi ha il flag evento ⇒ **il viaggio nel passato funziona** senza patch al codice | Scelta utente + proposta Claude |
-| D25 | **Pichu Spunzorecchio** sbloccabile: dopo la Lega, Pichu qualsiasi al santuario. Serve una piccola patch al codice (il controllo vuole un Pichu cromatico con flag evento, nessun comando di script lo può dare) | Scelta utente |
+| D25 | **Pichu Spunzorecchio** sbloccabile: dopo la Lega, Pichu qualsiasi in testa alla squadra al santuario. Fatto **solo nello script** (`GetPartyMonSpecies` al posto di `FollowerPokeIsEventTrigger EVENT_SPIKY_EARED_PICHU`): nessuna patch al codice | Scelta utente |
+| D26 | Script modificati come **diff** sui sorgenti della decomp (`data/scripts/scr_seq_NNNN.diff`), assemblati da `tools/scrasm.py` | Nel repo solo differenze; assemblatore verificato 965/965 byte per byte |
+| D27 | Flag nostri nel blocco **0x51F-0x54F** (mai usato né da script né dal codice C): `FLAG_PCN_CELEBI_CAUGHT` = 0x54E | Serve un flag permanente; MAPTEMP si azzera cambiando mappa |
 | D22 | Oak (Kanto) e Rocco (Johto, D17) lasciano **tutte e 3 le Poké Ball**: si possono prendere tutti gli starter | Scelta utente (2026-09-29) |
 | D23 | Radio Suono Hoenn/Sinnoh **neutra**: le sue specie = slot erba 2/4 (giorno) della stessa mappa | Proposta Claude, scelta di minimo impatto (la radio non può avere specie 0) |
 | D24 | Tutte le altre specie > 251 (allenatori, Parco Lotta, Pokéathlon, Bottintesta, Safari, Gara) con la **tabella globale** `data/design/sostituzioni.csv` (242 righe riviste) | Coerenza; starter e leggendari mai negli incontri casuali |
@@ -183,23 +185,21 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 `get_tools.py` → `roundtrip.py` → `probe.py`, ripresa con Claude Code).
 
 ## 11. Prossimi passi
-1. **Utente** (fatto 2026-09-29): `out/roundtrip_IPKI.nds` parte in melonDS e IPKI si apre in DSPRE.
-2. **Utente**: provare `out/PokemonCrystalNew_IPKI.nds` (solo modifiche ai dati) con la checklist in chat del 2026-09-29.
-3. Fase 4 — build (`python tools/build.py`, ~20 s): copia work/IPKI → work/build, applica evoluzioni, selvatici,
-   Bottintesta, Safari, Gara, Pokéathlon, allenatori (sostituto + adattamento al livello + mosse dal learnset se
-   personalizzate), scambi, Parco Lotta (specie + mosse a lv 100), strumenti a terra (scr_seq_0141), Spaccaroccia
-   (ov001), oggetti D7 usabili come pietre (a/0/1/7: campi uso copiati dalla Pietrafocaia). Riesegue l'audit sui file
-   costruiti, poi dsrom → `out/PokemonCrystalNew_IPKI.nds` e `tools/bps.py` → `.bps` (verificata riapplicandola).
-   Da fare, nell'ordine:
-   a. **Assemblatore di script** dai `.s` della decomp usando le macro di `asm/macros/script.inc` (get_pret scarica
-      `asm/macros`); test: riassemblare tutti gli script originali e confrontarli byte per byte con a/0/1/2.
-   b. Script: Rocco (D17) e Oak (D22) con tutte e 3 le Poké Ball; Mew (D20) con condizione "Lega battuta";
-      Celebi (D21) con `ScrCmd_686`; vaganti Lati tolti; Pichu (D25).
-   c. Patch al codice per D25 (controllo EVENT_SPIKY_EARED_PICHU in ScrCmd, arm9).
-   d. Pokédex di Johto: togliere le 5 voci gen 4 (a/1/3/8 + liste di ordinamento in a/0/7/4, che dipende dalla lingua).
-4. Pubblicazione della BPS in `patches/`: decidere dopo i test (contiene solo differenze, ma include pezzi di codice
-   ricompresso dell'overlay 1).
-5. Opzionale: provare dspre-mcp su IPKI se servirà per gli script di evento.
+1. **Utente**: provare `out/PokemonCrystalNew_IPKI.nds` (dati + script). Da controllare in particolare: sprite di Mew alla
+   Torre Inclusa dopo la Lega (sprite "compagno", non esiste quello statico); Celebi al santuario di Lecci dopo la Lega
+   (lv 30), poi con Celebi in testa il viaggio nel passato; Pichu in testa al santuario dopo la Lega.
+2. Fase 4 — fatto: `build.py` (dati), `scrasm.py` (assemblatore), `scrpatch.py` (patch agli script:
+   `apri NNNN` → modifica in work/script_edit → `salva`). Script già modificati: 0092 santuario di Lecci (Celebi D21,
+   Pichu D25), 0133-0135 Torre Inclusa (Mew D20, condizione FLAG_GAME_CLEAR), 0776 Aranciopoli (niente scena Lati),
+   0825 Lega (niente vaganti Lati). Sprite della stanza: `data/design/oggetti_mappa.csv`.
+   Da fare:
+   a. **Testi**: strumento per leggere/scrivere i messaggi italiani (a/0/2/7, formato gen 4 cifrato, charmap della decomp).
+      Serve per Rocco (le voci del menu sono i nomi Treecko/Torchic/Mudkip; D17 + tutti e 3: darli tutti insieme).
+   b. Oak (T01R0301): tutte e 3 le Poké Ball (D22).
+   c. Pokédex di Johto: togliere le 5 voci gen 4 (a/1/3/8 + liste in a/0/7/4).
+   d. BPS più piccola: confronto file per file (ora 300 KB perché gli script cambiano lunghezza e spostano i dati).
+3. Pubblicazione della BPS in `patches/`: dopo i test.
+4. Rifiniture (idea utente): nome della ROM nel banner del DS e schermata del titolo ("Pokémon Crystal Soul"?).
 
 ## 12. Problemi aperti
 - Nessuno bloccante.

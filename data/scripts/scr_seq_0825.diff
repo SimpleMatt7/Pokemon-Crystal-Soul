@@ -1,0 +1,15 @@
+--- a/scr_seq_0825_T10R0701.s
++++ b/scr_seq_0825_T10R0701.s
+@@ -199,10 +199,8 @@
+ _0280:
+ 	SetVar VAR_ROAMER_LATIAS_STATUS, 0
+-	CreateRoamer 2
+ 	Return
+ 
+ _028B:
+ 	SetVar VAR_ROAMER_LATIOS_STATUS, 0
+-	CreateRoamer 3
+-	Return
+-	.balign 4, 0
++	Return
++	.balign 4, 0

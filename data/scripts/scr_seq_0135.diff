@@ -1,0 +1,29 @@
+--- a/scr_seq_0135_D52R0103.s
++++ b/scr_seq_0135_D52R0103.s
+@@ -41,5 +41,5 @@
+ 	ToggleFollowingPokemonMovement 1
+ 	FollowingPokemonMovement 48
+-	PlayCry SPECIES_RAYQUAZA, 0
++	PlayCry SPECIES_MEW, 0
+ 	WaitCry
+ 	ToggleFollowingPokemonMovement 0
+@@ -53,5 +53,5 @@
+ 	Release obj_D52R0103_tsure_poke_static_rayquaza
+ 	ScrCmd_523 obj_D52R0103_tsure_poke_static_rayquaza, 8, 90, 3, 0
+-	PlayCry SPECIES_RAYQUAZA, 0
++	PlayCry SPECIES_MEW, 0
+ 	NPCMsg msg_0150_D52R0103_00000
+ 	WaitCry
+@@ -74,10 +74,10 @@
+ 	Release obj_D52R0103_tsure_poke_static_rayquaza
+ 	ScrCmd_523 obj_D52R0103_tsure_poke_static_rayquaza, 8, 90, 3, 0
+-	PlayCry SPECIES_RAYQUAZA, 0
++	PlayCry SPECIES_MEW, 0
+ 	NPCMsg msg_0150_D52R0103_00000
+ 	WaitCry
+ 	CloseMsg
+ 	SetFlag FLAG_ENGAGING_STATIC_POKEMON
+-	WildBattle SPECIES_RAYQUAZA, 50, 0
++	WildBattle SPECIES_MEW, 50, 0
+ 	ClearFlag FLAG_ENGAGING_STATIC_POKEMON
+ 	CheckBattleWon VAR_SPECIAL_RESULT

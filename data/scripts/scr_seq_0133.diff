@@ -1,0 +1,78 @@
+--- a/scr_seq_0133_D52R0101.s
++++ b/scr_seq_0133_D52R0101.s
+@@ -35,7 +35,5 @@
+ _004A:
+ 	GoToIfSet FLAG_BEAT_OR_ESCAPED_FROM_GROUDON_OR_KYOGRE, _007C
+-	HasItem ITEM_RED_ORB, 1, VAR_TEMP_x4000
+-	Compare VAR_TEMP_x4000, 1
+-	GoToIfGe _0072
++	GoToIfSet FLAG_GAME_CLEAR, _0072
+ 	GoTo _0040
+ 	End
+@@ -63,10 +61,8 @@
+ 	LockAll
+ 	FacePlayer
+-	PlayCry SPECIES_GROUDON, 0
+-	NPCMsg msg_0148_D52R0101_00000
++	PlayCry SPECIES_MEW, 0
+ 	WaitCry
+-	CloseMsg
+ 	SetFlag FLAG_ENGAGING_STATIC_POKEMON
+-	WildBattle SPECIES_GROUDON, 50, 0
++	WildBattle SPECIES_MEW, 50, 0
+ 	ClearFlag FLAG_ENGAGING_STATIC_POKEMON
+ 	CheckBattleWon VAR_SPECIAL_RESULT
+@@ -79,52 +75,10 @@
+ 	GoToIfEq _00FB
+ _00EC:
+-	NPCMsg msg_0148_D52R0101_00001
+-	WaitButton
+-	CloseMsg
+-	SetFlag FLAG_BEAT_OR_ESCAPED_FROM_GROUDON_OR_KYOGRE
+ 	ReleaseAll
+ 	End
+ 
+ _00FB:
+-	SetVar VAR_SCENE_EMBEDDED_TOWER, 4
+-	SetFlag FLAG_CAUGHT_GROUDON
+-	ClearFlag FLAG_HIDE_EMBEDDED_TOWER_GROUDON_HIKER
+-	ShowPerson obj_D52R0101_mount_2
+-	ToggleFollowingPokemonMovement 0
+-	WaitFollowingPokemonMovement
+-	FollowingPokemonMovement 55
+-	GetPlayerFacing VAR_TEMP_x4001
+-	Compare VAR_TEMP_x4001, 0
+-	GoToIfNe _0142
+-	ApplyMovement obj_D52R0101_mount_2, _01A4
+-	WaitMovement
+-	ApplyMovement obj_player, _01B0
+-	WaitMovement
+-	GoTo _0156
+-
+-_0142:
+-	ApplyMovement obj_D52R0101_mount_2, _01BC
+-	WaitMovement
+-	ApplyMovement obj_player, _01C8
+-	WaitMovement
+-_0156:
+-	WaitFollowingPokemonMovement
+-	ToggleFollowingPokemonMovement 1
+-	FollowingPokemonMovement 48
+-	NPCMsg msg_0148_D52R0101_00002
+-	CloseMsg
+-	ApplyMovement obj_D52R0101_mount_2, _01D0
+-	WaitMovement
+-	NPCMsg msg_0148_D52R0101_00003
+-	CloseMsg
+-	ApplyMovement obj_D52R0101_mount_2, _01E0
+-	WaitMovement
+-	NPCMsg msg_0148_D52R0101_00004
+-	CloseMsg
+-	ApplyMovement obj_D52R0101_mount_2, _01EC
+-	WaitMovement
+-	HidePerson obj_D52R0101_mount_2
++	SetFlag FLAG_BEAT_OR_ESCAPED_FROM_GROUDON_OR_KYOGRE
+ 	SetFlag FLAG_HIDE_EMBEDDED_TOWER_GROUDON_HIKER
+-	SetFlag FLAG_HIDE_ROUTE_47_EMBEDDED_TOWER_HIKER
+ 	ReleaseAll
+ 	End

@@ -1,0 +1,10 @@
+--- a/scr_seq_0776_T06.s
++++ b/scr_seq_0776_T06.s
+@@ -60,6 +60,5 @@
+ 	NPCMsg msg_0483_T06_00016
+ 	CloseMsg
+-	ApplyMovement obj_T06_daigo, _0180
+-	WaitMovement
++	GoTo _013F  @ Pokémon Crystal New: niente Latias/Latios (gen 3)
+ 	GetGameVersion VAR_TEMP_x4004
+ 	Compare VAR_TEMP_x4004, 8

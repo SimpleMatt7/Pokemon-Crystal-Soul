@@ -1,0 +1,50 @@
+--- a/scr_seq_0092_D36R0101.s
++++ b/scr_seq_0092_D36R0101.s
+@@ -9,4 +9,5 @@
+ #include "constants/events.h"
+ #include "constants/scrcmd.h"
++#define FLAG_PCN_CELEBI_CAUGHT 0x54E
+ #include "fielddata/script/scr_seq/event_D36R0101.h"
+ #include "msgdata/msg/msg_0115_D36R0101.h"
+@@ -1732,8 +1733,9 @@
+ 	Compare VAR_UNK_412B, 1
+ 	GoToIfEq _1803
++	GoToIfUnset FLAG_GAME_CLEAR, _17C1
+ 	GetPartyLeadAlive VAR_TEMP_x4000
+-	FollowerPokeIsEventTrigger EVENT_SPIKY_EARED_PICHU, VAR_TEMP_x4000, VAR_TEMP_x4001
+-	Compare VAR_TEMP_x4001, 0
+-	GoToIfNe _17B7
++	GetPartyMonSpecies VAR_TEMP_x4000, VAR_TEMP_x4001
++	Compare VAR_TEMP_x4001, SPECIES_PICHU
++	GoToIfEq _17B7
+ 	GoTo _17C1
+ 
+@@ -1762,4 +1764,28 @@
+ 
+ _1803:
++	GoToIfUnset FLAG_GAME_CLEAR, _PCN_shrine_msg
++	GoToIfSet FLAG_PCN_CELEBI_CAUGHT, _PCN_shrine_msg
++	PlaySE SEQ_SE_DP_SELECT
++	LockAll
++	PlayCry SPECIES_CELEBI, 0
++	WaitCry
++	ScrCmd_686 SPECIES_CELEBI, 30
++	CheckBattleWon VAR_SPECIAL_RESULT
++	Compare VAR_SPECIAL_RESULT, 0
++	GoToIfEq _PCN_celebi_whiteout
++	GetStaticEncounterOutcome VAR_TEMP_x4002
++	Compare VAR_TEMP_x4002, 4
++	GoToIfNe _PCN_celebi_end
++	SetFlag FLAG_PCN_CELEBI_CAUGHT
++_PCN_celebi_end:
++	ReleaseAll
++	End
++
++_PCN_celebi_whiteout:
++	WhiteOut
++	ReleaseAll
++	End
++
++_PCN_shrine_msg:
+ 	SimpleNPCMsg msg_0115_D36R0101_00028
+ 	End
