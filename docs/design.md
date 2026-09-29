@@ -83,7 +83,7 @@ Generato da `python tools/design.py`: applica `data/design/*.csv` ai dati di IPK
 | 227 | Skarmory | selvatico |
 | 230 | Kingdra | evoluzione da Seadra |
 | 233 | Porygon2 | evoluzione da Porygon |
-| 251 | Celebi | nuovo evento [D36R0101 (santuario del Bosco di Lecci)] (dopo aver battuto la Lega; da definire con l'utente) |
+| 251 | Celebi | nuovo evento [D36R0101 (santuario del Bosco di Lecci)] (dopo aver battuto la Lega; lotta 'fatidica' (ScrCmd_686) => Celebi con flag evento) |
 
 ## Da fare in fase 4 (build)
 
