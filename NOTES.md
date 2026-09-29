@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 2: fonti degli oggetti con `tools/items.py` → `docs/oggetti.md`; audit corretto
-per starter e fossili → 222/251; vedi §5b e §11).
+Ultimo aggiornamento: 2026-09-29 (fase 2 **completata**: fonti degli oggetti, condizioni di sblocco di radio/sciami/gara,
+archivi residui; audit corretto → 222/251; vedi §5b e §11. Prossimo: decisioni di design della fase 3).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -12,7 +12,7 @@ partendo dalla ROM ITA).
 - [x] Fase 0 — repository, `.gitignore`, hook anti-ROM, CLAUDE.md/NOTES.md, script di lettura ROM.
 - [x] Fase 1 — toolchain e round-trip sulla ROM ITA: **OK**, differenze solo nei 4 byte di CRC dell'header
       (0x6C area sicura, 0x15E header). Mancano: avvio di `out/roundtrip_IPKI.nds` in melonDS e apertura IPKI in DSPRE (utente).
-- [ ] Fase 2 — audit completo in sola lettura (vedi §6).
+- [x] Fase 2 — audit completo in sola lettura (`docs/audit.md`, `docs/oggetti.md`; §5b).
 - [ ] Fase 3 — tabelle di design (nuove distribuzioni, allenatori sostitutivi, regali).
 - [ ] Fase 4 — `build.py`: applica le tabelle, ricostruisce, genera BPS; audit = 0 specie > 251, 251/251 ottenibili.
 - [ ] Fase 5 — opzioni meccaniche (nature neutre?).
@@ -67,12 +67,24 @@ partendo dalla ROM ITA).
   a/0/2/7 testi, a/0/3/2 eventi zona, a/0/3/3 learnset, a/0/3/4 evoluzioni, a/0/3/7 incontri HG (a/1/3/6 SS),
   a/0/5/5-6 allenatori, a/1/3/8 Pokédex Johto, a/2/2/9 mosse uovo, a/2/3/0 Safari, a/2/5/2 Bottintesta,
   `data/tradelist.narc` scambi, `data/mushi/mushi_encount.bin` Gara Pigliamosche (4 tabelle × 10).
-- **Parco Lotta** (non mappato nella decomp, trovato per scansione): a/1/2/9 (951 set da 16 byte) + a/1/2/8 (allenatori),
-  a/2/0/3 (951 set) + a/2/0/2 (allenatori), a/2/0/4 (478 set, forse noleggi). Circa metà dei set è gen 3-4.
-  Record: specie u16, 4 mosse u16, EV u8, natura u8, strumento u16, …
-- Archivi non identificati con qualche specie gen 3-4: a/0/6/6 (64×12 B), a/2/5/8 (100×8 B), a/2/5/4 (= photo_data).
-- **Gara Pigliamosche**: tabelle 0-1 solo gen 1-2; tabelle 2-3 con Wurmple, Silcoon/Cascoon, Nincada, Volbeat/Illumise,
-  Kricketot/Kricketune, Dustox/Beautifly, Combee (+ Scyther, Pinsir). Da capire quando si usano le tabelle 2-3.
+- **Parco Lotta**: a/2/0/3 (951 set) + a/2/0/2 (allenatori) = Torre Lotta (`unk_0204B538.c`); a/1/2/9 + a/1/2/8 stesso
+  formato, altra struttura (codice non decompilato); a/2/0/4 (478 set, forse noleggi Factory). Circa metà dei set è gen 3-4.
+  Set (16 B): specie, 4 mosse, EV, natura, strumento, forma. Allenatori (104 B): classe, numero set, indici dei set
+  ⇒ per ripulire basta sostituire specie/mosse nei set gen 3-4, gli allenatori non si toccano.
+- Archivi residui: a/0/6/6 = dati delle **bacche** (falso positivo, non sono specie); a/2/5/8 (100 voci × 3 specie,
+  codice non decompilato; ipotesi: squadre avversarie del Pokéathlon, con 11 specie gen 4 tipo Lucario/Staraptor);
+  a/2/5/4 = photo_data.
+- **Gara Pigliamosche**: tabella 0 prima del Nazionale; dopo, martedì/giovedì/sabato → tabelle 1/2/3
+  (`overlay_bug_contest.c`). Le specie gen 3-4 (Wurmple, Nincada, Kricketot, Combee, …) sono solo nelle tabelle 2-3.
+- **Radio** Suono Hoenn (mercoledì) / Suono Sinnoh (giovedì): solo con il Pokédex Nazionale (`pokemon_music.c`);
+  sostituiscono gli slot erba 2-5.
+- **Sciami**: attivati da Oak insieme al Nazionale (`EnableMassOutbreaks`, P01R0101); ogni giorno una di 20 mappe
+  (`sSwarmMapLUT`, verificata in arm9 ITA). 12 sciami su 20 sono gen 3-4; gli altri 8 sono gen 1-2 (Marill, Dunsparce,
+  Chansey, Qwilfish, Yanma, Snubbull, Remoraid, Ditto). I 4 u16 finali della tabella incontri sono: sciame erba,
+  sciame surf, **pesca notturna** (sempre attiva, prima l'audit la contava come sciame), sciame pesca.
+- **Pokédex di Johto** (a/1/3/8): è una tabella numero nazionale → numero di Johto (0 = assente), non una lista di specie.
+  256 voci = tutte le 251 + 5 evoluzioni gen 4 (Yanmega J102, Ambipom J124, Lickilicky J181, Tangrowth J183,
+  Mamoswine J197). Togliendole restano 5 buchi: da rinumerare (fase 4; controllare anche le liste di ordinamento in zkn_data).
 - **Scambi in gioco** (13): uno dà **Beldum** (Iron). Gli altri sono gen 1-2.
 - **Script** (regali/statici): Ho-Oh (D17R0110, lv 45/70) e Lugia (D40R0107, lv 70/45) entrambi in HG.
   Rocco dà **Treecko/Torchic/Mudkip** lv 5 (T11R0701) → idea: sostituirli con **Chikorita/Cyndaquil/Totodile**
@@ -108,18 +120,16 @@ partendo dalla ROM ITA).
 - **Audit corretto**: un solo starter di Johto; fossili solo se presenti nelle tabelle Spaccaroccia; cercava
   `ITEM_UP_GRADE` invece di `ITEM_UPGRADE`. Risultato: **222/251** (con 1 famiglia di starter). Mancano 23 + 6 starter:
   esclusive SS (10), evoluzioni per scambio (9, D7), **Kabuto, Kabutops**, Mew, Celebi, + 2 famiglie di starter
-  (idea: Rocco dà Chikorita/Cyndaquil/Totodile al posto degli starter di Hoenn).
+  (idea: Rocco dà Chikorita/Cyndaquil/Totodile al posto degli starter di Hoenn). Nessuna delle 222 dipende solo da
+  radio, sciami, bonus Safari o gara post-Nazionale.
 
 ## 6. Da verificare (fase 2)
-- Safari di Johto: secondo Serebii ~25-30 specie gen3-4 su 80+, sbloccate con oggetti + giorni. Formato dati ignoto.
-- Headbutt, Gara Bug: dove sono i dati (NARC vs codice).
-- Script: regali (Rocco → starter Hoenn), leggendari statici (Torre Inclusa: Groudon; Rovine di Sinjoh: Dialga/Palkia/Giratina), vaganti (Latios/Latias), scambi di gioco, evento Santuario di Lecci.
-- Quando si sbloccano i suoni Hoenn/Sinnoh della radio.
-- Pokédex di Johto (256 voci): include evoluzioni gen 4? L'ordine è un dato modificabile?
-- ~~Ottenibilità in una partita di: Metallopatina, Squama Drago, Roccia di Re, Upgrade, pietre; Aromi~~ → fatto (§5b).
-- Disponibilità reale 1-251 in una sola cartuccia (esclusivi di versione, 2 starter Johto mancanti, fossili).
-- Parco Lotta: formato dei set Pokémon.
-- Percorsi NARC equivalenti su SoulSilver (alcuni differiscono).
+Fase 2 chiusa: Safari, Bottintesta, Gara, script, radio, sciami, Pokédex di Johto, oggetti, Parco Lotta → §5b.
+Restano per dopo:
+- Evento del Santuario di Lecci (Celebi): leggere lo script quando si progetta D10.
+- Pokédex di Johto: come si rinumera (tabella a/1/3/8 + eventuali liste di ordinamento in zkn_data).
+- a/2/5/8: conferma che sia il Pokéathlon (in gioco o dal codice quando sarà decompilato).
+- Percorsi NARC equivalenti su SoulSilver (alcuni differiscono) — solo per la fase 7.
 
 ## 7. Opzioni aperte
 - **O1 — Nature neutre.** Le nature (gen 3+) danno +10% a una statistica e -10% a un'altra (5 su 25 sono neutre).
@@ -161,10 +171,8 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 1. (Fatto) Primo push di `main` e `dev` su GitHub come SimpleMatt7; da qui in avanti si lavora e si pusha su `dev`.
 2. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS fino al menu/intro (verifica che i CRC di header
    non ricalcolati non diano problemi); aprire la ROM IPKI in DSPRE 2.3.2 e confermare che carica senza errori.
-3. Fase 2 (in corso). Fatto: audit (`tools/audit.py` → `docs/audit.md`) e fonti degli oggetti (`tools/items.py` →
-   `docs/oggetti.md`). Rimane: quando si sbloccano radio Hoenn/Sinnoh, sciami e tabelle 2-3 della Gara Pigliamosche;
-   archivi a/0/6/6 e a/2/5/8; formato allenatori del Parco Lotta.
-   Dopo `git pull`, rilanciare `python tools/get_pret.py` (la sparse checkout ora include eventdata, itemdata, src/).
+3. Fase 2 completata (`docs/audit.md`, `docs/oggetti.md`). Dopo `git pull` su un altro PC, rilanciare
+   `python tools/get_pret.py` (la sparse checkout ora include eventdata, itemdata e tutto `src/`).
 4. Fase 3 — decisioni utente in arrivo: dove mettere le 10 esclusive SS, Kabuto (Domofossile nella tabella Spaccaroccia
    delle Rovine? o selvatico), Mew/Celebi, starter di Rocco.
 5. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.

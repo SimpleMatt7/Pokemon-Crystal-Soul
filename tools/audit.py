@@ -113,14 +113,33 @@ WILD_SLOTS = [
     ("surf", [100 + k * 4 + 2 for k in range(5)], True),
     ("spaccaroccia", [120 + k * 4 + 2 for k in range(2)], True),
     ("pesca", [128 + k * 4 + 2 for k in range(15)], True),
-    ("sciami", [188 + k * 2 for k in range(4)], False),
+    ("pesca notturna", [192], True),  # nightFish: sostituisce uno slot di Amo Buono/Super Amo di notte, sempre attivo
+    ("sciame erba", [188], False),
+    ("sciame surf", [190], False),
+    ("sciame pesca", [194], False),
 ]
+SWARM_KIND = {0: "sciame erba", 1: "sciame surf", 2: "sciame pesca"}
+
+
+def read_swarm_maps(checks):
+    """{(codice mappa, categoria)} degli sciami possibili: sSwarmMapLUT (codice), verificata nella ROM ITA.
+    Gli sciami si attivano con il Pokédex Nazionale (EnableMassOutbreaks in P01R0101); ogni giorno una mappa a caso."""
+    maps = {}
+    for m in re.finditer(r"#define (MAP_\w+)\s+(\d+)\s*// MAP_(\w+)", (PRET / "include/constants/maps.h").read_text()):
+        maps[m.group(1)] = (int(m.group(2)), m.group(3))
+    lut = [(maps[a], int(b)) for a, b in
+           re.findall(r"\{\s*(MAP_\w+),\s*(\d)\s*\}", (PRET / "src/unk_02097F6C.c").read_text())]
+    blob = b"".join(struct.pack("<HH", mid, k) for (mid, _), k in lut)
+    where = items_mod.find_code(blob)
+    checks.append(("Mappe degli sciami (sSwarmMapLUT): decomp = ROM", bool(where), f"{len(lut)} mappe, {where or 'non trovata'}"))
+    return {(code, SWARM_KIND[k]) for (_, code), k in lut}
 
 
 def read_wild(checks):
     files = narc("a/0/3/7")
     names = [e["map"] for e in json.loads((PRET / "files/fielddata/encountdata/gs_enc_data.json").read_text())["encounters"]]
     checks.append(("Nomi tabelle selvatici (gs_enc_data.json)", len(names) == len(files), f"{len(names)} nomi / {len(files)} tabelle"))
+    swarms = read_swarm_maps(checks)
     out = []  # (mappa, categoria, specie, normale?)
     for i, f in enumerate(files):
         name = names[i] if i < len(names) else f"#{i}"
@@ -128,7 +147,11 @@ def read_wild(checks):
             for o in offs:
                 s = u16(f, o) & 0x3FF
                 if s:
-                    out.append((name, cat, s, normal))
+                    if cat.startswith("sciame") and (name, cat) not in swarms:
+                        cat_ = "sciame mai attivo"  # mappa non nella tabella degli sciami: dato morto
+                    else:
+                        cat_ = cat
+                    out.append((name, cat_, s, normal))
     return out
 
 
@@ -225,7 +248,10 @@ def read_trades():
 
 def read_frontier():
     out = {}
-    for a, desc in [("a/1/2/9", "set A (con allenatori a/1/2/8)"), ("a/2/0/3", "set B (con allenatori a/2/0/2)"),
+    # set da 16 byte: specie, 4 mosse, EV, natura, strumento, forma (FrontierMonNarcData in unk_0204B538.c).
+    # Allenatori (104 byte): classe u16, numero di set u16, indici dei set u16: si puliscono cambiando solo i set.
+    for a, desc in [("a/1/2/9", "set A, allenatori a/1/2/8 (altra struttura, codice non decompilato)"),
+                    ("a/2/0/3", "set B, allenatori a/2/0/2 (Torre Lotta, unk_0204B538.c)"),
                     ("a/2/0/4", "set C (478, probabilmente noleggi Factory)")]:
         c = collections.Counter(u16(f, 0) & 0x7FF for f in narc(a) if len(f) >= 2)
         c.pop(0, None)
@@ -234,13 +260,10 @@ def read_frontier():
 
 
 def read_johto_dex():
-    b = (ROM / "a/1/3/8").read_bytes()
-    try:
-        subs = parse_narc(b)
-        data = b"".join(subs)
-    except ValueError:
-        data = b
-    return [u16(data, k) for k in range(0, len(data) - 1, 2)]
+    """{specie nazionale: numero nel Pokédex di Johto} da a/1/3/8 (johtozukan.narc): una tabella u16 indicizzata
+    per numero nazionale (0..493), 0 = assente."""
+    data = parse_narc((ROM / "a/1/3/8").read_bytes())[0]
+    return {s: u16(data, s * 2) for s in range(1, len(data) // 2) if u16(data, s * 2)}
 
 
 # --- script (dalla decomp; a/0/1/2 identico tra IPKI e IPKE)
@@ -357,13 +380,16 @@ def main():
     # fonti per specie (<= 251 per la matrice; > 251 per la pulizia)
     src = collections.defaultdict(set)
     for m, cat, s, normal in wild:
-        src[s].add("selvatico" if normal else cat)
+        if cat == "sciame mai attivo":
+            continue
+        src[s].add("selvatico" if normal else cat + " (dopo il Nazionale)")
     for m, g, s in headbutt:
         src[s].add("bottintesta")
     for a, cat, s, bonus, _ in safari:
         src[s].add("safari (bonus oggetti)" if bonus else "safari")
     for t, s in bug:
-        src[s].add(f"gara coleottero t{t}")
+        # tabella 0 prima del Nazionale; dopo, martedì/giovedì/sabato → 1/2/3 (overlay_bug_contest.c)
+        src[s].add("gara coleottero" if t == 0 else f"gara coleottero t{t} (dopo il Nazionale)")
     for name, ask, give in trades:
         src[give].add(f"scambio ({name})")
     # Sinjoh (Arceus evento), Pichu spunzorecchio (Pichu evento), Lati statico di Plumbeopoli (Pietrenigma evento)
@@ -413,7 +439,8 @@ def main():
         rows.append((label, g3, g4, len(c)))
     add("Selvatici — slot normali", (s for m, cat, s, n in wild if n))
     add("Selvatici — radio Hoenn/Sinnoh", (s for m, cat, s, n in wild if cat.startswith("radio")))
-    add("Selvatici — sciami", (s for m, cat, s, n in wild if cat == "sciami"))
+    add("Selvatici — sciami attivi (20 mappe)", (s for m, cat, s, n in wild if cat.startswith("sciame ") and cat != "sciame mai attivo"))
+    add("Selvatici — sciami mai attivi (dato morto)", (s for m, cat, s, n in wild if cat == "sciame mai attivo"))
     add("Bottintesta", (s for m, g, s in headbutt))
     add("Safari — base", (s for a, c, s, b, _ in safari if not b))
     add("Safari — bonus oggetti", (s for a, c, s, b, _ in safari if b))
@@ -423,7 +450,7 @@ def main():
     add("Script (regali/statici/vaganti)", (s for f, cmd, sps, note in scripts for s in sps))
     for a, (desc, c) in frontier.items():
         add(f"Parco Lotta {desc}", c.elements())
-    add("Pokédex di Johto (voci)", (s for s in dex if s))
+    add("Pokédex di Johto (voci)", dex)
     r.table(["Fonte", "slot gen 3", "slot gen 4", "specie distinte"], rows)
 
     r.h(2, "Evoluzioni verso specie > #251 (da rimuovere, D8)")
@@ -435,6 +462,20 @@ def main():
     r.table(["Da", "A", "Metodo", "Oggetto"],
             [(sp(s), sp(t), m, ITEMS.get(prm, "-") if m == "TRADE_ITEM" else "-")
              for s in range(1, 252) for m, prm, t in evo[s] if t <= 251 and m in EVO_IMPOSSIBLE_SOLO])
+
+    r.h(2, "Condizioni di sblocco (dal codice)")
+    r.p("- **Radio Suono Hoenn / Suono Sinnoh** (programma Musica Pokémon): solo con il Pokédex Nazionale, "
+        "Hoenn il mercoledì, Sinnoh il giovedì (`pokemon_music.c`). Sostituiscono gli slot erba 2-5.")
+    r.p("- **Sciami**: attivati da Oak alla consegna del Pokédex Nazionale (`EnableMassOutbreaks`, P01R0101); ogni giorno "
+        "una delle 20 mappe di `sSwarmMapLUT`. Gli sciami delle altre mappe non si attivano mai (dato morto).")
+    r.p("- **Pesca notturna** (`nightFish`): di notte sostituisce uno slot di Amo Buono/Super Amo, sempre attiva.")
+    r.p("- **Gara Pigliamosche**: tabella 0 prima del Nazionale; dopo, martedì/giovedì/sabato → tabelle 1/2/3 "
+        "(`overlay_bug_contest.c`). Le specie gen 3-4 sono solo nelle tabelle 2-3.")
+
+    r.h(2, "Sciami attivi")
+    r.table(["Mappa", "Tipo", "Specie"],
+            [(m, c, f"**{sp(s)}**" if s > 251 else sp(s)) for m, c, s, n in sorted(wild)
+             if c.startswith("sciame ") and c != "sciame mai attivo"])
 
     r.h(2, "Selvatici: radio e sciami per mappa")
     by = collections.defaultdict(collections.Counter)
@@ -476,14 +517,26 @@ def main():
             [(f, c, ", ".join(f"**{sp(s)}**" if s > 251 else sp(s) for s in sps) or "?", note) for f, c, sps, note in scripts])
 
     r.h(2, "Parco Lotta (set di Pokémon)")
+    r.p("Formato set (16 byte): specie, 4 mosse, EV, natura, strumento, forma. Gli allenatori contengono solo indici "
+        "dei set: per ripulire basta sostituire le specie (e le mosse) nei set gen 3-4.")
+    r.p()
     r.table(["Archivio", "Descrizione", "Set totali", "Set gen 3", "Set gen 4"],
             [(a, d, sum(c.values()), sum(n for s, n in c.items() if gen(s) == 3), sum(n for s, n in c.items() if gen(s) == 4))
              for a, (d, c) in frontier.items()])
 
+    r.h(2, "Altri archivi controllati")
+    r.p("- `a/0/6/6` (64×12 B): dati delle **bacche** (vasi di bacche, `overlay_16_022014A0.c`): i numeri non sono specie.")
+    r.p("- `a/2/5/8` (100×8 B): 3 specie + indice per voce; codice non decompilato. Ipotesi: squadre avversarie del "
+        "Pokéathlon. Contiene qualche specie gen 3-4 (da ripulire per coerenza, non si catturano).")
+    r.p("- `a/2/5/4` = `photo_data` (foto dello studio fotografico).")
+
     r.h(2, "Pokédex di Johto")
-    extra = [s for s in dex if s > 251]
-    r.p(f"Voci lette da a/1/3/8: {len([s for s in dex if s])}. Specie > 251 presenti: {len(extra)}"
-        + (f" — {', '.join(sp(s) for s in extra)}" if extra else "") + ".")
+    extra = sorted((n, s) for s, n in dex.items() if s > 251)
+    absent = [s for s in range(1, 252) if s not in dex]
+    r.p(f"a/1/3/8 = tabella numero nazionale → numero di Johto. Voci: {len(dex)}, numeri da 1 a {max(dex.values())}. "
+        f"Specie > 251 presenti: {len(extra)}" + (" — " + ", ".join(f"{sp(s)} (J{n})" for n, s in extra) if extra else "")
+        + f". Specie 1-251 assenti dal Pokédex di Johto: {len(absent)}"
+        + (" — " + ", ".join(sp(s) for s in absent) if absent else "") + ".")
 
     r.h(2, "Oggetti per evoluzioni/allevamento negli script")
     r.p("Solo oggetti citati per costante negli script. Quadro completo (a terra, nascosti, negozi, Spaccaroccia, "
@@ -500,8 +553,11 @@ def main():
 
     r.h(2, "Matrice di ottenibilità #001-#251 (una partita, HeartGold, senza scambi né eventi)")
     missing = [s for s in range(1, 252) if s not in obtain and s not in starter_species]
-    only_cond = [s for s in range(1, 252) if s in obtain and s in src and not via[s]
-                 and all(x.startswith(("radio", "sciami", "safari (bonus")) for x in src[s])]
+    # "solo condizionale": ottenibile, ma non più se si tolgono radio, sciami, bonus Safari e gara post-Nazionale
+    def conditional(x):
+        return x.startswith(("radio", "sciame", "safari (bonus")) or "dopo il Nazionale" in x
+    uncond, _ = closure({s for s, v in src.items() if 1 <= s <= 493 and not all(conditional(x) for x in v)}, evo, personal)
+    only_cond = [s for s in range(1, 252) if s in obtain and s not in uncond]
     fam_size = max((len(f) for f in starter_fam.values()), default=0)
     n_ok = 251 - len(missing) - len(starter_species) + fam_size
     r.p(f"**Ottenibili: {n_ok}/251** (contando una sola famiglia di starter). Mancanti: {len(missing)}"
