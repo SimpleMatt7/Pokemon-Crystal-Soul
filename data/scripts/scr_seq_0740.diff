@@ -1,0 +1,52 @@
+--- a/scr_seq_0740_T01R0301.s
++++ b/scr_seq_0740_T01R0301.s
+@@ -1,3 +1,4 @@
+ #include "constants/scrcmd.h"
++@ Pokémon Crystal New (D22): dopo Red si possono prendere tutte e tre le Poké Ball di Oak, una alla volta
+ #include "fielddata/script/scr_seq/event_T01R0301.h"
+ #include "msgdata/msg/msg_0451_T01R0301.h"
+@@ -29,8 +30,4 @@
+ 
+ _0057:
+-	SetFlag FLAG_HIDE_OAKS_LAB_BULBASAUR_BALL
+-	SetFlag FLAG_HIDE_OAKS_LAB_SQUIRTLE_BALL
+-	SetFlag FLAG_HIDE_OAKS_LAB_CHARMANDER_BALL
+-	SetVar VAR_UNK_4131, 6
+ 	End
+ 
+@@ -498,8 +495,4 @@
+ 	LockAll
+ 	FacePlayer
+-	Compare VAR_UNK_4131, 4
+-	GoToIfEq _097D
+-	Compare VAR_UNK_4131, 5
+-	GoToIfEq _097D
+ 	GetPersonCoords 0, VAR_TEMP_x4000, VAR_TEMP_x4001
+ 	Compare VAR_TEMP_x4000, 8
+@@ -535,8 +528,4 @@
+ 	LockAll
+ 	FacePlayer
+-	Compare VAR_UNK_4131, 3
+-	GoToIfEq _097D
+-	Compare VAR_UNK_4131, 5
+-	GoToIfEq _097D
+ 	GetPersonCoords 0, VAR_TEMP_x4000, VAR_TEMP_x4001
+ 	Compare VAR_TEMP_x4000, 8
+@@ -572,8 +561,4 @@
+ 	LockAll
+ 	FacePlayer
+-	Compare VAR_UNK_4131, 3
+-	GoToIfEq _097D
+-	Compare VAR_UNK_4131, 4
+-	GoToIfEq _097D
+ 	GetPersonCoords 0, VAR_TEMP_x4000, VAR_TEMP_x4001
+ 	Compare VAR_TEMP_x4000, 8
+@@ -671,5 +656,8 @@
+ 	ReleaseAll
+ 	CopyVar VAR_UNK_4131, VAR_SPECIAL_x8006
++	Compare VAR_SCENE_EMBEDDED_TOWER, 0
++	GoToIfNe _PCN_tower_done
+ 	SetVar VAR_SCENE_EMBEDDED_TOWER, 1
++_PCN_tower_done:
+ 	Return
+ 

@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 4: assemblatore di script `tools/scrasm.py` (965/965 identici alla ROM),
-patch agli script in `data/scripts/*.diff`; Mew, Celebi, Pichu, vaganti Lati fatti. Mancano: testi (Rocco), Oak, Pokédex; §11).
+Ultimo aggiornamento: 2026-09-29 (fase 4: script completi (Rocco e Oak con tutti e 3 gli starter, Mew, Celebi, Pichu,
+Lati tolti), editor dei testi `tools/msg.py` (829/829), banner "Pokémon Crystal Soul" (provvisorio), build anche da IPKE (USA). §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -45,7 +45,9 @@ partendo dalla ROM ITA).
 | D21 | **Celebi** al santuario del Bosco di Lecci **dopo la Lega**, catturato con la lotta "fatidica" (`ScrCmd_686`, esiste nel gioco ma non è usata): Celebi ha il flag evento ⇒ **il viaggio nel passato funziona** senza patch al codice | Scelta utente + proposta Claude |
 | D25 | **Pichu Spunzorecchio** sbloccabile: dopo la Lega, Pichu qualsiasi in testa alla squadra al santuario. Fatto **solo nello script** (`GetPartyMonSpecies` al posto di `FollowerPokeIsEventTrigger EVENT_SPIKY_EARED_PICHU`): nessuna patch al codice | Scelta utente |
 | D26 | Script modificati come **diff** sui sorgenti della decomp (`data/scripts/scr_seq_NNNN.diff`), assemblati da `tools/scrasm.py` | Nel repo solo differenze; assemblatore verificato 965/965 byte per byte |
-| D27 | Flag nostri nel blocco **0x51F-0x54F** (mai usato né da script né dal codice C): `FLAG_PCN_CELEBI_CAUGHT` = 0x54E | Serve un flag permanente; MAPTEMP si azzera cambiando mappa |
+| D28 | Nome provvisorio **"Pokémon Crystal Soul"** nel banner del DS (`data/design/banner.csv`). Candidati dell'utente: Pokémon Crystal Soul / Pokémon Anima Cristallo / Pokémon Versione Crystal Soul | Da decidere |
+| D29 | **Versione inglese possibile**: `python tools/build.py --base IPKE` applica lo stesso design alla ROM USA (dati e script sono identici tra IPKI e IPKE); servono solo i testi in `data/testi/ENG/` | Verificato 2026-09-29: build IPKE con verifica a zero |
+| D27 | Flag nostri nel blocco **0x51F-0x54F** (mai usato né da script né dal codice C): `FLAG_PCN_CELEBI_CAUGHT` = 0x54E; Rocco: `FLAG_PCN_STEVEN_GREEN/RED/BLUE` = 0x54B-0x54D | Serve un flag permanente; MAPTEMP si azzera cambiando mappa |
 | D22 | Oak (Kanto) e Rocco (Johto, D17) lasciano **tutte e 3 le Poké Ball**: si possono prendere tutti gli starter | Scelta utente (2026-09-29) |
 | D23 | Radio Suono Hoenn/Sinnoh **neutra**: le sue specie = slot erba 2/4 (giorno) della stessa mappa | Proposta Claude, scelta di minimo impatto (la radio non può avere specie 0) |
 | D24 | Tutte le altre specie > 251 (allenatori, Parco Lotta, Pokéathlon, Bottintesta, Safari, Gara) con la **tabella globale** `data/design/sostituzioni.csv` (242 righe riviste) | Coerenza; starter e leggendari mai negli incontri casuali |
@@ -185,21 +187,19 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 `get_tools.py` → `roundtrip.py` → `probe.py`, ripresa con Claude Code).
 
 ## 11. Prossimi passi
-1. **Utente**: provare `out/PokemonCrystalNew_IPKI.nds` (dati + script). Da controllare in particolare: sprite di Mew alla
-   Torre Inclusa dopo la Lega (sprite "compagno", non esiste quello statico); Celebi al santuario di Lecci dopo la Lega
-   (lv 30), poi con Celebi in testa il viaggio nel passato; Pichu in testa al santuario dopo la Lega.
-2. Fase 4 — fatto: `build.py` (dati), `scrasm.py` (assemblatore), `scrpatch.py` (patch agli script:
-   `apri NNNN` → modifica in work/script_edit → `salva`). Script già modificati: 0092 santuario di Lecci (Celebi D21,
-   Pichu D25), 0133-0135 Torre Inclusa (Mew D20, condizione FLAG_GAME_CLEAR), 0776 Aranciopoli (niente scena Lati),
-   0825 Lega (niente vaganti Lati). Sprite della stanza: `data/design/oggetti_mappa.csv`.
+1. **Utente**: provare `out/PokemonCrystalNew_IPKI.nds`. Controlli nuovi: nome nel menu del DS; Rocco a Zafferanopoli
+   (post-game): pietra verde/rossa/blu → Chikorita/Cyndaquil/Totodile, Rocco resta finché non li hai presi tutti e 3;
+   Oak dopo Red: tutte e 3 le Poké Ball; dopo la Lega: Mew alla Torre Inclusa (sprite), Celebi al santuario di Lecci
+   (lv 30) e poi viaggio nel passato con Celebi in testa, Pichu in testa al santuario.
+2. Fase 4 — fatto: dati (`build.py`), script (`scrasm.py` + `scrpatch.py`, 8 script: 0092, 0133-0135, 0740 Oak,
+   0776, 0825, 0837 Rocco), testi (`msg.py`, nessuna modifica per ora: il menu di Rocco usa i colori delle pietre),
+   banner. `build.py --base IPKE` per la versione USA.
    Da fare:
-   a. **Testi**: strumento per leggere/scrivere i messaggi italiani (a/0/2/7, formato gen 4 cifrato, charmap della decomp).
-      Serve per Rocco (le voci del menu sono i nomi Treecko/Torchic/Mudkip; D17 + tutti e 3: darli tutti insieme).
-   b. Oak (T01R0301): tutte e 3 le Poké Ball (D22).
-   c. Pokédex di Johto: togliere le 5 voci gen 4 (a/1/3/8 + liste in a/0/7/4).
-   d. BPS più piccola: confronto file per file (ora 300 KB perché gli script cambiano lunghezza e spostano i dati).
+   a. Pokédex di Johto: togliere le 5 voci gen 4 (a/1/3/8 + liste in a/0/7/4, che dipende dalla lingua).
+   b. BPS più piccola: confronto file per file (ora 300 KB perché gli script cambiano lunghezza).
+   c. Testi che citano specie o regioni tolte (es. radio Suono Hoenn/Sinnoh, NPC): cercarli con msg.py.
 3. Pubblicazione della BPS in `patches/`: dopo i test.
-4. Rifiniture (idea utente): nome della ROM nel banner del DS e schermata del titolo ("Pokémon Crystal Soul"?).
+4. Rifiniture: nome definitivo (D28), icona del banner e schermata del titolo (grafica).
 
 ## 12. Problemi aperti
 - Nessuno bloccante.

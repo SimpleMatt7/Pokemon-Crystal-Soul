@@ -21,7 +21,8 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 - `tools/` — script: `roms.py` (trova/verifica ROM), `ndsfs.py` (lettura FNT/FAT/NARC), `probe.py` (audit specie > 251),
   `get_tools.py` (scarica dsrom con SHA256), `roundtrip.py` (estrai/ricostruisci/confronta), `find_nature_table.py`,
   `get_pret.py` (decomp pret in `work/pret`, commit fissato), `audit.py` (→ `docs/audit.md`), `items.py` (→ `docs/oggetti.md`),
-  `build.py` (costruisce la ROM), `bps.py` (patch BPS), `design*.py` (tabelle di design).
+  `build.py` (costruisce la ROM), `bps.py` (patch BPS), `design*.py` (tabelle di design), `scrasm.py`/`scrpatch.py`
+  (script), `msg.py` (testi). `data/scripts/` diff degli script, `data/testi/<lingua>/` testi modificati.
 - `tools/bin/` (ignorata) — binari esterni scaricati; non si versionano (decisione D14).
 - `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret). `data/design/`: tabelle di design
   della fase 3 (sostituzioni, selvatici, evoluzioni, oggetti, eventi); generatori `tools/design_subs.py`, `tools/design_wild.py`.
@@ -39,6 +40,10 @@ python tools/audit.py         # report specie > 251 e matrice di ottenibilità �
 python tools/items.py         # fonti degli oggetti (evolutivi, fossili, aromi) → docs/oggetti.md
 python tools/design.py        # applica data/design/*.csv in memoria e verifica (0 > 251, 251/251) → docs/design.md
 python tools/build.py         # costruisce out/PokemonCrystalNew_IPKI.nds + .bps (work/build, verifica sui file)
+python tools/build.py --base IPKE   # stessa hack sulla ROM USA
+python tools/scrasm.py --verifica   # assemblatore di script: 965/965 identici alla ROM
+python tools/scrpatch.py apri NNNN  # modifica uno script (poi: salva) → data/scripts/scr_seq_NNNN.diff
+python tools/msg.py mostra NNNN     # testi di un archivio (a/0/2/7); modifiche in data/testi/ITA/msg_NNNN.csv
 python tools/bps.py applica ORIGINALE PATCH.bps USCITA   # applica una BPS (anche: crea)
 git config core.hooksPath tools/hooks   # una volta per clone: attiva l'hook anti-ROM
 ```

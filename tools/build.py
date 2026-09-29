@@ -309,6 +309,32 @@ def apply_scripts(c):
     n.save()
 
 
+def apply_texts(c, lang="ITA"):
+    import msg
+    n = Narc(msg.MSG_NARC)
+    for f in sorted((ROOT / "data" / "testi" / lang).glob("msg_*.csv")):
+        idx = int(re.match(r"msg_(\d+)", f.stem).group(1))
+        key, texts = msg.read_texts(bytes(n.files[idx]))
+        with open(f, newline="", encoding="utf-8") as fh:
+            for r in csv.DictReader(line for line in fh if not line.startswith("#")):
+                texts[int(r["indice"])] = r["testo"]
+                c.log["testi"] += 1
+        n.files[idx] = bytearray(msg.write(key, texts))
+    n.save()
+
+
+def apply_banner(c):
+    p = BUILD / "banner" / "banner.yaml"
+    y = p.read_text(encoding="utf-8")
+    for r in rows("banner.csv"):
+        lines = r["titolo"].split("\\n")  # nel CSV "\n" (due caratteri) separa le righe
+        block = f"  {r['lingua']}: |-\n" + "".join(f"    {ln}\n" for ln in lines)
+        y, k = re.subn(rf"  {r['lingua']}: \|-\n(?:    .*\n)+", lambda _m: block, y)
+        assert k == 1, r
+        c.log["banner"] += 1
+    p.write_text(y, encoding="utf-8")
+
+
 # ------------------------------------------------------------------ verifica sui file costruiti
 def verify(c):
     audit.ROM = BUILD / "files"
@@ -332,24 +358,32 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # console Windows cp1252
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-rom", action="store_true")
+    ap.add_argument("--base", default="IPKI", help="ROM di partenza: IPKI (ITA, default) o IPKE (USA)")
     args = ap.parse_args()
+    global SRC, BUILD, NAME
+    SRC = ROOT / "work" / args.base
+    BUILD = ROOT / "work" / f"build_{args.base}" if args.base != "IPKI" else BUILD
+    NAME = f"PokemonCrystalNew_{args.base}"
+    audit.ROM = SRC / "files"
+    lang = {"IPKI": "ITA", "IPKE": "ENG"}[args.base]
     if not SRC.exists():
-        sys.exit("Manca work/IPKI: eseguire prima python tools/roundtrip.py")
+        sys.exit(f"Manca {SRC.relative_to(ROOT)}: eseguire prima python tools/roundtrip.py {args.base}")
     if BUILD.exists():
         shutil.rmtree(BUILD)
-    print("Copia work/IPKI → work/build ...")
+    print(f"Copia {SRC.relative_to(ROOT)} → {BUILD.relative_to(ROOT)} ...")
     shutil.copytree(SRC, BUILD)
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts):
+                 apply_map_objects, apply_scripts, apply_banner):
         step(c)
+    apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
     left = verify(c)
     print("Verifica sui file costruiti (specie > 251 rimaste):", dict(left))
     if any(left.values()):
         sys.exit("ERRORE: restano specie > 251 o evoluzioni per scambio")
-    print("Non ancora applicati: starter di Oak/Rocco (servono i testi), Pokédex di Johto.")
+    print("Non ancora applicati: Pokédex di Johto.")
 
     if args.no_rom:
         return
@@ -360,7 +394,7 @@ def main():
     print(f"dsrom build → {rom.relative_to(ROOT)} ...")
     run_dsrom("build", "--config", str(BUILD / "config.yaml"), "--rom", str(rom))
     print("Patch BPS ...")
-    patch = bps.create((ROOT / "work" / "IPKI_orig.nds").read_bytes(), rom.read_bytes())
+    patch = bps.create((ROOT / "work" / f"{args.base}_orig.nds").read_bytes(), rom.read_bytes())
     (OUT / f"{NAME}.bps").write_bytes(patch)
     print(f"{NAME}.bps: {len(patch)} byte")
 
