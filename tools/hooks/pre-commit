@@ -1,0 +1,37 @@
+#!/bin/sh
+# Blocca il commit di ROM, salvataggi, dati estratti e file grandi.
+# Attivazione (una volta per clone): git config core.hooksPath tools/hooks
+
+max_kb=512
+marker="${TMPDIR:-/tmp}/.precommit_fail_$$"   # $$ resta lo stesso nella subshell del while
+rm -f "$marker"
+
+block() { echo "BLOCCATO ($1): $2" >&2; : > "$marker"; }
+
+git diff --cached --name-only --diff-filter=ACMR -z | tr '\0' '\n' | while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  lower=$(printf '%s' "$f" | tr 'A-Z' 'a-z')
+  # Unica eccezione: patch BPS in patches/ (contengono solo differenze)
+  case "$lower" in
+    patches/*.bps) continue ;;
+  esac
+  case "$lower" in
+    *.nds|*.srl|*.dsi|*.zip|*.7z|*.rar|*.sav|*.dsv|*.duc|*.narc|*.bin|*.arc|*.sdat|*.nsbmd|*.nsbtx|*.ncgr|*.nclr|*.ncer|*.nanr|*.pkm|*.pk4|*.bps|*.xdelta|*.ips|*.ups)
+      block "estensione protetta" "$f" ;;
+    roms/*|work/*|out/*|extracted/*|build/*|*_dspre_contents/*|dspre_projects/*)
+      block "cartella protetta" "$f" ;;
+  esac
+  size=$(git cat-file -s ":$f" 2>/dev/null || echo 0)
+  [ "$size" -gt $((max_kb * 1024)) ] && block "> ${max_kb} KB, verificare a mano" "$f"
+  # Header NDS di Pokémon: "POKEMON " all'offset 0
+  if [ "$size" -gt 512 ] && [ "$(git cat-file -p ":$f" 2>/dev/null | head -c 8)" = "POKEMON " ]; then
+    block "sembra una ROM NDS" "$f"
+  fi
+done
+
+if [ -e "$marker" ]; then
+  rm -f "$marker"
+  echo "Commit annullato: togli i file sopra dallo staging (git restore --staged <file>)." >&2
+  exit 1
+fi
+exit 0
