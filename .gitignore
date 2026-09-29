@@ -57,6 +57,7 @@ backups/
 
 # Tool scaricati (si riscaricano con gli script)
 tools/bin/
+tools/bin-cargo/
 
 # Python / Node / OS
 __pycache__/
