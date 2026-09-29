@@ -1,6 +1,6 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 1 completata lato script; restano 2 verifiche manuali dell'utente, §11).
+Ultimo aggiornamento: 2026-09-29 (fase 2: primo giro di `tools/audit.py` eseguito → `docs/audit.md`; vedi §5b e §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -56,6 +56,39 @@ partendo dalla ROM ITA).
 - Layout incontri usato (offset in byte): erba 20..91 (3×12 u16), radio Hoenn 92/94, radio Sinnoh 96/98,
   surf 100+4k (+2 specie), spaccaroccia 120+4k, pesca 128+4k (15 slot), sciami 188..195.
 
+## 5b. Scoperte della fase 2 (finora)
+- **IPKI e IPKE hanno archivi di dati identici byte per byte** (SHA1): personal, mosse, oggetti, evoluzioni,
+  learnset, incontri, allenatori, **script (a/0/1/2)**, eventi di zona, Safari, Bottintesta, scambi, Gara, uova.
+  Differiscono solo testi (a/0/2/7) e a/0/7/4 (dati Pokédex, probabilmente ordine alfabetico).
+  ⇒ la decomp pret (che ricostruisce la versione USA) documenta anche la ROM ITA: nomi mappe/allenatori e script in chiaro.
+  Scaricata in `work/pret` con `tools/get_pret.py` (commit fissato 9d8b7591).
+- Mappa archivi (da `filesystem.mk` della decomp): a/0/0/2 personal, a/0/1/1 mosse, a/0/1/2 script, a/0/1/7 oggetti,
+  a/0/2/7 testi, a/0/3/2 eventi zona, a/0/3/3 learnset, a/0/3/4 evoluzioni, a/0/3/7 incontri HG (a/1/3/6 SS),
+  a/0/5/5-6 allenatori, a/1/3/8 Pokédex Johto, a/2/2/9 mosse uovo, a/2/3/0 Safari, a/2/5/2 Bottintesta,
+  `data/tradelist.narc` scambi, `data/mushi/mushi_encount.bin` Gara Pigliamosche (4 tabelle × 10).
+- **Parco Lotta** (non mappato nella decomp, trovato per scansione): a/1/2/9 (951 set da 16 byte) + a/1/2/8 (allenatori),
+  a/2/0/3 (951 set) + a/2/0/2 (allenatori), a/2/0/4 (478 set, forse noleggi). Circa metà dei set è gen 3-4.
+  Record: specie u16, 4 mosse u16, EV u8, natura u8, strumento u16, …
+- Archivi non identificati con qualche specie gen 3-4: a/0/6/6 (64×12 B), a/2/5/8 (100×8 B), a/2/5/4 (= photo_data).
+- **Gara Pigliamosche**: tabelle 0-1 solo gen 1-2; tabelle 2-3 con Wurmple, Silcoon/Cascoon, Nincada, Volbeat/Illumise,
+  Kricketot/Kricketune, Dustox/Beautifly, Combee (+ Scyther, Pinsir). Da capire quando si usano le tabelle 2-3.
+- **Scambi in gioco** (13): uno dà **Beldum** (Iron). Gli altri sono gen 1-2.
+- **Script** (regali/statici): Ho-Oh (D17R0110, lv 45/70) e Lugia (D40R0107, lv 70/45) entrambi in HG.
+  Rocco dà **Treecko/Torchic/Mudkip** lv 5 (T11R0701) → idea: sostituirli con **Chikorita/Cyndaquil/Totodile**
+  (risolve i 2 starter di Johto mancanti). Torre Inclusa: Groudon (D52R0101), Kyogre (D52R0102), Rayquaza (D52R0103).
+  Rovine di Sinjoh (D51R0201): Dialga/Palkia/Giratina (solo con Arceus evento). Lati: statico lv 40 a Plumbeopoli
+  (T03, Pietrenigma evento) e vaganti (T06, CreateRoamer 2/3). Riferimenti cosmetici (versi, controlli party) a Chatot,
+  Banette, Deoxys, Rotom, Togekiss: innocui.
+- Oggetti negli script: Roccia di Re (Pozzo Slowpoke D26R0103), Metallopatina (M/N Acqua P01R0306). Squama Drago,
+  Upgrade, Aromi, fossili **non** compaiono per costante: probabilmente item ball / oggetti nascosti / negozi nel codice.
+  Il Museo di Plumbeopoli (T03R0101) rianima Ambra Vecchia, Helix, Dome: da verificare come si ottengono i fossili.
+
+- **Primo giro audit** (controlli ROM↔decomp tutti OK: 142 tabelle selvatici, 12 aree Safari, 738/738 squadre allenatori
+  identiche): **230/251 ottenibili**. Mancanti (21): esclusive SS (Vulpix, Ninetales, Meowth, Persian, Ledyba, Ledian,
+  Teddiursa, Ursaring, Delibird, Skarmory), evoluzioni per scambio (Alakazam, Machamp, Golem, Gengar, Politoed, Slowking,
+  Scizor, Kingdra, Porygon2), Mew, Celebi. Limite noto: i 3 starter di Johto sono contati tutti come ottenibili
+  (in realtà 1 su 3) — da correggere nella matrice.
+
 ## 6. Da verificare (fase 2)
 - Safari di Johto: secondo Serebii ~25-30 specie gen3-4 su 80+, sbloccate con oggetti + giorni. Formato dati ignoto.
 - Headbutt, Gara Bug: dove sono i dati (NARC vs codice).
@@ -107,8 +140,10 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 1. (Fatto) Primo push di `main` e `dev` su GitHub come SimpleMatt7; da qui in avanti si lavora e si pusha su `dev`.
 2. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS fino al menu/intro (verifica che i CRC di header
    non ricalcolati non diano problemi); aprire la ROM IPKI in DSPRE 2.3.2 e confermare che carica senza errori.
-3. Fase 2: estendere `probe.py` → audit completo (§6), report in `docs/audit.md` (solo nomi/ID, nessun dato binario).
-   Leggere i dati da `work/IPKI/files/` invece che dalla ROM in memoria.
+3. Fase 2 (in corso): eseguire `python tools/get_pret.py` e poi `python tools/audit.py` → `docs/audit.md`
+   (solo nomi/ID). Rivedere l'output: controlli di coerenza ROM↔decomp tutti OK? matrice 251, mancanti attesi Mew/Celebi +
+   altri? Poi committare get_pret.py, audit.py, docs/audit.md. Punti aperti: fonte dei fossili e degli oggetti evolutivi
+   (codice: negozi/nascosti), tabelle 2-3 della Gara, archivi a/0/6/6 e a/2/5/8, formato allenatori del Parco Lotta.
 4. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
 
 ## 12. Problemi aperti
