@@ -22,7 +22,8 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
   `get_tools.py` (scarica dsrom con SHA256), `roundtrip.py` (estrai/ricostruisci/confronta), `find_nature_table.py`,
   `get_pret.py` (decomp pret in `work/pret`, commit fissato), `audit.py` (→ `docs/audit.md`), `items.py` (→ `docs/oggetti.md`).
 - `tools/bin/` (ignorata) — binari esterni scaricati; non si versionano (decisione D14).
-- `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret).
+- `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret). `data/design/`: tabelle di design
+  della fase 3 (sostituzioni, selvatici, evoluzioni, oggetti, eventi); generatori `tools/design_subs.py`, `tools/design_wild.py`.
 - `docs/` — `SETUP.md` (setup da zero su un altro PC).
 - `patches/` — patch BPS pubblicabili (quando esisteranno).
 
@@ -35,6 +36,7 @@ python tools/probe.py         # dove compaiono specie > 251 (evoluzioni, selvati
 python tools/get_pret.py      # decomp pret (documentazione dei formati, script in chiaro)
 python tools/audit.py         # report specie > 251 e matrice di ottenibilità → docs/audit.md
 python tools/items.py         # fonti degli oggetti (evolutivi, fossili, aromi) → docs/oggetti.md
+python tools/design.py        # applica data/design/*.csv in memoria e verifica (0 > 251, 251/251) → docs/design.md
 git config core.hooksPath tools/hooks   # una volta per clone: attiva l'hook anti-ROM
 ```
 

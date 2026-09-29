@@ -1,7 +1,7 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-29 (fase 2 **completata**: fonti degli oggetti, condizioni di sblocco di radio/sciami/gara,
-archivi residui; audit corretto → 222/251; vedi §5b e §11. Prossimo: decisioni di design della fase 3).
+Ultimo aggiornamento: 2026-09-29 (fase 3 — tabelle di design in `data/design/`, verifica `tools/design.py` →
+`docs/design.md`: 0 specie > 251, 251/251 ottenibili. Aperto: forma dell'evento Celebi; vedi §11).
 
 ## 1. Obiettivo
 Esperienza "Pokémon Cristallo" con **solo le 251 specie di gen 1-2, tutte ottenibili in una partita**, grafica
@@ -13,7 +13,7 @@ partendo dalla ROM ITA).
 - [x] Fase 1 — toolchain e round-trip sulla ROM ITA: **OK**, differenze solo nei 4 byte di CRC dell'header
       (0x6C area sicura, 0x15E header). Mancano: avvio di `out/roundtrip_IPKI.nds` in melonDS e apertura IPKI in DSPRE (utente).
 - [x] Fase 2 — audit completo in sola lettura (`docs/audit.md`, `docs/oggetti.md`; §5b).
-- [ ] Fase 3 — tabelle di design (nuove distribuzioni, allenatori sostitutivi, regali).
+- [~] Fase 3 — tabelle di design in `data/design/` (verificate in memoria: 0 > 251, 251/251). Manca: dettaglio evento Celebi.
 - [ ] Fase 4 — `build.py`: applica le tabelle, ricostruisce, genera BPS; audit = 0 specie > 251, 251/251 ottenibili.
 - [ ] Fase 5 — opzioni meccaniche (nature neutre?).
 - [ ] Fase 6 — playtest dell'utente con checklist.
@@ -40,6 +40,12 @@ partendo dalla ROM ITA).
 | D16 | Le 10 esclusive SS (Vulpix, Meowth, Ledyba, Teddiursa, Delibird, Skarmory + evoluzioni) diventano **selvatiche nelle aree dove stanno in SoulSilver** | Scelta utente (2026-09-29): la più fedele |
 | D17 | Rocco (T11R0701) regala **Chikorita/Cyndaquil/Totodile** al posto di Treecko/Torchic/Mudkip | Scelta utente (2026-09-29) |
 | D18 | I 12 sciami gen 3-4 vengono **sostituiti** con specie gen 1-2 (gli 8 sciami gen 1-2 restano) | Scelta utente (2026-09-29) |
+| D19 | Kabuto: **Domofossile al posto del Frammento Blu** nella tabella Spaccaroccia delle Rovine d'Alfa (come SS); Fossilunghia della Grotta Falesia → Fossilhelix/Ambra Vecchia | Scelta utente (2026-09-29) |
+| D20 | **Mew** alla Torre Inclusa al posto di Groudon (lv 50; anche le stanze Kyogre/Rayquaza, irraggiungibili in HG) | Scelta utente; conferma D11 |
+| D21 | **Celebi** al santuario del Bosco di Lecci **dopo la Lega** (forma dell'evento da definire: cattura o regalo) | Scelta utente; precisa D10 |
+| D22 | Oak (Kanto) e Rocco (Johto, D17) lasciano **tutte e 3 le Poké Ball**: si possono prendere tutti gli starter | Scelta utente (2026-09-29) |
+| D23 | Radio Suono Hoenn/Sinnoh **neutra**: le sue specie = slot erba 2/4 (giorno) della stessa mappa | Proposta Claude, scelta di minimo impatto (la radio non può avere specie 0) |
+| D24 | Tutte le altre specie > 251 (allenatori, Parco Lotta, Pokéathlon, Bottintesta, Safari, Gara) con la **tabella globale** `data/design/sostituzioni.csv` (242 righe riviste) | Coerenza; starter e leggendari mai negli incontri casuali |
 
 ## 4. Alternative scartate
 - **pret/pokeheartgold (decomp)**: WIP, compila solo USA, serve MWCC (msys2/wine); usarla = perdere l'italiano. Tenuta come *documentazione dei formati*.
@@ -69,7 +75,7 @@ partendo dalla ROM ITA).
 - Mappa archivi (da `filesystem.mk` della decomp): a/0/0/2 personal, a/0/1/1 mosse, a/0/1/2 script, a/0/1/7 oggetti,
   a/0/2/7 testi, a/0/3/2 eventi zona, a/0/3/3 learnset, a/0/3/4 evoluzioni, a/0/3/7 incontri HG (a/1/3/6 SS),
   a/0/5/5-6 allenatori, a/1/3/8 Pokédex Johto, a/2/2/9 mosse uovo, a/2/3/0 Safari, a/2/5/2 Bottintesta,
-  `data/tradelist.narc` scambi, `data/mushi/mushi_encount.bin` Gara Pigliamosche (4 tabelle × 10).
+  **a/1/1/2 scambi** (`data/tradelist.narc` è grafica, non gli scambi: corretto 2026-09-29), `data/mushi/mushi_encount.bin` Gara Pigliamosche (4 tabelle × 10).
 - **Parco Lotta**: a/2/0/3 (951 set) + a/2/0/2 (allenatori) = Torre Lotta (`unk_0204B538.c`); a/1/2/9 + a/1/2/8 stesso
   formato, altra struttura (codice non decompilato); a/2/0/4 (478 set, forse noleggi Factory). Circa metà dei set è gen 3-4.
   Set (16 B): specie, 4 mosse, EV, natura, strumento, forma. Allenatori (104 B): classe, numero set, indici dei set
@@ -88,7 +94,8 @@ partendo dalla ROM ITA).
 - **Pokédex di Johto** (a/1/3/8): è una tabella numero nazionale → numero di Johto (0 = assente), non una lista di specie.
   256 voci = tutte le 251 + 5 evoluzioni gen 4 (Yanmega J102, Ambipom J124, Lickilicky J181, Tangrowth J183,
   Mamoswine J197). Togliendole restano 5 buchi: da rinumerare (fase 4; controllare anche le liste di ordinamento in zkn_data).
-- **Scambi in gioco** (13): uno dà **Beldum** (Iron). Gli altri sono gen 1-2.
+- **Scambi in gioco** (13, a/1/1/2, 0x54 byte: specie data a 0x00, chiesta a 0x4C): Iron dà **Beldum**;
+  Hornlette (dà Rhyhorn) **chiede Bonsly** (gen 4). Il resto è gen 1-2.
 - **Script** (regali/statici): Ho-Oh (D17R0110, lv 45/70) e Lugia (D40R0107, lv 70/45) entrambi in HG.
   Rocco dà **Treecko/Torchic/Mudkip** lv 5 (T11R0701) → idea: sostituirli con **Chikorita/Cyndaquil/Totodile**
   (risolve i 2 starter di Johto mancanti). Torre Inclusa: Groudon (D52R0101), Kyogre (D52R0102), Rayquaza (D52R0103).
@@ -175,15 +182,16 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 `get_tools.py` → `roundtrip.py` → `probe.py`, ripresa con Claude Code).
 
 ## 11. Prossimi passi
-1. (Fatto) Primo push di `main` e `dev` su GitHub come SimpleMatt7; da qui in avanti si lavora e si pusha su `dev`.
-2. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS fino al menu/intro (verifica che i CRC di header
-   non ricalcolati non diano problemi); aprire la ROM IPKI in DSPRE 2.3.2 e confermare che carica senza errori.
-3. Fase 2 completata (`docs/audit.md`, `docs/oggetti.md`). Dopo `git pull` su un altro PC, rilanciare
-   `python tools/get_pret.py` (la sparse checkout ora include eventdata, itemdata e tutto `src/`).
-4. Fase 3 — decise D16-D18. Ancora aperte (proposte in chat 2026-09-29): Kabuto (Domofossile al posto di un
-   frammento nella tabella Spaccaroccia delle Rovine, come in SS), Mew (Torre Inclusa, fine post-game), Celebi
-   (incontro nuovo al santuario di Lecci), starter mancanti (Oak e Rocco che danno tutte e 3 le Poké Ball, una alla volta).
-5. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
+1. **Utente**: avviare `out/roundtrip_IPKI.nds` in melonDS; aprire IPKI in DSPRE 2.3.2 (verifica di base, ancora da fare).
+2. Fase 3 (quasi chiusa). Tabelle in `data/design/`:
+   `sostituzioni.csv` (242 righe, `tools/design_subs.py`), `selvatici.csv` (594 righe, `tools/design_wild.py`: D16, D18, D23),
+   `evoluzioni.csv` (D7, D8), `oggetti.csv` (D9, D19, oggetti D7 usabili come pietre), `eventi.csv` (D17, D20-D22, vaganti, scambi).
+   `python tools/design.py` le applica in memoria → `docs/design.md`. Aperto: **evento Celebi** (cattura statica vs regalo;
+   il viaggio nel passato richiede un Celebi "incontro fatidico": vedi chat 2026-09-29).
+3. Fase 4 — `build.py`: scrivere le tabelle nella ROM (NARC, overlay 1 per Spaccaroccia, script), adattare livelli/mosse
+   degli allenatori, rinumerare il Pokédex di Johto, generare la BPS. Script: capire come ricompilare gli script
+   (assemblatore nostro dai .s della decomp o DSPRE).
+4. Opzionale: provare dspre-mcp su IPKI (round-trip dei suoi parser) se servirà per gli script di evento.
 
 ## 12. Problemi aperti
 - Nessuno bloccante.

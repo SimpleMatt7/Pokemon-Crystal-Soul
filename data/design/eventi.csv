@@ -1,0 +1,14 @@
+# Regali, incontri statici, vaganti, scambi: modifiche agli script e ai dati legati agli script.
+# tipo: regalo | statico | vagante | scambio | nuovo. specie = costanti separate da |. condizione = quando si ottiene.
+tipo,dove,da,a,livello,condizione,motivo
+regalo,T11R0701 (Rocco),TREECKO|TORCHIC|MUDKIP,CHIKORITA|CYNDAQUIL|TOTODILE,5,post-game (come l'originale); tutte e 3 una alla volta,D17 + starter tutti ottenibili
+regalo,T01R0301 (Oak),BULBASAUR|CHARMANDER|SQUIRTLE,BULBASAUR|CHARMANDER|SQUIRTLE,5,dopo Red; tutte e 3 una alla volta (le altre Poké Ball restano),starter tutti ottenibili
+statico,D52R0101 (Torre Inclusa),GROUDON,MEW,50,Sfera Rossa (dopo Red -> Oak -> Sig. Pokémon),D11 Mew
+statico,D52R0102 (Torre Inclusa),KYOGRE,MEW,50,irraggiungibile in HG (Sfera Blu solo SS),pulizia
+statico,D52R0103 (Torre Inclusa),RAYQUAZA,MEW,50,irraggiungibile in HG (serve la stanza di Kyogre),pulizia
+nuovo,D36R0101 (santuario del Bosco di Lecci),,CELEBI,50,dopo aver battuto la Lega; da definire con l'utente,D10 Celebi
+vagante,T06 + T10R0701 (Latias/Latios),LATIAS|LATIOS,,,,togliere la creazione del vagante (CreateRoamer 2/3)
+statico,T03 (Plumbeopoli; Pietrenigma evento),LATIAS|LATIOS,,40,solo evento,pulizia: specie via sostituzioni.csv
+regalo,D51R0201 (Rovine di Sinjoh; Arceus evento),DIALGA|PALKIA|GIRATINA,,1,solo evento,pulizia: specie via sostituzioni.csv
+scambio,a/1/1/2 #12 Iron,BELDUM,MAGNEMITE,,,dà Beldum -> Magnemite (sostituzioni.csv)
+scambio,a/1/1/2 #11 Hornlette (chiede),BONSLY,SUDOWOODO,,,chiede Bonsly -> Sudowoodo
