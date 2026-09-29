@@ -1,7 +1,8 @@
 """Patch BPS (formato di byuu/beat): creazione e applicazione, solo libreria standard.
 
 La creazione cerca le parti uguali allo stesso offset (SourceRead) e, per i dati spostati, blocchi uguali
-allineati a 512 byte (l'allineamento dei file nella ROM ricostruita da dsrom) (SourceCopy); il resto è TargetRead.
+(SourceCopy): allineati a 512 byte in tutta la ROM (allineamento dei file di dsrom) e a 4 byte dentro i file
+che cambiano (letti dalla FAT: i NARC si spostano di multipli di 4). Il resto è TargetRead.
 
 Uso:  python tools/bps.py crea ORIGINALE MODIFICATA PATCH.bps
       python tools/bps.py applica ORIGINALE PATCH.bps USCITA
@@ -38,10 +39,32 @@ def _read_num(b, o):
         data += shift
 
 
+def _changed_file_ranges(src, dst):
+    """Intervalli (nella ROM sorgente) dei file NDS che cambiano tra src e dst, letti dalla FAT (0x48/0x4C).
+    Dentro questi file i dati si spostano di multipli di 4 byte (allineamento dei NARC), non di 512."""
+    try:
+        fat_s, n_s = struct.unpack_from("<II", src, 0x48)
+        fat_d, n_d = struct.unpack_from("<II", dst, 0x48)
+    except struct.error:
+        return []
+    out = []
+    for i in range(min(n_s, n_d) // 8):
+        a, b = struct.unpack_from("<II", src, fat_s + 8 * i)
+        c, d = struct.unpack_from("<II", dst, fat_d + 8 * i)
+        if 0 <= a <= b <= len(src) and 0 <= c <= d <= len(dst) and src[a:b] != dst[c:d]:
+            out.append((a, b))
+    return out
+
+
 def create(src: bytes, dst: bytes) -> bytes:
     index = {}
     for s in range(0, len(src) - KEY, BLOCK):
         index.setdefault(src[s:s + KEY], s)
+    fine = _changed_file_ranges(src, dst)
+    for a, b in fine:
+        for s in range(a - a % 4, b - KEY, 4):
+            index.setdefault(src[s:s + KEY], s)
+    step = 4 if fine else BLOCK
     out = bytearray(b"BPS1" + _num(len(src)) + _num(len(dst)) + _num(0))
     src_rel = 0  # posizione relativa per SourceCopy
     lit_start = None
@@ -67,7 +90,7 @@ def create(src: bytes, dst: bytes) -> bytes:
                 t = e
                 continue
         # 2) blocco spostato
-        if t % BLOCK == 0:
+        if t % step == 0:
             s = index.get(dst[t:t + KEY])
             if s is not None and s != t:
                 e = 0

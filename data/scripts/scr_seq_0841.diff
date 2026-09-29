@@ -1,0 +1,9 @@
+--- a/scr_seq_0841_T11R0802.s
++++ b/scr_seq_0841_T11R0802.s
+@@ -276,5 +276,5 @@
+ 	LockAll
+ 	FacePlayer
+-	PlayCry SPECIES_BANETTE, 0
++	PlayCry SPECIES_DITTO, 0
+ 	NPCMsg msg_0541_T11R0802_00013
+ 	WaitCry

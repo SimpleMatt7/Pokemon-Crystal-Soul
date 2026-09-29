@@ -1,0 +1,7 @@
+indice,testo
+11,"Brock: Chi si vede! {STRVAR_1 3, 0, 0}!\nSto allenando una nuova squadra\fdi Pokémon di tipo Roccia.\rMi manca solo un GEODUDE, ma\nnon trovo mai il tempo di catturarne\funo.\rSe hai un GEODUDE, ti andrebbe di\nscambiarlo con il mio RHYHORN?{YESNO 0}"
+12,"Brock: Chi si vede! Cara {STRVAR_1 3, 0, 0}!\nSto allenando una nuova squadra\fdi Pokémon di tipo Roccia.\rMi manca solo un GEODUDE, ma\nnon trovo mai il tempo di catturarne\funo.\rSe hai un GEODUDE, ti andrebbe di\nscambiarlo con il mio RHYHORN?{YESNO 0}"
+14,"Brock: Ah, nemmeno tu hai un GEODUDE...\rSe te ne capita uno tra le mani,\nscambialo con me, ti prego!"
+15,Brock: Sto cercando un GEODUDE...\nTi andrebbe di darmelo in cambio\fdel mio RHYHORN?{YESNO 0}
+16,"Brock: Grazie!\nNon sai quanto desiderassi un GEODUDE!\rIl RHYHORN che ti ho dato è uscito da\nun Uovo di cui mi sono preso cura io!\rE, non per vantarmi, ma ha imparato\nFulmindenti!\rQuesto vuol dire che può contrastare\nanche i Pokémon acqua, che di solito\fnon sono il suo forte.\rAbbine la massima cura!"
+18,Brock: Ehi! Ma quello non è un GEODUDE!

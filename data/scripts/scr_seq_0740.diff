@@ -41,12 +41,11 @@
 -	GoToIfEq _097D
  	GetPersonCoords 0, VAR_TEMP_x4000, VAR_TEMP_x4001
  	Compare VAR_TEMP_x4000, 8
-@@ -671,5 +656,8 @@
+@@ -671,6 +656,5 @@
  	ReleaseAll
  	CopyVar VAR_UNK_4131, VAR_SPECIAL_x8006
-+	Compare VAR_SCENE_EMBEDDED_TOWER, 0
-+	GoToIfNe _PCN_tower_done
- 	SetVar VAR_SCENE_EMBEDDED_TOWER, 1
-+_PCN_tower_done:
- 	Return
+-	SetVar VAR_SCENE_EMBEDDED_TOWER, 1
+-	Return
++	Return  @ niente catena della Sfera Rossa (Sig. Pokémon / Oak su Groudon e Kyogre): Mew compare dopo la Lega (D20)
  
+ _0929:
