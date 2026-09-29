@@ -1,0 +1,15 @@
+--- a/scr_seq_0134_D52R0102.s
++++ b/scr_seq_0134_D52R0102.s
+@@ -63,10 +63,10 @@
+ 	LockAll
+ 	FacePlayer
+-	PlayCry SPECIES_KYOGRE, 0
++	PlayCry SPECIES_MEW, 0
+ 	NPCMsg msg_0149_D52R0102_00000
+ 	WaitCry
+ 	CloseMsg
+ 	SetFlag FLAG_ENGAGING_STATIC_POKEMON
+-	WildBattle SPECIES_KYOGRE, 50, 0
++	WildBattle SPECIES_MEW, 50, 0
+ 	ClearFlag FLAG_ENGAGING_STATIC_POKEMON
+ 	CheckBattleWon VAR_SPECIAL_RESULT

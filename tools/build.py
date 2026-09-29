@@ -289,6 +289,26 @@ def apply_items(c):
     n.save()
 
 
+def apply_map_objects(c):
+    sprites = {m.group(1): int(m.group(2)) for m in re.finditer(r"#define (SPRITE_\w+)\s+(\d+)", (audit.PRET / "include/constants/sprites.h").read_text())}
+    n = Narc("a/0/3/2")
+    for r in rows("oggetti_mappa.csv"):
+        f = n.files[int(r["zona"])]
+        nb = struct.unpack_from("<I", f, 0)[0]
+        o = 4 + nb * 20 + 4 + int(r["oggetto"]) * 32 + {"sprite": 2}[r["campo"]]
+        assert u16(f, o) == sprites[r["da"]], (r, u16(f, o))
+        set16(f, o, sprites[r["a"]]); c.log["oggetti delle mappe"] += 1
+    n.save()
+
+
+def apply_scripts(c):
+    import scrpatch
+    n = Narc("a/0/1/2")
+    for idx, b in scrpatch.patched_scripts().items():
+        n.files[idx] = bytearray(b); c.log["script"] += 1
+    n.save()
+
+
 # ------------------------------------------------------------------ verifica sui file costruiti
 def verify(c):
     audit.ROM = BUILD / "files"
@@ -321,14 +341,15 @@ def main():
     shutil.copytree(SRC, BUILD)
 
     c = Ctx()
-    for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items):
+    for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
+                 apply_map_objects, apply_scripts):
         step(c)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
     left = verify(c)
     print("Verifica sui file costruiti (specie > 251 rimaste):", dict(left))
     if any(left.values()):
         sys.exit("ERRORE: restano specie > 251 o evoluzioni per scambio")
-    print("Script (starter, Mew, Celebi, vaganti, Pichu) e Pokédex di Johto: non ancora applicati.")
+    print("Non ancora applicati: starter di Oak/Rocco (servono i testi), Pokédex di Johto.")
 
     if args.no_rom:
         return

@@ -6,8 +6,8 @@ regalo,T01R0301 (Oak),BULBASAUR|CHARMANDER|SQUIRTLE,BULBASAUR|CHARMANDER|SQUIRTL
 statico,D52R0101 (Torre Inclusa),GROUDON,MEW,50,dopo aver battuto la Lega (condizione nuova al posto della Sfera Rossa),D20 Mew
 statico,D52R0102 (Torre Inclusa),KYOGRE,MEW,50,irraggiungibile in HG (Sfera Blu solo SS),pulizia
 statico,D52R0103 (Torre Inclusa),RAYQUAZA,MEW,50,irraggiungibile in HG (serve la stanza di Kyogre),pulizia
-nuovo,D36R0101 (santuario del Bosco di Lecci),,CELEBI,50,dopo aver battuto la Lega; lotta 'fatidica' (ScrCmd_686) => Celebi con flag evento,D21 Celebi (abilita il viaggio nel passato)
-nuovo,D36R0101 (santuario del Bosco di Lecci),,PICHU,,dopo la Lega (e dopo il viaggio nel passato): Pichu qualsiasi in squadra; patch al controllo EVENT_SPIKY_EARED_PICHU (niente cromatico/evento),D25 Pichu Spunzorecchio
+nuovo,D36R0101 (santuario del Bosco di Lecci),,CELEBI,30,dopo aver battuto la Lega; lotta 'fatidica' (ScrCmd_686) => Celebi con flag evento,D21 Celebi (abilita il viaggio nel passato)
+nuovo,D36R0101 (santuario del Bosco di Lecci),,PICHU,,dopo la Lega: Pichu qualsiasi in testa alla squadra (script: GetPartyMonSpecies al posto del controllo evento; nessuna patch al codice),D25 Pichu Spunzorecchio
 vagante,T06 + T10R0701 (Latias/Latios),LATIAS|LATIOS,,,,togliere la creazione del vagante (CreateRoamer 2/3)
 statico,T03 (Plumbeopoli; Pietrenigma evento),LATIAS|LATIOS,,40,solo evento,pulizia: specie via sostituzioni.csv
 regalo,D51R0201 (Rovine di Sinjoh; Arceus evento),DIALGA|PALKIA|GIRATINA,,1,solo evento,pulizia: specie via sostituzioni.csv
