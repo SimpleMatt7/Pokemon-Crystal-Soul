@@ -25,6 +25,7 @@ squadra è vuota 30 Ultra Ball e 10 Master Ball, poi porta sul posto. Si può us
 | Oak (Kanto) | `VAR_UNK_4131 = 1` (dopo Rosso), Poké Ball visibili | Laboratorio di Oak, sulla porta (parte la scena di Oak: 5 passi a nord) | D22 (provato, funziona): si possono prendere tutte e tre le Poké Ball, una alla volta (la squadra non deve essere piena) |
 | Rocco (Johto) | `VAR_UNK_4130 = 2`, `VAR_UNK_40FD = 1`, starter da Elm = Cyndaquil | Silph S.p.A. di Zafferanopoli | D17/D22/D47: il menu offre solo pietra verde e blu (Chikorita, Totodile), uno alla volta; Rocco se ne va dopo il secondo |
 | Uovo Strano | uovo non ancora ricevuto (squadra non piena) | Percorso 34, due passi sotto il nonno della Pensione | D48: parlando col nonno → Uovo Strano (baby a caso tra Pichu, Cleffa, Igglybuff, Smoochum, Magby, Elekid, Tyrogue) con Stordipugno; la seconda volta fa da Pensione come sempre. Per vedere cosa nasce: camminare finché si schiude (o riscegliere la voce per un altro uovo) |
+| Squadra di prova | Typhlosion (se vuota), Totodile, Chikorita, Pidgey lv 30 | resta in cameretta | D49: salvare e lanciare `tools/verifica_nature.py`: i Pokémon nuovi devono risultare SENZA effetto della natura |
 | Esci | — | — | — |
 
 Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova basta riscegliere la voce.

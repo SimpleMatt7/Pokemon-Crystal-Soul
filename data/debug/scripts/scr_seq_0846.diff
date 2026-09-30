@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,127 @@
+@@ -35,12 +35,138 @@
  	ReleaseAll
  	End
  
@@ -32,7 +32,8 @@
 +	MenuItemAdd 8, 255, 4
 +	MenuItemAdd 9, 255, 5
 +	MenuItemAdd 11, 255, 6
-+	MenuItemAdd 10, 255, 7
++	MenuItemAdd 12, 255, 7
++	MenuItemAdd 10, 255, 8
 +	MenuExec
 +	TouchscreenMenuShow
  	CloseMsg
@@ -44,6 +45,7 @@
 +	Case 4, _DBG_oak
 +	Case 5, _DBG_rocco
 +	Case 6, _DBG_uovo
++	Case 7, _DBG_squadra
 +	ReleaseAll
 +	End
 +
@@ -103,6 +105,15 @@
 +	WaitFade
 +	Warp MAP_PALLET_TOWN_OAKS_LAB, 0, 8, 12, DIR_NORTH
 +	GoTo _DBG_fine
++
++_DBG_squadra:
++	@ Pokémon nuovi (natura a caso) senza spostarsi: si salva in cameretta e si controlla con tools/verifica_nature.py
++	Call _DBG_prepara
++	GiveMon SPECIES_TOTODILE, 30, 0, 0, 0, VAR_SPECIAL_RESULT
++	GiveMon SPECIES_CHIKORITA, 30, 0, 0, 0, VAR_SPECIAL_RESULT
++	GiveMon SPECIES_PIDGEY, 30, 0, 0, 0, VAR_SPECIAL_RESULT
++	ReleaseAll
++	End
 +
 +_DBG_uovo:
 +	Call _DBG_prepara  @ un Pokémon vero in squadra (con solo un uovo il gioco si blocca)
