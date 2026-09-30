@@ -3,7 +3,6 @@
 file,contesto,posizione,da,a,motivo
 arm9/arm9.bin,08b500f023f8fe2801d3012008bd,6,fe,f9,Pokedex_JohtoDexIsComplete: completo con 249 catturati (251 - Mew - Celebi) invece di 254
 arm9/arm9.bin,f42801d82c207047fd2801d82d207047,8,fd,f8,GetOakJohtoDexRating: messaggio di Pokédex completo sopra 248 invece di 253
-arm9_overlays/ov060.bin,000202001b010000807f0000,4,1b01,807f,Titolo: scritta "Tocca per iniziare" ciano anche nella variante Ho-Oh (era arancione RGB 27/8/0)
 arm9_overlays/ov060.bin,802e20d3,0,80,40,Intro scena 1: l'uccello compare 64 tick dopo lo scorrimento dello sfondo (era 128)
 arm9_overlays/ov060.bin,5a2e16d3,0,5a,9a,Intro scena 1: dissolvenza dopo 154 tick di volo (era 90); durata totale invariata (64+154 = 128+90)
 arm9_overlays/ov060.bin,012000900190022002904a2103916068be311722,6,02,03,Intro scena 1: 3 tavolozze per gli sprite (sole Ho-Oh Lugia) invece di 2
