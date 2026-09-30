@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,115 @@
+@@ -35,12 +35,116 @@
  	ReleaseAll
  	End
  
@@ -109,6 +109,7 @@
 +	ClearFlag FLAG_PCN_STEVEN_GREEN
 +	ClearFlag FLAG_PCN_STEVEN_RED
 +	ClearFlag FLAG_PCN_STEVEN_BLUE
++	SetStarterChoice SPECIES_CYNDAQUIL  @ come se da Elm si fosse scelto Cyndaquil: Rocco offre gli altri due (D47)
 +	FadeScreen 6, 1, 0, RGB_BLACK
 +	WaitFade
 +	Warp MAP_SAFFRON_SILPH_CO_HQ, 0, 14, 11, DIR_NORTH

@@ -8,7 +8,34 @@
 +#define FLAG_PCN_STEVEN_BLUE  0x54D
  #include "fielddata/script/scr_seq/event_T11R0701.h"
  #include "msgdata/msg/msg_0537_T11R0701.h"
-@@ -156,7 +160,9 @@
+@@ -100,4 +104,12 @@
+ scr_seq_T11R0701_004:
+ 	GoToIfSet FLAG_GOT_HOENN_STARTER_FROM_STEVEN, _03E8
++	@ Crystal Soul (D47): lo starter scelto da Elm conta come già ricevuto, Rocco offre solo gli altri due
++	GetStarterChoice VAR_TEMP_x4004
++	Compare VAR_TEMP_x4004, SPECIES_CHIKORITA
++	CallIfEq _PCN_set_green
++	Compare VAR_TEMP_x4004, SPECIES_CYNDAQUIL
++	CallIfEq _PCN_set_red
++	Compare VAR_TEMP_x4004, SPECIES_TOTODILE
++	CallIfEq _PCN_set_blue
+ 	Compare VAR_UNK_4130, 3
+ 	GoToIfEq _039B
+@@ -145,7 +157,13 @@
+ 	TouchscreenMenuHide
+ 	MenuInit 1, 1, 0, 1, VAR_SPECIAL_x8004
++	GoToIfSet FLAG_PCN_STEVEN_GREEN, _PCN_menu_red
+ 	MenuItemAdd 17, 255, 0
++_PCN_menu_red:
++	GoToIfSet FLAG_PCN_STEVEN_RED, _PCN_menu_blue
+ 	MenuItemAdd 18, 255, 1
++_PCN_menu_blue:
++	GoToIfSet FLAG_PCN_STEVEN_BLUE, _PCN_menu_end
+ 	MenuItemAdd 19, 255, 2
++_PCN_menu_end:
+ 	MenuItemAdd 27, 255, 3
+ 	MenuExec
+@@ -156,7 +174,9 @@
  	Compare VAR_SPECIAL_RESULT, 6
  	GoToIfEq _033B
 +	CopyVar VAR_TEMP_x4003, VAR_SPECIAL_x8004
@@ -19,7 +46,7 @@
 +	SetVar VAR_SPECIAL_x8004, SPECIES_CHIKORITA
  	GoTo _02B6
  
-@@ -164,9 +170,11 @@
+@@ -164,9 +184,11 @@
  	Compare VAR_SPECIAL_x8004, 1
  	GoToIfNe _02B0
 -	SetVar VAR_SPECIAL_x8004, 255
@@ -33,7 +60,7 @@
 +	SetVar VAR_SPECIAL_x8004, SPECIES_TOTODILE
  _02B6:
  	BufferSpeciesName 1, VAR_SPECIAL_x8004, 0, 0
-@@ -186,4 +194,13 @@
+@@ -186,4 +208,13 @@
  	NPCMsg msg_0537_T11R0701_00022
  	CloseMsg
 +	Compare VAR_TEMP_x4003, 0
@@ -47,7 +74,7 @@
 +	GoToIfUnset FLAG_PCN_STEVEN_BLUE, _PCN_stay
  	GetPlayerFacing VAR_SPECIAL_RESULT
  	Compare VAR_SPECIAL_RESULT, 3
-@@ -203,4 +220,24 @@
+@@ -203,4 +234,24 @@
  	ReleaseAll
  	End
 +
