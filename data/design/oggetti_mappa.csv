@@ -1,6 +1,8 @@
 # Modifiche agli oggetti degli eventi di zona (a/0/3/2). zona = indice nel NARC (= numero del file zone_event della
-# decomp), oggetto = indice nella lista objects, campo = sprite (u16 a +2 nel record da 32 byte).
+# decomp), oggetto = indice nella lista objects, campo = sprite (u16 a +2 nel record da 32 byte) o script (u16 a +10, numero:
+# script della mappa = indice ScrDef + 1, script comuni = numero std).
 zona,mappa,oggetto,campo,da,a,motivo
 476,D52R0101,0,sprite,SPRITE_FOLLOWER_MON_STATIC_GROUDON,SPRITE_FOLLOWER_MON_MEW,D20 Mew al posto di Groudon (non esiste uno sprite "statico" di Mew)
 362,T11R0802,2,sprite,SPRITE_JUPETTA,SPRITE_FOLLOWER_MON_DITTO,casa di Copiona: la bambola che si muove è un Ditto (era Banette)
 477,D52R0102,0,sprite,SPRITE_FOLLOWER_MON_STATIC_KYOGRE,SPRITE_FOLLOWER_MON_MEW,D46 in HeartGold si entra nella stanza di Kyogre: Mew anche qui
+35,R34,10,script,9500,14,D48 nonno della Pensione: scr_seq_R34_013 (Uovo Strano la prima volta) invece di std_daycare_man (9500)

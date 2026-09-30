@@ -296,9 +296,10 @@ def apply_map_objects(c):
     for r in rows("oggetti_mappa.csv"):
         f = n.files[int(r["zona"])]
         nb = struct.unpack_from("<I", f, 0)[0]
-        o = 4 + nb * 20 + 4 + int(r["oggetto"]) * 32 + {"sprite": 2}[r["campo"]]
-        assert u16(f, o) == sprites[r["da"]], (r, u16(f, o))
-        set16(f, o, sprites[r["a"]]); c.log["oggetti delle mappe"] += 1
+        o = 4 + nb * 20 + 4 + int(r["oggetto"]) * 32 + {"sprite": 2, "script": 10}[r["campo"]]
+        val = (lambda s: sprites[s]) if r["campo"] == "sprite" else (lambda s: int(s, 0))  # script: numero
+        assert u16(f, o) == val(r["da"]), (r, u16(f, o))
+        set16(f, o, val(r["a"])); c.log["oggetti delle mappe"] += 1
     n.save()
 
 

@@ -1,0 +1,100 @@
+--- a/scr_seq_0237_R34.s
++++ b/scr_seq_0237_R34.s
+@@ -2,4 +2,8 @@
+ #include "fielddata/script/scr_seq/event_R34.h"
+ #include "msgdata/msg/msg_0384_R34.h"
++@ Crystal Soul (D48): Uovo Strano come in Cristallo. Il nonno della Pensione (oggetto 10) usa questo script invece di
++@ std_daycare_man: la prima volta, con posto in squadra, regala un uovo con un baby a caso che conosce Stordipugno;
++@ poi fa da Pensione come sempre. Testi 50-53 aggiunti in data/testi/<lingua>/msg_0384.csv.
++#define FLAG_PCN_ODD_EGG 0x549
+ 	.include "asm/macros/script.inc"
+ 
+@@ -19,4 +23,5 @@
+ 	ScrDef scr_seq_R34_011
+ 	ScrDef scr_seq_R34_012
++	ScrDef scr_seq_R34_013
+ 	ScrDefEnd
+ 
+@@ -837,2 +842,82 @@
+ 	End
+ 	.balign 4, 0
++
++scr_seq_R34_013:
++	GoToIfSet FLAG_PCN_ODD_EGG, _PCN_daycare
++	PlaySE SEQ_SE_DP_SELECT
++	LockAll
++	FacePlayer
++	GetPartyCount VAR_TEMP_x4001
++	Compare VAR_TEMP_x4001, 6
++	GoToIfEq _PCN_egg_full
++	NPCMsg 50
++	Random VAR_TEMP_x4000, 100
++	Compare VAR_TEMP_x4000, 9
++	GoToIfLt _PCN_egg_pichu
++	Compare VAR_TEMP_x4000, 28
++	GoToIfLt _PCN_egg_cleffa
++	Compare VAR_TEMP_x4000, 47
++	GoToIfLt _PCN_egg_igglybuff
++	Compare VAR_TEMP_x4000, 63
++	GoToIfLt _PCN_egg_smoochum
++	Compare VAR_TEMP_x4000, 75
++	GoToIfLt _PCN_egg_magby
++	Compare VAR_TEMP_x4000, 89
++	GoToIfLt _PCN_egg_elekid
++	SetVar VAR_SPECIAL_x8004, SPECIES_TYROGUE
++	SetVar VAR_SPECIAL_x8005, 3
++	GoTo _PCN_egg_give
++
++_PCN_egg_pichu:
++	SetVar VAR_SPECIAL_x8004, SPECIES_PICHU
++	SetVar VAR_SPECIAL_x8005, 2
++	GoTo _PCN_egg_give
++
++_PCN_egg_cleffa:
++	SetVar VAR_SPECIAL_x8004, SPECIES_CLEFFA
++	SetVar VAR_SPECIAL_x8005, 2
++	GoTo _PCN_egg_give
++
++_PCN_egg_igglybuff:
++	SetVar VAR_SPECIAL_x8004, SPECIES_IGGLYBUFF
++	SetVar VAR_SPECIAL_x8005, 2
++	GoTo _PCN_egg_give
++
++_PCN_egg_smoochum:
++	SetVar VAR_SPECIAL_x8004, SPECIES_SMOOCHUM
++	SetVar VAR_SPECIAL_x8005, 1
++	GoTo _PCN_egg_give
++
++_PCN_egg_magby:
++	SetVar VAR_SPECIAL_x8004, SPECIES_MAGBY
++	SetVar VAR_SPECIAL_x8005, 2
++	GoTo _PCN_egg_give
++
++_PCN_egg_elekid:
++	SetVar VAR_SPECIAL_x8004, SPECIES_ELEKID
++	SetVar VAR_SPECIAL_x8005, 2
++_PCN_egg_give:
++	SetFlag FLAG_PCN_ODD_EGG
++	GiveEgg VAR_SPECIAL_x8004, MAPLOC(METLOC_DAY_CARE_COUPLE)
++	SetMonMove VAR_TEMP_x4001, VAR_SPECIAL_x8005, MOVE_DIZZY_PUNCH
++	BufferPlayersName 0
++	PlayFanfare SEQ_ME_TAMAGO_GET
++	NPCMsg 51
++	WaitFanfare
++	NPCMsg 52
++	WaitButton
++	CloseMsg
++	ReleaseAll
++	End
++
++_PCN_egg_full:
++	NPCMsg 53
++	WaitButton
++	CloseMsg
++	ReleaseAll
++	End
++
++_PCN_daycare:
++	CallStd std_daycare_man
++	End
++	.balign 4, 0

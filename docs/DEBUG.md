@@ -24,6 +24,7 @@ squadra è vuota 30 Ultra Ball e 10 Master Ball, poi porta sul posto. Si può us
 | Pichu | dà un Pichu lv 30 | come sopra | D25 (provato, funziona): Pichu deve essere **primo in squadra** (se avevi già Pokémon, spostalo in cima); esaminare il santuario → evento di Pichu Spunzorecchio |
 | Oak (Kanto) | `VAR_UNK_4131 = 1` (dopo Rosso), Poké Ball visibili | Laboratorio di Oak, sulla porta (parte la scena di Oak: 5 passi a nord) | D22 (provato, funziona): si possono prendere tutte e tre le Poké Ball, una alla volta (la squadra non deve essere piena) |
 | Rocco (Johto) | `VAR_UNK_4130 = 2`, `VAR_UNK_40FD = 1`, starter da Elm = Cyndaquil | Silph S.p.A. di Zafferanopoli | D17/D22/D47: il menu offre solo pietra verde e blu (Chikorita, Totodile), uno alla volta; Rocco se ne va dopo il secondo |
+| Uovo Strano | uovo non ancora ricevuto (squadra non piena) | Percorso 34, due passi sotto il nonno della Pensione | D48: parlando col nonno → Uovo Strano (baby a caso tra Pichu, Cleffa, Igglybuff, Smoochum, Magby, Elekid, Tyrogue) con Stordipugno; la seconda volta fa da Pensione come sempre. Per vedere cosa nasce: camminare finché si schiude (o riscegliere la voce per un altro uovo) |
 | Esci | — | — | — |
 
 Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova basta riscegliere la voce.
