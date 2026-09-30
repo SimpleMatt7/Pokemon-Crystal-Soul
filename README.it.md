@@ -42,8 +42,10 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 - **Pokédex di Johto = le 251**, rinumerate, con diploma raggiungibile.
 - **Fossili:** Kabuto (Domofossile) alle Rovine d'Alfa come in SoulSilver; nella Grotta Falesia Helixfossile/Ambra Antica.
 - **Mantenuti da HGSS:** mosse, abilità, nature, divisione fisico/speciale, Pokémon che ti seguono, grafica e musica.
+- **Suicune come in Cristallo:** oltre alla caccia di HGSS, Suicune si fa vedere anche sul **Percorso 36** davanti
+  al cancello del Parco Nazionale, subito dopo il Percorso 42.
 - **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e poi Lugia (cielo oro e cielo
-  azzurro), intro con entrambi gli uccelli, icona azzurro cristallo nel menu del DS.
+  azzurro) e Suicune nell'angolo, intro con entrambi gli uccelli, icona azzurro cristallo nel menu del DS.
 
 ## Come giocare
 
