@@ -1,6 +1,6 @@
 # NOTES — diario di progetto
 
-Ultimo aggiornamento: 2026-09-30 (rifiniture: titolo SoulSilver (Lugia, cielo azzurro) con logo "Versione Crystal Soul"
+Ultimo aggiornamento: 2026-09-30 (titolo Ho-Oh → lampo → Lugia, D39; rifiniture: titolo SoulSilver (Lugia, cielo azzurro) con logo "Versione Crystal Soul"
 generato da `tools/logo.py`; Ho-Oh/Lugia lv 60. Da chiarire: schermata "oro" dopo il titolo. §11).
 
 ## 1. Obiettivo
@@ -51,6 +51,7 @@ partendo dalla ROM ITA).
 | D34 | **Intro scena 1: Ho-Oh e Lugia insieme** (`tools/intro.py`): sprite combinato nei membri 23-26 di a/2/6/2 (tile Ho-Oh + Lugia, tavolozza 2 = Lugia). Ho-Oh esce dal sole da solo (30 fotogrammi), poi Lugia spunta da dietro e i due si separano (12 fotogrammi, celle "coppia" con distanza crescente fino a 40), poi arrivano affiancati e grandi fino alla dissolvenza. Codice ov060: 3 tavolozze invece di 2, comparsa dopo 64 tick (era 128), dissolvenza dopo 154 (era 90): durata invariata, musica sincronizzata | Richiesta utente: vederli tutti e due grandi |
 | D37 | **Loghi: "Pokémon" originale e colori originali**: sopra la riga di taglio (ITA y<100, ENG y<104, solo nella zona della parola) si usa la parola "Pokémon" del logo SS originale della stessa lingua; il resto del logo disegnato usa solo i colori delle scritte del logo originale (`ORIGINAL_STYLE`). prepara_logo allinea la parola gialla a quella originale della lingua (ITA x 37 y 42 larga 185; ENG x 31 y 47 larga 181) | Richiesta utente |
 | D38 | **Testi inglesi** in `data/testi/ENG/` (stessi archivi e indici dell'italiano): la ROM USA è coerente | |
+| D39 | **Titolo: Ho-Oh, lampo bianco, poi Lugia** (sostituisce D33, il "a caso"; checkpoint della versione a caso: tag `checkpoint-titolo-casuale`). `tools/titolo_ciclo.py`, passo del build: routine Thumb (~214 byte) in coda all'overlay 60 agganciata alla chiamata a `TitleScreenAnim_GetCameraNextPosition`; quando il giro di telecamera di Ho-Oh finisce (cameraScene torna a 0, versione 7): schermo bianco (MASTER_BRIGHT) e dissolvenza da bianco, scarica Ho-Oh e scintille, distrugge e ricrea il gestore VRAM 3D (le texture dei due non stanno insieme nei 128 KB del banco A), carica Lugia (20-24) e scintille SS (41-43), versione = 8, telecamera iniziale di Lugia. Durata del titolo 2340 → 2436 fotogrammi (Ho-Oh 1270 + Lugia 1146 + 20, simulazione esatta dello script di telecamera). Funzioni e indirizzi trovati per contenuto (vale per ITA e USA) | Richiesta utente: vederli tutti e due nel video del titolo |
 | D32 | **Ho-Oh e Lugia al livello 60** come in Cristallo (HG: 45/70), script 0021 e 0104 | Richiesta utente |
 | D29 | **Versione inglese possibile**: `python tools/build.py --base IPKE` applica lo stesso design alla ROM USA (dati e script sono identici tra IPKI e IPKE); servono solo i testi in `data/testi/ENG/` | Verificato 2026-09-29: build IPKE con verifica a zero |
 | D30 | **Pokédex di Johto = le 251**: tolte le 5 evoluzioni gen 4 e rinumerato 1-251 (a/1/3/8; lista "johto" = membro 12 di a/0/7/4 e a/2/1/4, il gioco ne legge la lunghezza come size/2). Codice (`data/design/codice.csv`, per contesto di byte, vale anche per USA): completamento con 249 catturati (era 254 = 256 - Mew - Celebi), messaggio di Oak "completo" sopra 248 (era 253) | Coerenza; senza le soglie il diploma sarebbe irraggiungibile |
@@ -225,9 +226,9 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       cartella ignorata da git perché contiene il marchio ufficiale) il build lo usa al posto di quello generato,
       convertendolo alla tavolozza del logo SS (condivisa con il cielo del titolo). File di partenza per l'utente
       in work/per_utente/.
-   c. (Fatto, D34) Intro scena 1: Ho-Oh poi Lugia. Da provare in melonDS. Titolo "ciclico" dentro la stessa
-      schermata: richiederebbe codice nuovo per ricaricare i modelli 3D a metà schermata e una memoria che
-      sopravviva al ricaricamento dell'overlay (Main_RunOverlayManager scarica/ricarica a ogni cambio). Per ora: a caso.
+   c. (Fatto, D34) Intro scena 1: Ho-Oh poi Lugia. Da provare in melonDS. Titolo "ciclico": fatto (D39),
+      Ho-Oh → lampo bianco → Lugia nella stessa schermata. Da provare in melonDS (se qualcosa si rompe: tag
+      `checkpoint-titolo-casuale`).
    d. Icona del banner.
 
 ## 11b. Revisione dei rischi (2026-09-30)

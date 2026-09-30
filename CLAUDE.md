@@ -22,7 +22,7 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 - `tools/` — script: `roms.py` (trova/verifica ROM), `ndsfs.py` (lettura FNT/FAT/NARC), `probe.py` (audit specie > 251),
   `get_tools.py` (scarica dsrom con SHA256), `roundtrip.py` (estrai/ricostruisci/confronta), `find_nature_table.py`,
   `get_pret.py` (decomp pret in `work/pret`, commit fissato), `audit.py` (→ `docs/audit.md`), `items.py` (→ `docs/oggetti.md`),
-  `build.py` (costruisce la ROM), `bps.py` (patch BPS), `design*.py` (tabelle di design), `scrasm.py`/`scrpatch.py`
+  `build.py` (costruisce la ROM), `bps.py` (patch BPS), `design*.py` (tabelle di design), `titolo_ciclo.py` (titolo Ho-Oh → Lugia), `scrasm.py`/`scrpatch.py`
   (script), `msg.py` (testi). `data/scripts/` diff degli script, `data/testi/<lingua>/` testi modificati.
 - `tools/bin/` (ignorata) — binari esterni scaricati; non si versionano (decisione D14).
 - `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret). `data/design/`: tabelle di design
