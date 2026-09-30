@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,126 @@
+@@ -35,12 +35,127 @@
  	ReleaseAll
  	End
  
@@ -105,6 +105,7 @@
 +	GoTo _DBG_fine
 +
 +_DBG_uovo:
++	Call _DBG_prepara  @ un Pokémon vero in squadra (con solo un uovo il gioco si blocca)
 +	ClearFlag FLAG_PCN_ODD_EGG
 +	FadeScreen 6, 1, 0, RGB_BLACK
 +	WaitFade

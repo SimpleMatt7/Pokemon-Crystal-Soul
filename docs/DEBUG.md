@@ -33,3 +33,9 @@ Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova bas
 dentro la ROM si spostano e uno stato vecchio legge dati sbagliati (testi e finestre rovinati). Usare il salvataggio
 del gioco.
 
+## Nature neutre (D49)
+
+Nel riepilogo di HGSS l'effetto della natura non si vede (niente colori, e le statistiche dipendono anche da IV/EV).
+Per verificarlo: salvare in gioco e lanciare `python tools/verifica_nature.py "out/Pokemon Crystal Soul (ITA) DEBUG.sav"`
+(o il salvataggio normale): per ogni Pokémon in squadra confronta le statistiche salvate con quelle calcolate con e
+senza natura. I Pokémon creati o saliti di livello con la ROM nuova devono risultare "SENZA effetto".

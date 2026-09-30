@@ -45,6 +45,7 @@ python tools/build.py         # costruisce out/Pokemon Crystal Soul (ITA).nds + 
 python tools/build.py --base IPKE   # stessa hack sulla ROM USA
 python tools/build.py --rilascio    # copia anche la BPS in patches/ (pubblicata; README.md inglese, README.it.md italiano)
 python tools/build.py --debug       # ROM di prova con scorciatoie (data/debug/, docs/DEBUG.md): mai pubblicata
+python tools/verifica_nature.py FILE.sav   # statistiche della squadra: con o senza effetto della natura (D49)
 python tools/scrasm.py --verifica   # assemblatore di script: 965/965 identici alla ROM
 python tools/scrpatch.py apri NNNN  # modifica uno script (poi: salva) → data/scripts/scr_seq_NNNN.diff
 python tools/msg.py mostra NNNN     # testi di un archivio (a/0/2/7); modifiche in data/testi/ITA/msg_NNNN.csv
