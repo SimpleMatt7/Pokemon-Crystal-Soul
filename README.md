@@ -46,7 +46,8 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 - **Odd Egg** as in Crystal: the Day-Care Man on Route 34 gives it once (a random baby Pokémon that knows Dizzy
   Punch).
 - **Suicune as in Crystal:** besides the HGSS chase, Suicune also shows up on **Route 36** in front of the National
-  Park gate, right after Route 42.
+  Park gate, right after Route 42, and until the Pokémon League it keeps reappearing in a loop (Cianwood, Route 42,
+  Route 36) as in Crystal.
 - **New presentation:** "Crystal Soul" logo, title screen with Ho-Oh then Lugia (golden and blue skies) and
   Suicune in the corner, intro with both birds, crystal-blue DS menu icon.
 

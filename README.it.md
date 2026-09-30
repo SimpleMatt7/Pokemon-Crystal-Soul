@@ -47,7 +47,8 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 - **Uovo Strano** come in Cristallo: il nonno della Pensione sul Percorso 34 lo regala una volta (un baby Pokémon a
   caso che conosce Stordipugno).
 - **Suicune come in Cristallo:** oltre alla caccia di HGSS, Suicune si fa vedere anche sul **Percorso 36** davanti
-  al cancello del Parco Nazionale, subito dopo il Percorso 42.
+  al cancello del Parco Nazionale, subito dopo il Percorso 42, e fino alla Lega continua a ricomparire a giro (Fiorlisopoli, Percorso 42,
+  Percorso 36) come in Cristallo.
 - **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e poi Lugia (cielo oro e cielo
   azzurro) e Suicune nell'angolo, intro con entrambi gli uccelli, icona azzurro cristallo nel menu del DS.
 
