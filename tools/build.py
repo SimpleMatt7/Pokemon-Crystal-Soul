@@ -356,6 +356,22 @@ def apply_dex_areas(c):
     n.save()
 
 
+def grow_overlay(file, old_len, new_len):
+    """Aggiorna code_size in overlays.yaml dopo aver allungato un overlay (solo se senza bss: vedi NOTES)."""
+    ov = int(re.search(r"ov(\d+)\.bin", file).group(1))
+    y = (BUILD / "arm9_overlays/overlays.yaml").read_text()
+    m = re.search(rf"(- id: {ov}\n(?:    .*\n)*?    code_size: )(\d+)", y)
+    assert m and int(m.group(2)) <= old_len, "code_size maggiore della lunghezza del file"
+    assert re.search(rf"- id: {ov}\n(?:    .*\n)*?    bss_size: 0\n", y), "overlay con bss: non si può allungare"
+    y = y[:m.start(2)] + str(new_len) + y[m.end(2):]
+    (BUILD / "arm9_overlays/overlays.yaml").write_text(y)
+
+
+def overlay_base(ov):
+    y = (BUILD / "arm9_overlays/overlays.yaml").read_text()
+    return int(re.search(rf"- id: {ov}\n    base_address: (\d+)\n", y).group(1))
+
+
 def apply_code(c):
     appended = {}   # file → offset della routine aggiunta in coda (per le chiamate "BL:FINE")
     for r in rows("codice.csv"):
@@ -367,13 +383,7 @@ def apply_code(c):
             appended[r["file"]] = len(b)
             b += bytes.fromhex(r["a"])
             p.write_bytes(bytes(b))
-            ov = int(re.search(r"ov(\d+)\.bin", r["file"]).group(1))
-            y = (BUILD / "arm9_overlays/overlays.yaml").read_text()
-            m = re.search(rf"(- id: {ov}\n(?:    .*\n)*?    code_size: )(\d+)", y)
-            assert m and int(m.group(2)) == appended[r["file"]], "code_size diverso dalla lunghezza del file"
-            assert re.search(rf"- id: {ov}\n(?:    .*\n)*?    bss_size: 0\n", y), "overlay con bss: non si può allungare"
-            y = y[:m.start(2)] + str(len(b)) + y[m.end(2):]
-            (BUILD / "arm9_overlays/overlays.yaml").write_text(y)
+            grow_overlay(r["file"], appended[r["file"]], len(b))
             c.log["codice"] += 1
             continue
         ctx = bytes.fromhex(r["contesto"])
@@ -389,6 +399,18 @@ def apply_code(c):
         assert b[o:o + len(da)] == da, r
         b[o:o + len(a)] = a
         p.write_bytes(bytes(b)); c.log["codice"] += 1
+
+
+def apply_title_cycle(c):
+    """Titolo: Ho-Oh, lampo bianco, poi Lugia (tools/titolo_ciclo.py, D39)."""
+    import titolo_ciclo
+    p = BUILD / "arm9_overlays/ov060.bin"
+    b = bytearray(p.read_bytes())
+    old = len(b)
+    b, _, _ = titolo_ciclo.apply(b, overlay_base(60))
+    p.write_bytes(bytes(b))
+    grow_overlay("ov060.bin", old, len(b))
+    c.log["titolo Ho-Oh+Lugia"] += 1
 
 
 def apply_intro(c):
@@ -549,7 +571,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
