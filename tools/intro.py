@@ -7,9 +7,11 @@ sequenza 0 = sole, 1 = volo dell'uccello (112 fotogrammi SRT da 3 tick, scala cr
 Combinato (scritto nei membri 23-26, quelli che il codice HG carica):
   - NCGR: tile di Ho-Oh + tile di Lugia; NCLR: tavolozza 2 = tavolozza 1 di Lugia
   - NCER: celle di Ho-Oh + celle 1-6 di Lugia (tile spostati, tavolozza 2)
-  - NANR sequenza 1: Ho-Oh esce dal sole (HOOH_OUT fotogrammi), ci rientra (al contrario, più veloce), poi esce Lugia.
-Codice (codice.csv): 3 tavolozze caricate invece di 2; l'uccello compare subito (0 tick invece di 128) e la
-dissolvenza parte dopo 218 invece di 90 (durata totale della scena invariata: la musica resta sincronizzata).
+  - celle "coppia": Ho-Oh (davanti) + Lugia (dietro) con distanza crescente
+  - NANR sequenza 1: Ho-Oh esce dal sole da solo (HOOH_SOLO fotogrammi), poi Lugia spunta da dietro e i due si
+    separano (RAMP fotogrammi), poi arrivano affiancati e grandi fino alla dissolvenza.
+Codice (codice.csv): 3 tavolozze caricate invece di 2; l'uccello compare dopo 64 tick (era 128) e la
+dissolvenza parte dopo 154 (era 90) (durata totale della scena invariata: la musica resta sincronizzata).
 """
 import struct
 import sys
@@ -21,9 +23,6 @@ import gfx  # noqa: E402
 NARC = "a/2/6/2"
 HOOH = dict(pal=23, chr=24, anm=25, cel=26)
 LUGIA = dict(pal=27, chr=28, anm=29, cel=30)
-HOOH_OUT = 36          # fotogrammi di Ho-Oh in uscita (scala ~0.42)
-HOOH_BACK_STEP = 2     # rientro nel sole: un fotogramma ogni 2, al contrario
-LUGIA_START = 8        # Lugia parte già un po' fuori dal sole
 
 
 def _sec(b, magic):
@@ -141,6 +140,23 @@ def nclr_set_bank(orig, bank, src, src_bank):
 
 
 # ------------------------------------------------------------------ combinazione
+HOOH_SOLO = 30         # fotogrammi con Ho-Oh da solo (scala fino a ~0.36)
+RAMP = 12              # fotogrammi in cui Lugia spunta da dietro Ho-Oh e i due si separano
+PAIR_DX = 40           # distanza finale dal centro (unità della cella, scala 1): Ho-Oh a sinistra, Lugia a destra
+
+
+def _shift(oams, dx, tile_add=0, pal=None):
+    out = []
+    for a0, a1, a2 in oams:
+        x = a1 & 0x1FF
+        x = (x + dx) & 0x1FF
+        a2n = a2
+        if pal is not None:
+            a2n = (a2 & 0x0C00) | (pal << 12) | ((a2 & 0x3FF) + tile_add)
+        out.append([a0, (a1 & ~0x1FF) | x, a2n])
+    return out
+
+
 def build(files):
     """files: lista dei membri (già decompressi) di a/2/6/2 → {indice: bytes nuovi (non compressi)}"""
     H = {k: files[v] for k, v in HOOH.items()}
@@ -150,27 +166,32 @@ def build(files):
     new_pal = nclr_set_bank(H["pal"], 2, L["pal"], 1)
     _, _, _, hc = ncer_cells(H["cel"])
     _, _, _, lc = ncer_cells(L["cel"])
-    base_l = len(hc) - 1                     # cella Lugia c (1..6) → indice base_l + c
-    cells = list(hc)
-    for e, oams in lc[1:]:
-        moved = []
-        for a0, a1, a2 in oams:
-            tile, pal = a2 & 0x3FF, a2 >> 12
-            assert pal == 1, "tavolozza inattesa nelle celle di Lugia"
-            moved.append([a0, a1, (a2 & 0x0C00) | (2 << 12) | (tile + ntiles_h)])
-        cells.append((e, moved))
+    for _, oams in lc[1:]:
+        assert all(a2 >> 12 == 1 for _, _, a2 in oams), "tavolozza inattesa nelle celle di Lugia"
+    cells = list(hc)                          # 0 = sole, 1..6 = Ho-Oh da solo
+    pair_index = {}                           # (posa 1..6, passo 0..RAMP) → indice cella
+    for step in range(RAMP + 1):
+        d = round(PAIR_DX * step / RAMP)
+        for pose in range(1, 7):
+            e, h_oams = hc[pose]
+            _, l_oams = lc[pose]
+            # prima Ho-Oh (disegnato sopra), poi Lugia dietro
+            oams = _shift(h_oams, -d) + _shift(l_oams, +d, tile_add=ntiles_h, pal=2)
+            pair_index[(pose, step)] = len(cells)
+            cells.append((e, oams))
     assert max(a[2] & 0x3FF for _, ol in cells for a in ol) < 1024
     new_cel = ncer_build(H["cel"], cells)
-    hs, ls = nanr_seqs(H["anm"]), nanr_seqs(L["anm"])
-    fly_h, fly_l = hs[1]["frames"], ls[1]["frames"]
-    lugia = []
-    for elem, dur in fly_l[LUGIA_START:]:
+    hs = nanr_seqs(H["anm"])
+    fly = hs[1]["frames"]
+    seq = []
+    for k, (elem, dur) in enumerate(fly):
         e = bytearray(elem)
-        struct.pack_into("<H", e, 0, struct.unpack_from("<H", e, 0)[0] + base_l)
-        lugia.append((bytes(e), dur))
-    out = fly_h[:HOOH_OUT]
-    back = list(reversed(fly_h[:HOOH_OUT:HOOH_BACK_STEP]))
-    seq1 = dict(hs[1], frames=out + back + lugia)
+        pose = struct.unpack_from("<H", e, 0)[0]
+        if k >= HOOH_SOLO:
+            step = min(RAMP, k - HOOH_SOLO)
+            struct.pack_into("<H", e, 0, pair_index[(pose, step)])
+        seq.append((bytes(e), dur))
+    seq1 = dict(hs[1], frames=seq)
     new_anm = nanr_build(H["anm"], [hs[0], seq1, hs[2]])
     return {HOOH["chr"]: new_chr, HOOH["pal"]: new_pal, HOOH["cel"]: new_cel, HOOH["anm"]: new_anm}
 
@@ -190,11 +211,13 @@ def main():
     # anteprima delle celle (senza scala), 64x64 ciascuna
     bpp, tiles, _, _ = gfx.ncgr(new[HOOH["chr"]])
     _, cols, _ = gfx.nclr(new[HOOH["pal"]])
-    W = 64 * len(cells)
-    rgba = bytearray(W * 64 * 4)
+    pick = [0, 1, 7, 7 + 6 * 6, 7 + 6 * 12]      # sole, Ho-Oh, coppia inizio / metà / fine
+    B = 128
+    W = B * len(pick)
+    rgba = bytearray(W * B * 4)
     shapes = {(0, 0): (8, 8), (0, 1): (16, 16), (0, 2): (32, 32), (0, 3): (64, 64), (1, 0): (16, 8), (1, 1): (32, 8),
               (1, 2): (32, 16), (1, 3): (64, 32), (2, 0): (8, 16), (2, 1): (8, 32), (2, 2): (16, 32), (2, 3): (32, 64)}
-    for ci, (_, oams) in enumerate(cells):
+    for ci, (_, oams) in enumerate([cells[i] for i in pick]):
         for a0, a1, a2 in reversed(oams):
             y = a0 & 0xFF; y = y - 256 if y > 127 else y
             x = a1 & 0x1FF; x = x - 512 if x > 255 else x
@@ -216,11 +239,11 @@ def main():
                             X = tx * 8 + px; Y = ty * 8 + py
                             if hf: X = w - 1 - X
                             if vf: Y = h - 1 - Y
-                            gx, gy = ci * 64 + 32 + x + X, 32 + y + Y
-                            if 0 <= gx < W and 0 <= gy < 64 and ci * 64 <= gx < ci * 64 + 64:
+                            gx, gy = ci * B + B // 2 + x + X, B // 2 + y + Y
+                            if 0 <= gx < W and 0 <= gy < B and ci * B <= gx < ci * B + B:
                                 o = (gy * W + gx) * 4
                                 rgba[o:o + 4] = bytes((*cols[pal * 16 + v], 255))
-    gfx.write_png(root / "work/intro_celle.png", W, 64, bytes(rgba))
+    gfx.write_png(root / "work/intro_celle.png", W, B, bytes(rgba))
     print("anteprima: work/intro_celle.png")
 
 

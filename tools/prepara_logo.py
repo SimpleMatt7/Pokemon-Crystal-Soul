@@ -15,9 +15,9 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 BOX = (14, 22, 242, 176)        # zona disponibile nello schermo superiore ("Developed by GAME FREAK" parte da y=181)
-# nei loghi originali HG/SS la parola gialla "Pokémon" occupa x 37..221 (185 px), y da 42: il logo nuovo viene
-# scalato e posizionato perché la sua parola gialla coincida (stessa grandezza degli originali)
-POKEMON_ORIG = (37, 42, 185)
+# parola gialla "Pokémon" nei loghi originali (x iniziale, y iniziale, larghezza): il logo nuovo viene scalato e
+# posizionato perché la sua coincida. Italiano: x 37..221, y da 42; inglese: x 31..211, y da 47.
+POKEMON_ORIG = {"ITA": (37, 42, 185), "ENG": (31, 47, 181)}
 WHITE_TOL = 60                  # distanza massima dal bianco per considerare un pixel sfondo
 
 
@@ -62,10 +62,11 @@ def main():
     img = img.crop(img.getbbox())
     bw, bh = BOX[2] - BOX[0], BOX[3] - BOX[1]
     yx0, yy0, yx1, _ = yellow_bbox(img)
-    s = POKEMON_ORIG[2] / (yx1 - yx0 + 1)
+    px0, py0, pw = POKEMON_ORIG[sys.argv[2]]
+    s = pw / (yx1 - yx0 + 1)
     size = (max(1, round(img.width * s)), max(1, round(img.height * s)))
-    x = round(POKEMON_ORIG[0] - yx0 * s)
-    y = round(POKEMON_ORIG[1] - yy0 * s)
+    x = round(px0 - yx0 * s)
+    y = round(py0 - yy0 * s)
     if not (BOX[0] <= x and x + size[0] <= BOX[2] and BOX[1] <= y and y + size[1] <= BOX[3]):
         print(f"attenzione: alla grandezza originale il logo esce dalla zona {BOX}: lo riduco")
         s = min(bw / img.width, bh / img.height)

@@ -238,7 +238,7 @@ def build_logo(base="IPKI"):
     img, cols = load_indexed(SS_LOGO, SS_PAL, base=base)
     custom = local_logo(base)
     if custom:                # logo rifatto a mano (cartella locale, non versionata)
-        return import_png(custom, cols), cols
+        return import_png(custom, cols, orig=img, base=base), cols
     fill = [img[y][FILL_COL] for y in range(FILL_Y0, FILL_Y1 + 1)]  # sfumatura, letta prima di cancellare
     # riga piccola (y <= 130): via "ARGENTO"
     erase(img, 131, 103, 245, 131)
@@ -265,11 +265,19 @@ def local_logo(base):
     return None
 
 
-def import_png(path, cols):
+# zona di "Pokémon" nel logo originale della lingua (righe sotto CUT_Y, colonne fino a X_MAX): lì si usa l'originale
+POKEMON_ZONE = {"IPKI": (100, 231), "IPKE": (104, 221)}   # (CUT_Y, X_MAX); sotto CUT_Y c'è il logo disegnato
+ORIGINAL_STYLE = True    # colori delle scritte limitati a quelli delle scritte del logo originale SS
+
+
+def import_png(path, cols, orig=None, base="IPKI"):
     """Logo rifatto (PNG 256x256, trasparente dove non c'è logo) → immagine indicizzata sulla tavolozza del
     logo SS (condivisa con il cielo del titolo: non si cambia, si usa il colore più vicino)."""
     w, h, px = gfx.read_png(path)
     assert (w, h) == (256, 256), f"il logo deve essere 256x256 (è {w}x{h})"
+    allowed = range(1, len(cols))
+    if orig is not None and ORIGINAL_STYLE:
+        allowed = sorted({v for row in orig[POKEMON_ZONE[base][0]:] for v in row if v})
     cache, img = {}, []
     for y in range(h):
         row = []
@@ -279,9 +287,14 @@ def import_png(path, cols):
                 row.append(0); continue
             k = (r >> 3, g >> 3, b >> 3)
             if k not in cache:
-                cache[k] = min(range(1, len(cols)), key=lambda i: (cols[i][0] - r) ** 2 * 3 + (cols[i][1] - g) ** 2 * 4 + (cols[i][2] - b) ** 2 * 2)
+                cache[k] = min(allowed, key=lambda i: (cols[i][0] - r) ** 2 * 3 + (cols[i][1] - g) ** 2 * 4 + (cols[i][2] - b) ** 2 * 2)
             row.append(cache[k])
         img.append(row)
+    if orig is not None:
+        cut, xmax = POKEMON_ZONE[base]
+        for y in range(cut):
+            for x in range(xmax + 1):
+                img[y][x] = orig[y][x]
     return img
 
 
