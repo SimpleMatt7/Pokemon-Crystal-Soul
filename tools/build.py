@@ -467,6 +467,13 @@ def apply_title_logo(c):
         for i, (r, g, b_) in extra.items():
             set16(pb, po + 2 * i, (r * 31 // 255) | ((g * 31 // 255) << 5) | ((b_ * 31 // 255) << 10))
         n.files[pal] = pb
+    # variante Ho-Oh (membro 4): cielo dorato; al lampo il titolo carica l'azzurro (membro 2), D40
+    from gfx import nclr as _nclr
+    pb = n.files[4]
+    _, cols, po = _nclr(bytes(pb))
+    for i, (r, g, b_) in enumerate(logo.gold_colors(cols)):
+        if i >= logo.SKY_FIRST:
+            set16(pb, po + 2 * i, (r * 31 // 255) | ((g * 31 // 255) << 5) | ((b_ * 31 // 255) << 10))
     c.log["cielo (tile)"] = nsky
     n.files[logo.SS_LOGO] = bytearray(ng)
     n.files[3] = bytearray(ng)      # logo della variante Ho-Oh (HG): stesso logo, tavolozza copiata da copia_membri.csv
