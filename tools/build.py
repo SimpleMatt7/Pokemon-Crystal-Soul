@@ -359,6 +359,21 @@ def apply_code(c):
         p.write_bytes(bytes(b)); c.log["codice"] += 1
 
 
+def apply_intro(c):
+    """Scena 1 dell'intro: Ho-Oh poi Lugia (tools/intro.py) nei membri 23-26 di a/2/6/2."""
+    import intro
+    from gfx import maybe_lz, lz10_compress
+    n = Narc(intro.NARC)
+    dec, was_lz = [], []
+    for f in n.files:
+        d, lz = maybe_lz(bytes(f))
+        dec.append(d); was_lz.append(lz)
+    for i, data in intro.build(dec).items():
+        n.files[i] = bytearray(lz10_compress(data) if was_lz[i] else data)
+        c.log["intro (risorse)"] += 1
+    n.save()
+
+
 def apply_copies(c):
     narcs = {}
     for r in rows("copia_membri.csv"):
@@ -485,7 +500,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_copies, apply_title_logo, apply_palettes, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
