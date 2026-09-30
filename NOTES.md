@@ -241,8 +241,9 @@ Verificato sui file costruiti o negli script:
 Da provare in gioco (non verificabile dai dati): sprite "da compagno" come oggetti delle mappe (Mew alla Torre Inclusa,
 Ditto da Copiona: il gioco originale non lo fa mai, usa sprite "statici"); lotta fatidica di Celebi (ScrCmd_686, esiste
 ma non è usata dal gioco originale) e viaggio nel passato; Pichu; Rocco/Oak con tutti e 3 gli starter.
-Limiti noti (non bloccanti): Pokédex Nazionale a 493 posti; dati "zona" del Pokédex non aggiornati per le esclusive SS
-(la mappa dell'habitat non le mostra); Pokéwalker (non emulato) e Parco Amici/migrazione GBA possono ancora portare
+(Fatto) Zone del Pokédex per le esclusive SS: a/1/3/3 (membro 2 + metodo*495 + specie, elenco u32 terminato da 0)
+= unione degli elenchi HG e SS della decomp (build: apply_dex_areas; 36 elenchi; ROM = elenco HG verificato 3960/3960).
+Limiti noti (non bloccanti): Pokédex Nazionale a 493 posti; Pokéwalker (non emulato) e Parco Amici/migrazione GBA possono ancora portare
 specie gen 3-4 se usati.
 
 ## 12. Problemi aperti
