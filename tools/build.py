@@ -332,6 +332,30 @@ def apply_pokedex(c):
         n.save()
 
 
+SS_EXCLUSIVES = (37, 38, 52, 53, 165, 166, 216, 217, 225, 227)   # Vulpix … Skarmory (D16)
+
+
+def apply_dex_areas(c):
+    """Pokédex, schermata "zona": a/1/3/3 ha per ogni metodo d'incontro (8) e specie (495) l'elenco delle zone
+    (u32, terminato da 0), membro 2 + metodo*495 + specie. Per le esclusive SS (ora selvatiche anche in HG, D16)
+    si usa l'unione degli elenchi HG e SS della decomp; prima si controlla che la ROM coincida con l'elenco HG."""
+    import json
+    d = json.loads((audit.PRET / "files/application/zukanlist/zkn_data/zukan_enc.json").read_text())
+    n = Narc("a/1/3/3")
+    for mi, (_, mons) in enumerate(d["encounters"].items()):
+        names = list(mons)
+        for s in SS_EXCLUSIVES:
+            maps = mons[names[s]]
+            gold, silver = (maps, maps) if isinstance(maps, list) else (maps["GOLD"], maps["SILVER"])
+            k = 2 + mi * 495 + s
+            cur = list(struct.unpack(f"<{len(n.files[k]) // 4}I", n.files[k]))
+            assert cur == gold, f"zona Pokédex: dati inattesi per la specie {s}"
+            merged = [x for x in gold if x] + [x for x in silver if x and x not in gold]
+            n.files[k] = bytearray(struct.pack(f"<{len(merged) + 1}I", *merged, 0))
+            c.log["zone Pokédex"] += merged != [x for x in gold if x]
+    n.save()
+
+
 def apply_code(c):
     appended = {}   # file → offset della routine aggiunta in coda (per le chiamate "BL:FINE")
     for r in rows("codice.csv"):
@@ -525,7 +549,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
