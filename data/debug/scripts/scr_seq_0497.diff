@@ -1,0 +1,11 @@
+--- a/scr_seq_0497_R42_hdr.s
++++ b/scr_seq_0497_R42_hdr.s
+@@ -6,6 +6,8 @@
+ 	.rodata
+ 	.option alignment off
+ 
++	InitScriptEntry_OnTransition 7  @ DEBUG: scr_seq_R42_006
++	InitScriptEntry_OnResume 7  @ DEBUG: anche ricaricando il salvataggio sul Percorso 42
+ 	InitScriptEntryEnd
+ 
+ 	InitScriptEnd

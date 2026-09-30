@@ -1,6 +1,14 @@
 --- a/scr_seq_0252_R42.s
 +++ b/scr_seq_0252_R42.s
-@@ -226,6 +226,11 @@
+@@ -12,6 +12,7 @@
+ 	ScrDef scr_seq_R42_003
+ 	ScrDef scr_seq_R42_004
+ 	ScrDef scr_seq_R42_005
++	ScrDef scr_seq_R42_006
+ 	ScrDefEnd
+ 
+ scr_seq_R42_000:
+@@ -226,6 +227,11 @@
  	@ Crystal Soul: come in Cristallo Suicune si fa vedere ancora sul Percorso 36 (VAR_UNK_4092 = 2);
  	@ sarà quello script ad accendere Aranciopoli (prima lo faceva questo)
  	SetVar VAR_UNK_4092, 2
@@ -12,7 +20,7 @@
  	ReleaseAll
  	End
  
-@@ -233,6 +238,11 @@
+@@ -233,6 +239,11 @@
  	HidePerson obj_R42_tsure_poke_static_suicune
  	SetFlag FLAG_HIDE_ROUTE_42_SUICUNE
  	SetVar VAR_UNK_4092, 2
@@ -24,3 +32,15 @@
  	ReleaseAll
  	End
  
+@@ -279,6 +290,11 @@
+ 	WalkNormalEast
+ 	EndMovement
+ 
++scr_seq_R42_006:
++	@ DEBUG: l'albero da tagliare sta sul punto dell'avvistamento; nella ROM di prova non c'è Taglio
++	SetFlag FLAG_MAPTEMP_010
++	End
++
+ scr_seq_R42_002:
+ 	DirectionSignpostEx 1, 1, msg_0399_R42_00000
+ 	End
