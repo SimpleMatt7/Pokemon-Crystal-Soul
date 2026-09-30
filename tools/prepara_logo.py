@@ -14,7 +14,10 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
-BOX = (18, 22, 238, 168)        # x0, y0, x1, y1 disponibili nello schermo superiore (sotto: "Developed by")
+BOX = (14, 22, 242, 176)        # zona disponibile nello schermo superiore ("Developed by GAME FREAK" parte da y=181)
+# nei loghi originali HG/SS la parola gialla "Pokémon" occupa x 37..221 (185 px), y da 42: il logo nuovo viene
+# scalato e posizionato perché la sua parola gialla coincida (stessa grandezza degli originali)
+POKEMON_ORIG = (37, 42, 185)
 WHITE_TOL = 60                  # distanza massima dal bianco per considerare un pixel sfondo
 
 
@@ -40,21 +43,39 @@ def remove_white(img):
     return img
 
 
+def yellow_bbox(img):
+    """Riquadro dei pixel gialli (la parola "Pokémon")."""
+    px = img.load()
+    xs, ys = [], []
+    for y in range(img.height):
+        for x in range(img.width):
+            r, g, b, a = px[x, y]
+            if a > 128 and r > 200 and g > 170 and b < 120:
+                xs.append(x); ys.append(y)
+    return min(xs), min(ys), max(xs), max(ys)
+
+
 def main():
     if len(sys.argv) != 3 or sys.argv[2] not in ("ITA", "ENG"):
         sys.exit(__doc__)
     img = remove_white(Image.open(sys.argv[1]))
     img = img.crop(img.getbbox())
     bw, bh = BOX[2] - BOX[0], BOX[3] - BOX[1]
-    s = min(bw / img.width, bh / img.height)
+    yx0, yy0, yx1, _ = yellow_bbox(img)
+    s = POKEMON_ORIG[2] / (yx1 - yx0 + 1)
     size = (max(1, round(img.width * s)), max(1, round(img.height * s)))
+    x = round(POKEMON_ORIG[0] - yx0 * s)
+    y = round(POKEMON_ORIG[1] - yy0 * s)
+    if not (BOX[0] <= x and x + size[0] <= BOX[2] and BOX[1] <= y and y + size[1] <= BOX[3]):
+        print(f"attenzione: alla grandezza originale il logo esce dalla zona {BOX}: lo riduco")
+        s = min(bw / img.width, bh / img.height)
+        size = (max(1, round(img.width * s)), max(1, round(img.height * s)))
+        x, y = BOX[0] + (bw - size[0]) // 2, BOX[1] + (bh - size[1]) // 2
     small = img.resize(size, Image.LANCZOS)
     # niente semitrasparenze: il DS ha solo pieno/trasparente
     a = small.getchannel("A").point(lambda v: 255 if v >= 128 else 0)
     small.putalpha(a)
     out = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
-    x = BOX[0] + (bw - size[0]) // 2
-    y = BOX[1] + (bh - size[1]) // 2
     out.paste(small, (x, y), small)
     dst = ROOT / "locale" / f"logo_titolo_{sys.argv[2]}.png"
     dst.parent.mkdir(exist_ok=True)
