@@ -546,12 +546,17 @@ def apply_palettes(c):
 def apply_texts(c, lang="ITA"):
     import msg
     n = Narc(msg.MSG_NARC)
-    for f in sorted((ROOT / "data" / "testi" / lang).glob("msg_*.csv")):
+    files = sorted((ROOT / "data" / "testi" / lang).glob("msg_*.csv"))
+    if DEBUG:                    # testi della ROM di prova (menu di debug): possono aggiungere righe nuove in coda
+        files += sorted((ROOT / "data" / "debug" / "testi" / lang).glob("msg_*.csv"))
+    for f in files:
         idx = int(re.match(r"msg_(\d+)", f.stem).group(1))
         key, texts = msg.read_texts(bytes(n.files[idx]))
         with open(f, newline="", encoding="utf-8") as fh:
             for r in csv.DictReader(line for line in fh if not line.startswith("#")):
-                texts[int(r["indice"])] = r["testo"]
+                i = int(r["indice"])
+                texts += [""] * (i + 1 - len(texts))
+                texts[i] = r["testo"]
                 c.log["testi"] += 1
         n.files[idx] = bytearray(msg.write(key, texts))
     n.save()

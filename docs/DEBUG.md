@@ -8,10 +8,20 @@ sono rifiutati, e la patch in `patches/` viene sempre dalla build normale.
 Usare un salvataggio a parte (per esempio copiando la ROM di debug con un altro nome): gli stati impostati dalle
 scorciatoie restano nel salvataggio.
 
-## Scorciatoie
+## Menu di prova
 
-| Dove | Cosa fa | Per provare |
-|---|---|---|
-| Cameretta del protagonista (Borgo Foglianova, 1° piano): esaminare l'oggetto a destra del PC | Imposta lo stato "Suicune visto sul Percorso 42" (`VAR_UNK_4092 = 2`) e porta nel corridoio sotto la piazzetta del cancello del Parco Nazionale (Percorso 36, 382,242) | D45: Suicune è nella piazzetta; un passo a **nord** (come arrivando giocando): punto esclamativo, Suicune grida, scappa verso nord e sparisce. Parlandoci scappa lo stesso. Dopo, uscendo e rientrando nel Percorso 36 non deve più esserci |
+Nella cameretta del protagonista (Borgo Foglianova, 1° piano) esaminare la **console Wii** a destra del PC: compare
+un menu. Ogni voce (tranne Suicune) imposta lo stato "dopo la Lega" (`FLAG_GAME_CLEAR`), dà un Typhlosion lv 70 se la
+squadra è vuota e 30 Ultra Ball, poi porta sul posto. Si può usare subito dopo l'inizio di una partita nuova.
 
-Si può usare subito dopo l'inizio di una partita nuova (anche senza Pokémon: la piazzetta non ha erba alta).
+| Voce | Stato impostato | Arrivo | Cosa provare |
+|---|---|---|---|
+| Suicune P.36 | `VAR_UNK_4092 = 2` (dopo il Percorso 42) | Percorso 36, corridoio sotto il cancello del Parco Nazionale | D45: un passo a nord → Suicune scappa; parlandoci scappa lo stesso; rientrando non c'è più |
+| Mew | lotta non ancora fatta | Torre Inclusa (stanza usata da HeartGold) | D20/D46: Mew in fondo alla stanza; lotta al livello 50; se scappi o lo sconfiggi ricompare rientrando; catturato non ricompare |
+| Celebi | Rocket della Radio sconfitti, Celebi non catturato | Bosco di Lecci, davanti al santuario (lato ovest) | D21: esaminare il santuario → lotta con Celebi lv 30. Dopo la cattura: Celebi **primo in squadra** (menu Pokémon → Sposta) e riesaminare il santuario → deve partire il **viaggio nel passato** |
+| Pichu | dà un Pichu lv 30 | come sopra | D25: Pichu deve essere **primo in squadra** (se avevi già Pokémon, spostalo in cima); esaminare il santuario → evento di Pichu Spunzorecchio |
+| Oak (Kanto) | `VAR_UNK_4131 = 1` (dopo Rosso), Poké Ball visibili | Laboratorio di Oak | D22: si possono prendere tutte e tre le Poké Ball, una alla volta (la squadra non deve essere piena) |
+| Rocco (Johto) | `VAR_UNK_4130 = 2`, `VAR_UNK_40FD = 1`, starter non ancora presi | Silph S.p.A. di Zafferanopoli | D17/D22: parlando con Rocco, pietra verde/rossa/blu → Chikorita/Cyndaquil/Totodile, tutti e tre uno alla volta |
+| Esci | — | — | — |
+
+Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova basta riscegliere la voce.

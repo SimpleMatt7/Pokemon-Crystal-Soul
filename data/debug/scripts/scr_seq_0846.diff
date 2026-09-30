@@ -1,20 +1,110 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -36,11 +36,16 @@
+@@ -35,12 +35,107 @@
+ 	ReleaseAll
  	End
  
++@ DEBUG (solo con build.py --debug, mai nella patch pubblica): menu di prova degli eventi nuovi (docs/DEBUG.md).
++@ Testi 3-10 aggiunti da data/debug/testi/<lingua>/msg_0546.csv.
++#define FLAG_PCN_HIDE_R36_SUICUNE 0x54A
++#define FLAG_PCN_STEVEN_GREEN 0x54B
++#define FLAG_PCN_STEVEN_RED   0x54C
++#define FLAG_PCN_STEVEN_BLUE  0x54D
++#define FLAG_PCN_CELEBI_CAUGHT 0x54E
  scr_seq_T20R0202_001:
-+	@ DEBUG (solo con build.py --debug, mai nella patch pubblica): prova dello Suicune del Percorso 36 (D45).
-+	@ Stato dopo il Percorso 42 (VAR_UNK_4092 = 2) e salto nel corridoio sotto la piazzetta del cancello del Parco Nazionale (un passo a nord: parte la scena).
  	PlaySE SEQ_SE_DP_SELECT
  	LockAll
 -	NPCMsg msg_0546_T20R0202_00002
 -	WaitButton
--	CloseMsg
++	NPCMsg 3
++	TouchscreenMenuHide
++	MenuInit 1, 1, 0, 1, VAR_SPECIAL_x8004
++	MenuItemAdd 4, 255, 0
++	MenuItemAdd 5, 255, 1
++	MenuItemAdd 6, 255, 2
++	MenuItemAdd 7, 255, 3
++	MenuItemAdd 8, 255, 4
++	MenuItemAdd 9, 255, 5
++	MenuItemAdd 10, 255, 6
++	MenuExec
++	TouchscreenMenuShow
+ 	CloseMsg
++	Switch VAR_SPECIAL_x8004
++	Case 0, _DBG_suicune
++	Case 1, _DBG_mew
++	Case 2, _DBG_celebi
++	Case 3, _DBG_pichu
++	Case 4, _DBG_oak
++	Case 5, _DBG_rocco
++	ReleaseAll
++	End
++
++_DBG_prepara:
++	SetFlag FLAG_GAME_CLEAR
++	GetPartyCount VAR_SPECIAL_RESULT
++	Compare VAR_SPECIAL_RESULT, 0
++	GoToIfNe _DBG_prepara_strumenti
++	GiveMon SPECIES_TYPHLOSION, 70, 0, 0, 0, VAR_SPECIAL_RESULT
++_DBG_prepara_strumenti:
++	GiveItemNoCheck ITEM_ULTRA_BALL, 30
++	Return
++
++_DBG_suicune:
 +	SetVar VAR_UNK_4092, 2
 +	FadeScreen 6, 1, 0, RGB_BLACK
 +	WaitFade
 +	Warp MAP_ROUTE_36, 0, 382, 242, DIR_NORTH
++	GoTo _DBG_fine
++
++_DBG_mew:
++	Call _DBG_prepara
++	ClearFlag FLAG_BEAT_OR_ESCAPED_FROM_GROUDON_OR_KYOGRE
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_EMBEDDED_TOWER_KYOGRE_ROOM, 0, 16, 25, DIR_NORTH
++	GoTo _DBG_fine
++
++_DBG_celebi:
++	Call _DBG_prepara
++	SetFlag FLAG_BEAT_RADIO_TOWER_ROCKETS
++	SetVar VAR_UNK_40FE, 0
++	SetVar VAR_UNK_412B, 0
++	ClearFlag FLAG_PCN_CELEBI_CAUGHT
++	GoTo _DBG_santuario
++
++_DBG_pichu:
++	GiveMon SPECIES_PICHU, 30, 0, 0, 0, VAR_SPECIAL_RESULT
++	Call _DBG_prepara
++	SetVar VAR_UNK_412B, 0
++_DBG_santuario:
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_ILEX_FOREST, 0, 15, 55, DIR_EAST
++	GoTo _DBG_fine
++
++_DBG_oak:
++	Call _DBG_prepara
++	SetVar VAR_UNK_4131, 1
++	ClearFlag FLAG_HIDE_OAKS_LAB_BULBASAUR_BALL
++	ClearFlag FLAG_HIDE_OAKS_LAB_CHARMANDER_BALL
++	ClearFlag FLAG_HIDE_OAKS_LAB_SQUIRTLE_BALL
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_PALLET_TOWN_OAKS_LAB, 0, 8, 9, DIR_NORTH
++	GoTo _DBG_fine
++
++_DBG_rocco:
++	Call _DBG_prepara
++	SetVar VAR_UNK_4130, 2
++	SetVar VAR_UNK_40FD, 1
++	ClearFlag FLAG_GOT_HOENN_STARTER_FROM_STEVEN
++	ClearFlag FLAG_PCN_STEVEN_GREEN
++	ClearFlag FLAG_PCN_STEVEN_RED
++	ClearFlag FLAG_PCN_STEVEN_BLUE
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_SAFFRON_SILPH_CO_HQ, 0, 14, 11, DIR_NORTH
++_DBG_fine:
 +	FadeScreen 6, 1, 1, RGB_BLACK
 +	WaitFade
  	ReleaseAll
