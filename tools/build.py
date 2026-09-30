@@ -397,6 +397,22 @@ def apply_title_logo(c):
     ng, ns, ntiles = logo.encode(img, g, s)
     orig_tiles = len(logo.gfx.ncgr(g)[1])
     assert ntiles <= max(orig_tiles, 459), f"logo: {ntiles} tile, troppi (originale {orig_tiles})"
+    # cielo con Suicune (membri 36/37 e la copia 34/35 per la variante Ho-Oh) + colori esatti nei posti liberi
+    sky, _, extra = logo.build_sky(base=SRC.name)
+    kc, _ = maybe_lz(bytes(n.files[logo.SKY_CHR]))
+    ks, _ = maybe_lz(bytes(n.files[logo.SKY_SCR]))
+    nkc, nks, nsky = logo.encode(sky, kc, ks)
+    assert nsky <= 1024, f"cielo: {nsky} tile"
+    for ci, si in ((logo.SKY_CHR, logo.SKY_SCR), (34, 35)):
+        n.files[ci], n.files[si] = bytearray(nkc), bytearray(nks)
+    from gfx import nclr
+    for pal in (logo.SS_PAL, 4):
+        pb = bytearray(n.files[pal])
+        po = nclr(bytes(pb))[2]
+        for i, (r, g, b_) in extra.items():
+            set16(pb, po + 2 * i, (r * 31 // 255) | ((g * 31 // 255) << 5) | ((b_ * 31 // 255) << 10))
+        n.files[pal] = pb
+    c.log["cielo (tile)"] = nsky
     n.files[logo.SS_LOGO] = bytearray(ng)
     n.files[3] = bytearray(ng)      # logo della variante Ho-Oh (HG): stesso logo, tavolozza copiata da copia_membri.csv
     n.files[logo.LOGO_SCR] = bytearray(ns)
