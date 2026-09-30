@@ -236,8 +236,9 @@ def paste(img, piece, dx):
 
 def build_logo(base="IPKI"):
     img, cols = load_indexed(SS_LOGO, SS_PAL, base=base)
-    if LOCAL_LOGO.exists():   # logo rifatto a mano (cartella locale, non versionata)
-        return import_png(LOCAL_LOGO, cols), cols
+    custom = local_logo(base)
+    if custom:                # logo rifatto a mano (cartella locale, non versionata)
+        return import_png(custom, cols), cols
     fill = [img[y][FILL_COL] for y in range(FILL_Y0, FILL_Y1 + 1)]  # sfumatura, letta prima di cancellare
     # riga piccola (y <= 130): via "ARGENTO"
     erase(img, 131, 103, 245, 131)
@@ -252,7 +253,16 @@ def build_logo(base="IPKI"):
     return img, cols
 
 
-LOCAL_LOGO = Path(__file__).resolve().parent.parent / "locale" / "logo_titolo.png"
+LOCAL_DIR = Path(__file__).resolve().parent.parent / "locale"
+LANG = {"IPKI": "ITA", "IPKE": "ENG"}
+
+
+def local_logo(base):
+    """Logo rifatto a mano per la lingua della ROM (locale/logo_titolo_ITA.png / _ENG.png), se c'è."""
+    for name in (f"logo_titolo_{LANG.get(base, base)}.png", "logo_titolo.png"):
+        if (LOCAL_DIR / name).exists():
+            return LOCAL_DIR / name
+    return None
 
 
 def import_png(path, cols):
@@ -316,6 +326,7 @@ SUICUNE_POS = (2, 190)             # angolo in basso a sinistra (x sinistro, y d
 # posti liberi della tavolozza del titolo (né cielo né logo; 124-126 li usa la riga "Developed by GAME FREAK")
 FREE_SLOTS = [117, 118, 119, 120, 121, 122, 123, 127]
 EXACT_DIST = 900                   # oltre questa distanza il colore di Suicune prende un posto libero
+SUICUNE_WITH_CUSTOM_LOGO = False   # con un logo disegnato a mano Suicune si sovrappone alle lettere: per ora niente
 
 
 def pokemon_front(species, base="IPKI"):
@@ -343,6 +354,8 @@ def nearest(cols, rgb):
 
 def build_sky(base="IPKI"):
     sky, cols = load_indexed(SKY_CHR, SS_PAL, scr=SKY_SCR, base=base)
+    if local_logo(base) and not SUICUNE_WITH_CUSTOM_LOGO:
+        return sky, cols, {}
     mon, mcols = pokemon_front(SUICUNE, base)
     ys = [y for y in range(80) if any(mon[y])]
     xs = [x for x in range(80) if any(mon[y][x] for y in range(80))]
