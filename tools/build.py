@@ -523,6 +523,28 @@ def apply_texts(c, lang="ITA"):
     n.save()
 
 
+def apply_menu(c):
+    """Pulsanti del menu principale nascosti (data/design/menu.csv): nella tabella sMainMenuButtons dell'overlay 74
+    (id, altezza, testo, funzione; 9 voci) la funzione del pulsante punta a uno "return 0" dell'ARM9."""
+    ov = BUILD / "arm9_overlays/ov074.bin"
+    b = bytearray(ov.read_bytes())
+    hits = []
+    for k in range(0, len(b) - 144, 4):
+        w = struct.unpack_from("<36I", b, k)
+        if w[0::4] == tuple(range(1, 10)) and w[1::4] == (10, 4, 4, 4, 4, 4, 4, 4, 4) and w[2::4] == (0, 1, 9, 2, 3, 0, 11, 12, 10):
+            hits.append(k)
+    assert len(hits) == 1, f"menu principale: tabella dei pulsanti trovata {len(hits)} volte"
+    arm9 = (BUILD / "arm9/arm9.bin").read_bytes()
+    stub = bytes.fromhex("002070470220704704207047062070470120704703207047")   # sub_02074490.. (return 0, 2, 4, 6, 1, 3)
+    assert arm9.count(stub) == 1, "ARM9: funzione 'return 0' non trovata"
+    ret0 = 0x02000000 + arm9.find(stub) + 1          # Thumb
+    for r in rows("menu.csv"):
+        i = int(r["id"]) - 1
+        struct.pack_into("<I", b, hits[0] + 16 * i + 12, ret0)
+        c.log["menu (pulsanti nascosti)"] += 1
+    ov.write_bytes(bytes(b))
+
+
 def apply_banner(c):
     p = BUILD / "banner" / "banner.yaml"
     y = p.read_text(encoding="utf-8")
@@ -533,6 +555,25 @@ def apply_banner(c):
         assert k == 1, r
         c.log["banner"] += 1
     p.write_text(y, encoding="utf-8")
+    # icona: la Poké Ball dorata di HeartGold in azzurro cristallo (stessa tinta per immagine e tavolozza, colori
+    # arrotondati a 5 bit perché dsrom li ritrovi uguali nella tavolozza)
+    import colorsys
+    from gfx import read_png, write_png
+
+    def crystal(px):
+        r, g, b, a = px
+        h, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, b / 255)
+        if s > 0.08:
+            h = BANNER_HUE / 360
+        rr, gg, bb = colorsys.hsv_to_rgb(h, s, v)
+        return (round(rr * 255) & 0xF8, round(gg * 255) & 0xF8, round(bb * 255) & 0xF8, a)
+    for name in ("bitmap.png", "palette.png"):
+        w, h, px = read_png(SRC / "banner" / name)
+        write_png(BUILD / "banner" / name, w, h, b"".join(bytes(crystal(q)) for q in px))
+    c.log["banner"] += 1
+
+
+BANNER_HUE = 195    # tinta (gradi HSV) dell'icona del banner: azzurro cristallo come il logo
 
 
 # ------------------------------------------------------------------ verifica sui file costruiti
@@ -578,7 +619,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
