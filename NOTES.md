@@ -194,7 +194,7 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
 `get_tools.py` → `roundtrip.py` → `probe.py`, ripresa con Claude Code).
 
 ## 11. Prossimi passi
-1. **Utente**: provare `out/PokemonCrystalNew_IPKI.nds`. Controlli nuovi: nome nel menu del DS; Rocco a Zafferanopoli
+1. **Utente**: provare `out/Pokemon Crystal Soul (ITA).nds` (ENG: `(ENG).nds`). Controlli nuovi: nome nel menu del DS; Rocco a Zafferanopoli
    (post-game): pietra verde/rossa/blu → Chikorita/Cyndaquil/Totodile, Rocco resta finché non li hai presi tutti e 3;
    Oak dopo Red: tutte e 3 le Poké Ball; dopo la Lega: Mew alla Torre Inclusa (sprite), Celebi al santuario di Lecci
    (lv 30) e poi viaggio nel passato con Celebi in testa, Pichu in testa al santuario.
