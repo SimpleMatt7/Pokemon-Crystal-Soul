@@ -18,6 +18,7 @@ import scrasm  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 PATCHES = ROOT / "data" / "scripts"
+DEBUG_PATCHES = ROOT / "data" / "debug" / "scripts"
 EDIT = ROOT / "work" / "script_edit"
 
 
@@ -70,11 +71,18 @@ def patched_text(idx):
     return apply_diff(text, d.read_text(encoding="utf-8")) if d.exists() else text
 
 
-def patched_scripts():
+def patched_scripts(debug=False):
+    """Script modificati assemblati. Con debug=True si applicano in più le patch di data/debug/scripts/ (sopra a
+    quelle normali): servono solo per la ROM di prova (build.py --debug), mai per la patch pubblica."""
     out = {}
     for d in sorted(PATCHES.glob("scr_seq_*.diff")):
         idx = int(re.match(r"scr_seq_(\d+)", d.stem).group(1))
         out[idx] = scrasm.assemble(patched_text(idx), f"scr_seq_{idx:04d} (patch)")
+    if debug:
+        for d in sorted(DEBUG_PATCHES.glob("scr_seq_*.diff")):
+            idx = int(re.match(r"scr_seq_(\d+)", d.stem).group(1))
+            text = apply_diff(patched_text(idx), d.read_text(encoding="utf-8"))
+            out[idx] = scrasm.assemble(text, f"scr_seq_{idx:04d} (debug)")
     return out
 
 

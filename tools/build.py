@@ -28,6 +28,7 @@ BUILD = ROOT / "work" / "build"
 DESIGN = ROOT / "data" / "design"
 OUT = ROOT / "out"
 NAME = "Pokemon Crystal Soul (ITA)"
+DEBUG = False       # build.py --debug: ROM di prova con le scorciatoie di data/debug/ (vedi docs/DEBUG.md)
 sp = audit.sp
 LEVEL_METHODS = {"LEVEL", "LEVEL_ATK_GT_DEF", "LEVEL_ATK_EQ_DEF", "LEVEL_ATK_LT_DEF", "LEVEL_PID_LO", "LEVEL_PID_HI",
                  "LEVEL_NINJASK", "LEVEL_MALE", "LEVEL_FEMALE"}
@@ -301,10 +302,43 @@ def apply_map_objects(c):
     n.save()
 
 
+def apply_zone_events(c):
+    """Personaggi e punti di attivazione aggiunti agli eventi di zona (data/design/eventi_zona.csv).
+    Formato (decomp, fielddata/eventdata): u32 n + fondali da 20 byte, u32 n + oggetti da 32, u32 n + warp da 12,
+    u32 n + coord da 16."""
+    sprites = {m.group(1): int(m.group(2)) for m in re.finditer(r"#define (SPRITE_\w+)\s+(\d+)", (audit.PRET / "include/constants/sprites.h").read_text())}
+    num = lambda s: int(s, 0)  # noqa: E731
+    n = Narc("a/0/3/2")
+    by_zone = collections.defaultdict(list)
+    for r in rows("eventi_zona.csv"):
+        by_zone[int(r["zona"])].append(r)
+    for zone, rs in by_zone.items():
+        f = bytes(n.files[zone])
+        o, secs = 0, []
+        for size in (20, 32, 12, 16):
+            k = struct.unpack_from("<I", f, o)[0]
+            secs.append([f[o + 4 + i * size:o + 4 + (i + 1) * size] for i in range(k)])
+            o += 4 + k * size
+        assert o == len(f), f"eventi di zona {zone}: lunghezza inattesa"
+        for r in rs:
+            x, z = int(r["x"]), int(r["z"])
+            if r["tipo"] == "oggetto":
+                oid = int(r["id_o_script"])
+                assert oid == len(secs[1]), f"zona {zone}: l'id dell'oggetto nuovo deve essere {len(secs[1])}"
+                secs[1].append(struct.pack("<14HI", oid, sprites[r["sprite_o_larghezza"]], 0, 0, num(r["flag_o_altezza"]),
+                                           int(r["script_o_var"]), int(r["direzione_o_valore"]), 0, 0, 0, 0, 0, x, z, 0))
+            else:
+                secs[3].append(struct.pack("<8H", int(r["id_o_script"]), x, z, int(r["sprite_o_larghezza"]),
+                                           int(r["flag_o_altezza"]), 0, int(r["direzione_o_valore"]), num(r["script_o_var"])))
+            c.log["eventi di zona aggiunti"] += 1
+        n.files[zone] = bytearray(b"".join(struct.pack("<I", len(s)) + b"".join(s) for s in secs))
+    n.save()
+
+
 def apply_scripts(c):
     import scrpatch
     n = Narc("a/0/1/2")
-    for idx, b in scrpatch.patched_scripts().items():
+    for idx, b in scrpatch.patched_scripts(debug=DEBUG).items():
         n.files[idx] = bytearray(b); c.log["script"] += 1
     n.save()
 
@@ -602,13 +636,18 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # console Windows cp1252
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-rom", action="store_true")
+    ap.add_argument("--debug", action="store_true",
+                    help="ROM di prova con le scorciatoie di data/debug/ (nome ... DEBUG.nds; mai con --rilascio)")
     ap.add_argument("--rilascio", action="store_true", help="copia anche la patch BPS in patches/ (da versionare)")
     ap.add_argument("--base", default="IPKI", help="ROM di partenza: IPKI (ITA, default) o IPKE (USA)")
     args = ap.parse_args()
-    global SRC, BUILD, NAME
+    global SRC, BUILD, NAME, DEBUG
+    if args.debug and args.rilascio:
+        sys.exit("--debug e --rilascio insieme no: la ROM di prova non si pubblica")
+    DEBUG = args.debug
     SRC = ROOT / "work" / args.base
     BUILD = ROOT / "work" / f"build_{args.base}" if args.base != "IPKI" else BUILD
-    NAME = f"Pokemon Crystal Soul ({ {'IPKI': 'ITA', 'IPKE': 'ENG'}[args.base] })"
+    NAME = f"Pokemon Crystal Soul ({ {'IPKI': 'ITA', 'IPKE': 'ENG'}[args.base] })" + (" DEBUG" if DEBUG else "")
     audit.ROM = SRC / "files"
     lang = {"IPKI": "ITA", "IPKE": "ENG"}[args.base]
     if not SRC.exists():
@@ -620,7 +659,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
+                 apply_map_objects, apply_zone_events, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))

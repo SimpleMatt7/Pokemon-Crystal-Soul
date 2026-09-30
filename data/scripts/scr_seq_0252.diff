@@ -1,0 +1,14 @@
+--- a/scr_seq_0252_R42.s
++++ b/scr_seq_0252_R42.s
+@@ -222,8 +222,7 @@
+ 	SetFlag FLAG_HIDE_ROUTE_42_SUICUNE
+ 	SetFlag FLAG_HIDE_ROUTE_42_EUSINE
+-	SetVar VAR_UNK_4092, 0
+-	SetVar VAR_UNK_4070, 1
+-	SetVar VAR_UNK_4071, 1
+-	ClearFlag FLAG_HIDE_VERMILION_SUICUNE
++	@ Crystal Soul: come in Cristallo Suicune si fa vedere ancora sul Percorso 36 (VAR_UNK_4092 = 2);
++	@ sarà quello script ad accendere Aranciopoli (prima lo faceva questo)
++	SetVar VAR_UNK_4092, 2
+ 	ReleaseAll
+ 	End

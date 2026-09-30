@@ -1,0 +1,72 @@
+--- a/scr_seq_0243_R36.s
++++ b/scr_seq_0243_R36.s
+@@ -3,4 +3,9 @@
+ #include "msgdata/msg/msg_0390_R36.h"
+ #include "constants/battle.h"
++@ Crystal Soul (D45): come in Cristallo Suicune si fa vedere anche sul Percorso 36, davanti al cancello del Parco
++@ Nazionale, dopo il Percorso 42 (VAR_UNK_4092 = 2) e prima di Aranciopoli. Oggetto 9 e punti di attivazione
++@ aggiunti agli eventi di zona dal build (data/design/eventi_zona.csv).
++#define FLAG_PCN_HIDE_R36_SUICUNE 0x54A
++#define obj_R36_pcn_suicune 9
+ 	.include "asm/macros/script.inc"
+ 
+@@ -18,7 +23,16 @@
+ 	ScrDef scr_seq_R36_009
+ 	ScrDef scr_seq_R36_010
++	ScrDef scr_seq_R36_011
+ 	ScrDefEnd
+ 
+ scr_seq_R36_002:
++	Compare VAR_UNK_4092, 2
++	GoToIfEq _PCN_r36_suicune_on
++	SetFlag FLAG_PCN_HIDE_R36_SUICUNE
++	GoTo _PCN_r36_weekday
++
++_PCN_r36_suicune_on:
++	ClearFlag FLAG_PCN_HIDE_R36_SUICUNE
++_PCN_r36_weekday:
+ 	GetWeekday VAR_TEMP_x4000
+ 	Compare VAR_TEMP_x4000, 4
+@@ -468,2 +482,42 @@
+ 	End
+ 	.balign 4, 0
++
++scr_seq_R36_011:
++	ScrCmd_609
++	LockAll
++	PlayCry SPECIES_SUICUNE, 0
++	Release obj_R36_pcn_suicune
++	ScrCmd_523 obj_R36_pcn_suicune, 2, 90, 2, 0
++	Lock obj_R36_pcn_suicune
++	WaitCry
++	ToggleFollowingPokemonMovement 0
++	WaitFollowingPokemonMovement
++	FollowingPokemonMovement 56
++	ApplyMovement obj_R36_pcn_suicune, _PCN_r36_suicune_fugge
++	ApplyMovement obj_player, _PCN_r36_player_vede
++	WaitMovement
++	WaitFollowingPokemonMovement
++	ToggleFollowingPokemonMovement 1
++	FollowingPokemonMovement 48
++	HidePerson obj_R36_pcn_suicune
++	SetFlag FLAG_PCN_HIDE_R36_SUICUNE
++	SetVar VAR_UNK_4092, 0
++	SetVar VAR_UNK_4070, 1
++	SetVar VAR_UNK_4071, 1
++	ClearFlag FLAG_HIDE_VERMILION_SUICUNE
++	ReleaseAll
++	End
++
++	.balign 4, 0
++_PCN_r36_suicune_fugge:
++	Delay4 3
++	WalkFasterNorth 2
++	JumpFarNorth 2
++	MoveAction_112 1
++	EndMovement
++
++	.balign 4, 0
++_PCN_r36_player_vede:
++	EmoteExclamationMark
++	EndMovement
++	.balign 4, 0

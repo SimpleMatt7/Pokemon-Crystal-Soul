@@ -27,7 +27,7 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 - `tools/bin/` (ignorata) — binari esterni scaricati; non si versionano (decisione D14).
 - `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret). `data/design/`: tabelle di design
   della fase 3 (sostituzioni, selvatici, evoluzioni, oggetti, eventi); generatori `tools/design_subs.py`, `tools/design_wild.py`.
-- `docs/` — `SETUP.md` (setup da zero su un altro PC).
+- `docs/` — `SETUP.md` (setup da zero su un altro PC), `DEBUG.md` (ROM di prova e scorciatoie).
 - `patches/` — patch BPS pubblicate (`build.py --rilascio`, una per lingua). `README.md` (inglese) e `README.it.md`
   (italiano) sono la pagina pubblica: aggiornarli quando cambia qualcosa di visibile al giocatore.
 
@@ -44,6 +44,7 @@ python tools/design.py        # applica data/design/*.csv in memoria e verifica 
 python tools/build.py         # costruisce out/Pokemon Crystal Soul (ITA).nds + .bps (work/build, verifica sui file)
 python tools/build.py --base IPKE   # stessa hack sulla ROM USA
 python tools/build.py --rilascio    # copia anche la BPS in patches/ (pubblicata; README.md inglese, README.it.md italiano)
+python tools/build.py --debug       # ROM di prova con scorciatoie (data/debug/, docs/DEBUG.md): mai pubblicata
 python tools/scrasm.py --verifica   # assemblatore di script: 965/965 identici alla ROM
 python tools/scrpatch.py apri NNNN  # modifica uno script (poi: salva) → data/scripts/scr_seq_NNNN.diff
 python tools/msg.py mostra NNNN     # testi di un archivio (a/0/2/7); modifiche in data/testi/ITA/msg_NNNN.csv
