@@ -18,6 +18,7 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 ## Struttura
 - `roms/` (ignorata) — ROM originali, `.nds` o `.zip`; riconosciute tramite SHA1 (`tools/roms.py`).
 - `work/`, `out/` (ignorate) — estrazioni e ROM generate.
+- `locale/` (ignorata) — grafica rifatta a mano partendo da quella del gioco (loghi del titolo): non si pubblica.
 - `tools/` — script: `roms.py` (trova/verifica ROM), `ndsfs.py` (lettura FNT/FAT/NARC), `probe.py` (audit specie > 251),
   `get_tools.py` (scarica dsrom con SHA256), `roundtrip.py` (estrai/ricostruisci/confronta), `find_nature_table.py`,
   `get_pret.py` (decomp pret in `work/pret`, commit fissato), `audit.py` (→ `docs/audit.md`), `items.py` (→ `docs/oggetti.md`),
@@ -45,6 +46,7 @@ python tools/scrasm.py --verifica   # assemblatore di script: 965/965 identici a
 python tools/scrpatch.py apri NNNN  # modifica uno script (poi: salva) → data/scripts/scr_seq_NNNN.diff
 python tools/msg.py mostra NNNN     # testi di un archivio (a/0/2/7); modifiche in data/testi/ITA/msg_NNNN.csv
 python tools/bps.py applica ORIGINALE PATCH.bps USCITA   # applica una BPS (anche: crea)
+python tools/prepara_logo.py FILE ITA|ENG   # logo disegnato → locale/logo_titolo_<lingua>.png (serve Pillow)
 git config core.hooksPath tools/hooks   # una volta per clone: attiva l'hook anti-ROM
 ```
 

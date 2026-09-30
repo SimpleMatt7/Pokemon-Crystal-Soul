@@ -333,17 +333,20 @@ def apply_pokedex(c):
 
 
 def apply_code(c):
+    appended = {}   # file → offset della routine aggiunta in coda (per le chiamate "BL:FINE")
     for r in rows("codice.csv"):
         p = BUILD / r["file"]
         b = bytearray(p.read_bytes())
         if r["contesto"] == "FINE":   # codice aggiunto in coda a un overlay (senza bss: vedi NOTES)
-            assert len(b) == int(r["posizione"]), f"{r['file']}: lunghezza {len(b)} inattesa"
+            while len(b) % 4:
+                b.append(0)
+            appended[r["file"]] = len(b)
             b += bytes.fromhex(r["a"])
             p.write_bytes(bytes(b))
             ov = int(re.search(r"ov(\d+)\.bin", r["file"]).group(1))
             y = (BUILD / "arm9_overlays/overlays.yaml").read_text()
             m = re.search(rf"(- id: {ov}\n(?:    .*\n)*?    code_size: )(\d+)", y)
-            assert m and int(m.group(2)) == int(r["posizione"])
+            assert m and int(m.group(2)) == appended[r["file"]], "code_size diverso dalla lunghezza del file"
             assert re.search(rf"- id: {ov}\n(?:    .*\n)*?    bss_size: 0\n", y), "overlay con bss: non si può allungare"
             y = y[:m.start(2)] + str(len(b)) + y[m.end(2):]
             (BUILD / "arm9_overlays/overlays.yaml").write_text(y)
@@ -353,7 +356,12 @@ def apply_code(c):
         if b.count(ctx) != 1:
             raise SystemExit(f"codice.csv: contesto trovato {b.count(ctx)} volte in {r['file']}: {r['motivo']}")
         o = b.find(ctx) + int(r["posizione"])
-        da, a = bytes.fromhex(r["da"]), bytes.fromhex(r["a"])
+        da = bytes.fromhex(r["da"])
+        if r["a"] == "BL:FINE":       # BL Thumb (2 mezze parole) verso la routine aggiunta in coda
+            off = appended[r["file"]] - (o + 4)
+            a = struct.pack("<HH", 0xF000 | ((off >> 12) & 0x7FF), 0xF800 | ((off >> 1) & 0x7FF))
+        else:
+            a = bytes.fromhex(r["a"])
         assert b[o:o + len(da)] == da, r
         b[o:o + len(a)] = a
         p.write_bytes(bytes(b)); c.log["codice"] += 1
@@ -396,7 +404,8 @@ def apply_title_logo(c):
     img, _ = logo.build_logo(base=SRC.name)
     ng, ns, ntiles = logo.encode(img, g, s)
     orig_tiles = len(logo.gfx.ncgr(g)[1])
-    assert ntiles <= max(orig_tiles, 459), f"logo: {ntiles} tile, troppi (originale {orig_tiles})"
+    # livello SUB_2: tile da 0x0000, mappa a 0x8000 → al massimo 512 tile da 64 byte (8bpp)
+    assert ntiles <= 512, f"logo: {ntiles} tile, troppi (massimo 512; originale {orig_tiles})"
     # cielo con Suicune (membri 36/37 e la copia 34/35 per la variante Ho-Oh) + colori esatti nei posti liberi
     sky, _, extra = logo.build_sky(base=SRC.name)
     kc, _ = maybe_lz(bytes(n.files[logo.SKY_CHR]))
