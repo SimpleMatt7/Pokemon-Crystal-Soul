@@ -71,3 +71,6 @@ desktop.ini
 
 # Impostazioni locali di Claude Code
 .claude/settings.local.json
+
+# grafica rifatta a mano a partire da quella del gioco (non si pubblica)
+locale/
