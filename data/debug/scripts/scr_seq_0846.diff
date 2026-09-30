@@ -98,7 +98,7 @@
 +	ClearFlag FLAG_HIDE_OAKS_LAB_SQUIRTLE_BALL
 +	FadeScreen 6, 1, 0, RGB_BLACK
 +	WaitFade
-+	Warp MAP_PALLET_TOWN_OAKS_LAB, 0, 8, 9, DIR_NORTH
++	Warp MAP_PALLET_TOWN_OAKS_LAB, 0, 8, 12, DIR_NORTH
 +	GoTo _DBG_fine
 +
 +_DBG_rocco:
