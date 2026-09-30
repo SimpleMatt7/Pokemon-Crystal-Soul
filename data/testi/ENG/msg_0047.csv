@@ -1,0 +1,7 @@
+indice,testo
+11,"Brock: Hi, {STRVAR_1 3, 0, 0}!\nI’m putting together a new team\fof Rock-type Pokémon.\rAll I’m missing is a GEODUDE, but\nI never find the time to catch one.\rIf you happen to have a GEODUDE,\fcould you trade it for my RHYHORN? {YESNO 0}"
+12,"Brock: Hi, {STRVAR_1 3, 0, 0}!\nI’m putting together a new team\fof Rock-type Pokémon.\rAll I’m missing is a GEODUDE, but\nI never find the time to catch one.\rIf you happen to have a GEODUDE,\fcould you trade it for my RHYHORN? {YESNO 0}"
+14,"Brock: I thought you might have one,\nbut I guess it’s not that easy...\rIf you find one, remember to trade\nwith me, OK?"
+15,Brock: I am looking for GEODUDE.\nAre you saying you’ll trade\fit for my RHYHORN? {YESNO 0}
+16,"Brock: Thank you!\nI have been looking for GEODUDE!\rThe RHYHORN I gave you knows the move\nThunder Fang! I trained it from an Egg.\rI’m so proud of it, because it can\ntake down Water-type Pokémon, which\fusually are a tough matchup.\rTake good care of it for me!"
+18,"Brock: Hey, now!\nThat is not a GEODUDE!"

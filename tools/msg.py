@@ -5,7 +5,7 @@ cifrata con (765 * i * chiave); caratteri u16 cifrati con chiave i * 596947, +18
 Caratteri e comandi dalla charmap.txt della decomp ({STRVAR_1 3, 0, 0}, \\n a capo, \\r nuova finestra,
 \\f scorrimento). I nomi degli allenatori compressi (F100) si leggono ma non si riscrivono (non servono).
 
-Uso:  python tools/msg.py mostra 537 [indice ...]     stampa i testi di un file (ROM ITA estratta)
+Uso:  python tools/msg.py mostra 537 [indice ...]     stampa i testi di un file (ROM ITA estratta; --base IPKE = USA)
       python tools/msg.py verifica                    decodifica e ricodifica tutti i file: devono restare identici
 Da codice: read(bytes) → (chiave, [testi]); write(chiave, [testi]) → bytes.
 """
@@ -142,7 +142,10 @@ def write(key, texts_codes):
 
 def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    files = parse_narc((ROOT / "work/IPKI/files" / MSG_NARC).read_bytes())
+    base = "IPKI"
+    if "--base" in sys.argv:
+        i = sys.argv.index("--base"); base = sys.argv[i + 1]; del sys.argv[i:i + 2]
+    files = parse_narc((ROOT / "work" / base / "files" / MSG_NARC).read_bytes())
     if len(sys.argv) >= 3 and sys.argv[1] == "mostra":
         key, texts = read_texts(files[int(sys.argv[2])])
         sel = [int(x) for x in sys.argv[3:]] or range(len(texts))
