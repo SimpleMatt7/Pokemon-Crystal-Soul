@@ -1,0 +1,26 @@
+--- a/scr_seq_0252_R42.s
++++ b/scr_seq_0252_R42.s
+@@ -226,6 +226,11 @@
+ 	@ Crystal Soul: come in Cristallo Suicune si fa vedere ancora sul Percorso 36 (VAR_UNK_4092 = 2);
+ 	@ sarà quello script ad accendere Aranciopoli (prima lo faceva questo)
+ 	SetVar VAR_UNK_4092, 2
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_NEW_BARK_PLAYER_HOUSE_2F, 0, 8, 5, DIR_NORTH  @ DEBUG: ritorno in cameretta
++	FadeScreen 6, 1, 1, RGB_BLACK
++	WaitFade
+ 	ReleaseAll
+ 	End
+ 
+@@ -233,6 +238,11 @@
+ 	HidePerson obj_R42_tsure_poke_static_suicune
+ 	SetFlag FLAG_HIDE_ROUTE_42_SUICUNE
+ 	SetVar VAR_UNK_4092, 2
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_NEW_BARK_PLAYER_HOUSE_2F, 0, 8, 5, DIR_NORTH  @ DEBUG: ritorno in cameretta
++	FadeScreen 6, 1, 1, RGB_BLACK
++	WaitFade
+ 	ReleaseAll
+ 	End
+ 

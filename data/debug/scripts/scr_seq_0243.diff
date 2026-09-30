@@ -1,0 +1,26 @@
+--- a/scr_seq_0243_R36.s
++++ b/scr_seq_0243_R36.s
+@@ -508,6 +508,11 @@
+ 	SetFlag FLAG_PCN_SUICUNE_GIRO
+ 	SetVar VAR_UNK_4076, 1
+ 	ClearFlag FLAG_HIDE_CIANWOOD_SUICUNE
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_NEW_BARK_PLAYER_HOUSE_2F, 0, 8, 5, DIR_NORTH  @ DEBUG: ritorno in cameretta
++	FadeScreen 6, 1, 1, RGB_BLACK
++	WaitFade
+ 	ReleaseAll
+ 	End
+ 
+@@ -516,6 +521,11 @@
+ 	SetVar VAR_UNK_4070, 1
+ 	SetVar VAR_UNK_4071, 1
+ 	ClearFlag FLAG_HIDE_VERMILION_SUICUNE
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	Warp MAP_NEW_BARK_PLAYER_HOUSE_2F, 0, 8, 5, DIR_NORTH  @ DEBUG: ritorno in cameretta
++	FadeScreen 6, 1, 1, RGB_BLACK
++	WaitFade
+ 	ReleaseAll
+ 	End
+ 
