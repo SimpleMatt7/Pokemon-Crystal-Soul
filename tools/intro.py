@@ -8,8 +8,8 @@ Combinato (scritto nei membri 23-26, quelli che il codice HG carica):
   - NCGR: tile di Ho-Oh + tile di Lugia; NCLR: tavolozza 2 = tavolozza 1 di Lugia
   - NCER: celle di Ho-Oh + celle 1-6 di Lugia (tile spostati, tavolozza 2)
   - NANR sequenza 1: Ho-Oh esce dal sole (HOOH_OUT fotogrammi), ci rientra (al contrario, più veloce), poi esce Lugia.
-Codice (codice.csv): 3 tavolozze caricate invece di 2; l'uccello compare dopo 10 tick invece di 128 e la
-dissolvenza parte dopo 208 invece di 90 (durata totale della scena invariata: la musica resta sincronizzata).
+Codice (codice.csv): 3 tavolozze caricate invece di 2; l'uccello compare subito (0 tick invece di 128) e la
+dissolvenza parte dopo 218 invece di 90 (durata totale della scena invariata: la musica resta sincronizzata).
 """
 import struct
 import sys
@@ -21,8 +21,9 @@ import gfx  # noqa: E402
 NARC = "a/2/6/2"
 HOOH = dict(pal=23, chr=24, anm=25, cel=26)
 LUGIA = dict(pal=27, chr=28, anm=29, cel=30)
-HOOH_OUT = 28          # fotogrammi di Ho-Oh in uscita (scala ~0.33)
-HOOH_BACK_STEP = 3     # rientro nel sole: un fotogramma ogni 3, al contrario (più veloce)
+HOOH_OUT = 36          # fotogrammi di Ho-Oh in uscita (scala ~0.42)
+HOOH_BACK_STEP = 2     # rientro nel sole: un fotogramma ogni 2, al contrario
+LUGIA_START = 8        # Lugia parte già un po' fuori dal sole
 
 
 def _sec(b, magic):
@@ -163,7 +164,7 @@ def build(files):
     hs, ls = nanr_seqs(H["anm"]), nanr_seqs(L["anm"])
     fly_h, fly_l = hs[1]["frames"], ls[1]["frames"]
     lugia = []
-    for elem, dur in fly_l:
+    for elem, dur in fly_l[LUGIA_START:]:
         e = bytearray(elem)
         struct.pack_into("<H", e, 0, struct.unpack_from("<H", e, 0)[0] + base_l)
         lugia.append((bytes(e), dur))

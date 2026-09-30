@@ -308,6 +308,66 @@ def encode(img, ncgr_orig, nscr_orig):
     return new_ncgr, bytes(scr), len(tiles)
 
 
+# --------------------------------------------------------------- cielo del titolo con Suicune
+SKY_CHR, SKY_SCR = 36, 37          # cielo azzurro (SS), tavolozza SS_PAL (la stessa del logo)
+POKEGRA = "a/0/0/4"                # sprite dei Pokémon: 6 file per specie (retro f/m, fronte f/m, tavolozze)
+SUICUNE = 245
+SUICUNE_POS = (2, 190)             # angolo in basso a sinistra (x sinistro, y del fondo), specchiato verso il logo
+# posti liberi della tavolozza del titolo (né cielo né logo; 124-126 li usa la riga "Developed by GAME FREAK")
+FREE_SLOTS = [117, 118, 119, 120, 121, 122, 123, 127]
+EXACT_DIST = 900                   # oltre questa distanza il colore di Suicune prende un posto libero
+
+
+def pokemon_front(species, base="IPKI"):
+    """Sprite frontale 80x80 (prima posa) decifrato → (righe di indici 0-15, colori)."""
+    import struct
+    G = gfx.load_member(POKEGRA, species * 6 + 3, base)
+    P = gfx.load_member(POKEGRA, species * 6 + 4, base)
+    o = gfx._section(G, b"RAHC")
+    size, off = struct.unpack_from("<II", G, o + 24)
+    d = list(struct.unpack_from(f"<{size // 2}H", G, o + 8 + off))
+    seed = d[0]
+    for i in range(len(d)):          # cifratura degli sprite HGSS: XOR con LCG, seme = prima parola
+        d[i] ^= seed
+        seed = (seed * 1103515245 + 24691) & 0xFFFF
+    raw = struct.pack(f"<{len(d)}H", *d)
+    W = 160
+    img = [[(raw[(y * W + x) // 2] >> (4 if x & 1 else 0)) & 15 for x in range(80)] for y in range(80)]
+    return img, gfx.nclr(P)[1]
+
+
+def nearest(cols, rgb):
+    r, g, b = rgb
+    return min(range(1, len(cols)), key=lambda i: (cols[i][0] - r) ** 2 * 3 + (cols[i][1] - g) ** 2 * 4 + (cols[i][2] - b) ** 2 * 2)
+
+
+def build_sky(base="IPKI"):
+    sky, cols = load_indexed(SKY_CHR, SS_PAL, scr=SKY_SCR, base=base)
+    mon, mcols = pokemon_front(SUICUNE, base)
+    ys = [y for y in range(80) if any(mon[y])]
+    xs = [x for x in range(80) if any(mon[y][x] for y in range(80))]
+    x0, y1 = SUICUNE_POS
+    top = y1 - (ys[-1] - ys[0])
+    used_v = sorted({v for r in mon for v in r if v})
+    cmap, extra, free = {}, {}, list(FREE_SLOTS)
+    for v in used_v:
+        i = nearest(cols, mcols[v])
+        d = sum((a - b) ** 2 for a, b in zip(cols[i], mcols[v]))
+        if d > EXACT_DIST and free:
+            i = free.pop(0)
+            extra[i] = mcols[v]
+        cmap[v] = i
+    cols = list(cols)
+    for i, rgb in extra.items():
+        cols[i] = rgb
+    for y in range(ys[0], ys[-1] + 1):
+        for x in range(xs[0], xs[-1] + 1):
+            v = mon[y][x]
+            if v:
+                sky[top + y - ys[0]][x0 + (xs[-1] - x)] = cmap[v]   # specchiato
+    return sky, cols, extra
+
+
 def preview(path, img, cols, z=2):
     h, w = len(img), len(img[0])
     rgba = bytearray()
