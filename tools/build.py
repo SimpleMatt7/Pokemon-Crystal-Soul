@@ -336,6 +336,19 @@ def apply_code(c):
     for r in rows("codice.csv"):
         p = BUILD / r["file"]
         b = bytearray(p.read_bytes())
+        if r["contesto"] == "FINE":   # codice aggiunto in coda a un overlay (senza bss: vedi NOTES)
+            assert len(b) == int(r["posizione"]), f"{r['file']}: lunghezza {len(b)} inattesa"
+            b += bytes.fromhex(r["a"])
+            p.write_bytes(bytes(b))
+            ov = int(re.search(r"ov(\d+)\.bin", r["file"]).group(1))
+            y = (BUILD / "arm9_overlays/overlays.yaml").read_text()
+            m = re.search(rf"(- id: {ov}\n(?:    .*\n)*?    code_size: )(\d+)", y)
+            assert m and int(m.group(2)) == int(r["posizione"])
+            assert re.search(rf"- id: {ov}\n(?:    .*\n)*?    bss_size: 0\n", y), "overlay con bss: non si può allungare"
+            y = y[:m.start(2)] + str(len(b)) + y[m.end(2):]
+            (BUILD / "arm9_overlays/overlays.yaml").write_text(y)
+            c.log["codice"] += 1
+            continue
         ctx = bytes.fromhex(r["contesto"])
         if b.count(ctx) != 1:
             raise SystemExit(f"codice.csv: contesto trovato {b.count(ctx)} volte in {r['file']}: {r['motivo']}")
@@ -344,6 +357,16 @@ def apply_code(c):
         assert b[o:o + len(da)] == da, r
         b[o:o + len(a)] = a
         p.write_bytes(bytes(b)); c.log["codice"] += 1
+
+
+def apply_copies(c):
+    narcs = {}
+    for r in rows("copia_membri.csv"):
+        n = narcs.setdefault(r["narc"], Narc(r["narc"]))
+        n.files[int(r["destinazione"])] = bytearray(n.files[int(r["origine"])])
+        c.log["membri copiati"] += 1
+    for n in narcs.values():
+        n.save()
 
 
 def apply_title_logo(c):
@@ -360,6 +383,7 @@ def apply_title_logo(c):
     orig_tiles = len(logo.gfx.ncgr(g)[1])
     assert ntiles <= max(orig_tiles, 459), f"logo: {ntiles} tile, troppi (originale {orig_tiles})"
     n.files[logo.SS_LOGO] = bytearray(ng)
+    n.files[3] = bytearray(ng)      # logo della variante Ho-Oh (HG): stesso logo, tavolozza copiata da copia_membri.csv
     n.files[logo.LOGO_SCR] = bytearray(ns)
     n.save()
     c.log["logo (tile)"] = ntiles
@@ -461,7 +485,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_title_logo, apply_palettes, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_copies, apply_title_logo, apply_palettes, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
