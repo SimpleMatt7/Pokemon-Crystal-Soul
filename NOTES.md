@@ -48,6 +48,7 @@ partendo dalla ROM ITA).
 | D28 | Nome: **"Pokémon Crystal Soul"** nel banner del DS, **"Versione Crystal Soul"** nel logo del titolo | Scelta utente 2026-09-30 |
 | D31 | **Titolo in versione SoulSilver**: Lugia e cielo azzurro cristallo (il titolo legge la versione da gGameVersion = 0x020F566C; patch `ldrb r1,[r0]` → `mov r1,#8` nell'overlay 60, in codice.csv). Ho-Oh resta nell'intro (HG), Suicune è già nella scena 3 dell'intro | Richiesta utente: vedere sia Ho-Oh sia Lugia, sfondo azzurro |
 | D33 | **Titolo: Ho-Oh o Lugia a caso** a ogni avvio: routine Thumb di 28 byte aggiunta in coda all'overlay 60 (senza bss; nessun overlay caricato insieme parte dopo la sua fine), chiamata al posto di `ldr/ldrb gGameVersion`: 7 + ((VCOUNT + timer 3) & 1). La variante Ho-Oh usa le risorse SS copiate (`copia_membri.csv`: tavolozze, cielo, scintille) e lo stesso logo; scritta "Tocca per iniziare" ciano | Richiesta utente: alternare Ho-Oh e Lugia |
+| D34 | **Intro scena 1: Ho-Oh poi Lugia** (`tools/intro.py`): sprite combinato nei membri 23-26 di a/2/6/2 (tile Ho-Oh + Lugia, tavolozza 2 = Lugia, celle 7-12 = Lugia, sequenza: Ho-Oh esce dal sole 28 fotogrammi, rientra veloce, poi Lugia). Codice ov060: 3 tavolozze invece di 2, comparsa dopo 10 tick (era 128), dissolvenza dopo 208 (era 90): durata della scena invariata, musica sincronizzata | Richiesta utente |
 | D32 | **Ho-Oh e Lugia al livello 60** come in Cristallo (HG: 45/70), script 0021 e 0104 | Richiesta utente |
 | D29 | **Versione inglese possibile**: `python tools/build.py --base IPKE` applica lo stesso design alla ROM USA (dati e script sono identici tra IPKI e IPKE); servono solo i testi in `data/testi/ENG/` | Verificato 2026-09-29: build IPKE con verifica a zero |
 | D30 | **Pokédex di Johto = le 251**: tolte le 5 evoluzioni gen 4 e rinumerato 1-251 (a/1/3/8; lista "johto" = membro 12 di a/0/7/4 e a/2/1/4, il gioco ne legge la lunghezza come size/2). Codice (`data/design/codice.csv`, per contesto di byte, vale anche per USA): completamento con 249 catturati (era 254 = 256 - Mew - Celebi), messaggio di Oak "completo" sopra 248 (era 253) | Coerenza; senza le soglie il diploma sarebbe irraggiungibile |
@@ -222,7 +223,9 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       cartella ignorata da git perché contiene il marchio ufficiale) il build lo usa al posto di quello generato,
       convertendolo alla tavolozza del logo SS (condivisa con il cielo del titolo). File di partenza per l'utente
       in work/per_utente/.
-   c. Intro: scena 1 con Lugia (risorse SS in a/2/6/2, scelte a compilazione): più delicato, per ultimo.
+   c. (Fatto, D34) Intro scena 1: Ho-Oh poi Lugia. Da provare in melonDS. Titolo "ciclico" dentro la stessa
+      schermata: richiederebbe codice nuovo per ricaricare i modelli 3D a metà schermata e una memoria che
+      sopravviva al ricaricamento dell'overlay (Main_RunOverlayManager scarica/ricarica a ogni cambio). Per ora: a caso.
    d. Icona del banner.
 
 ## 12. Problemi aperti
