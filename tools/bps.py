@@ -64,7 +64,9 @@ def create(src: bytes, dst: bytes) -> bytes:
     for a, b in fine:
         for s in range(a - a % 4, b - KEY, 4):
             index.setdefault(src[s:s + KEY], s)
-    step = 4 if fine else BLOCK
+    # nei file che cambiano si cerca a ogni byte (l'indice è a passo 4: così si trova ogni spostamento, anche non
+    # multiplo di 4, come quando una parte compressa, es. l'ARM9, si accorcia di qualche byte)
+    step = 1 if fine else BLOCK
     out = bytearray(b"BPS1" + _num(len(src)) + _num(len(dst)) + _num(0))
     src_rel = 0  # posizione relativa per SourceCopy
     lit_start = None

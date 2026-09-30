@@ -41,7 +41,11 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
   Bosco di Lecci (la storia del viaggio nel tempo funziona). Si può sbloccare anche **Pichu Spunzorecchio**.
 - **Pokédex di Johto = le 251**, rinumerate, con diploma raggiungibile.
 - **Fossili:** Kabuto (Domofossile) alle Rovine d'Alfa come in SoulSilver; nella Grotta Falesia Helixfossile/Ambra Antica.
-- **Mantenuti da HGSS:** mosse, abilità, nature, divisione fisico/speciale, Pokémon che ti seguono, grafica e musica.
+- **Nature senza effetto**, come in Cristallo dove non esistevano: ogni Pokémon ne ha ancora una, ma non cambia
+  più le sue statistiche.
+- **Mantenuti da HGSS:** mosse, abilità, divisione fisico/speciale, Pokémon che ti seguono, grafica e musica.
+- **Uovo Strano** come in Cristallo: il nonno della Pensione sul Percorso 34 lo regala una volta (un baby Pokémon a
+  caso che conosce Stordipugno).
 - **Suicune come in Cristallo:** oltre alla caccia di HGSS, Suicune si fa vedere anche sul **Percorso 36** davanti
   al cancello del Parco Nazionale, subito dopo il Percorso 42.
 - **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e poi Lugia (cielo oro e cielo

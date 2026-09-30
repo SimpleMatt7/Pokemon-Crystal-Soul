@@ -40,7 +40,11 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
   Ilex Forest shrine (the time-travel story works). **Spiky-eared Pichu** can be unlocked too.
 - **Johto Pokédex = the 251**, renumbered, with a reachable completion diploma.
 - **Fossils:** Kabuto (Dome Fossil) from the Ruins of Alph as in SoulSilver; Cliff Cave gives Helix Fossil/Old Amber.
-- **Kept from HGSS:** moves, abilities, natures, the physical/special split, walking Pokémon, graphics and music.
+- **Natures without effect**, as in Crystal where they did not exist: each Pokémon still shows one, but it no
+  longer changes its stats.
+- **Kept from HGSS:** moves, abilities, the physical/special split, walking Pokémon, graphics and music.
+- **Odd Egg** as in Crystal: the Day-Care Man on Route 34 gives it once (a random baby Pokémon that knows Dizzy
+  Punch).
 - **Suicune as in Crystal:** besides the HGSS chase, Suicune also shows up on **Route 36** in front of the National
   Park gate, right after Route 42.
 - **New presentation:** "Crystal Soul" logo, title screen with Ho-Oh then Lugia (golden and blue skies) and
