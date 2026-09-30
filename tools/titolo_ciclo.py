@@ -7,7 +7,8 @@ quando il giro di telecamera di Ho-Oh finisce (cameraScene torna a 0) e la versi
   2. scarica i modelli di Ho-Oh e delle scintille, distrugge e ricrea il gestore della memoria video 3D (le texture
      di Ho-Oh e Lugia insieme non stanno nei 128 KB del banco A), carica Lugia (20-24) e le scintille SS (41-43)
   3. gameVersion = SoulSilver, telecamera sull'inquadratura iniziale di Lugia
-  4. cielo dietro al logo: dalla tavolozza dorata (membro 4, fatta al build da logo.gold_colors) all'azzurra (2)
+  4. scritta "Tocca per iniziare" da arancio (HG) a ciano (SS)
+  5. cielo dietro al logo: dalla tavolozza dorata (membro 4, fatta al build da logo.gold_colors) all'azzurra (2)
 La durata del titolo passa da 2340 a 2436 fotogrammi: giro di Ho-Oh (1270) + giro di Lugia (1146) + 20.
 
 Indirizzi e offset: cercati per contenuto (schemi univoci) così vale per la ROM ITA e USA; offset dei campi da
@@ -208,6 +209,11 @@ def routine(origin, a, base):
     s.mov(1, 0x80); s.lsl(1, 1, 7); s.add8(1, 0x10)
     s.strh0(1, 0)
     s.mov(2, 0x10); s.lsl(2, 2, 8); s.addr(0, 0, 2)      # 0x0400106C
+    s.strh0(1, 0)
+    # "Tocca per iniziare": il testo HG usa il colore 1 della tavolozza 2 dello schermo principale (arancio
+    # RGB(27,8,0), title_screen.c); con Lugia diventa il ciano di SoulSilver RGB(0,28,31) = 0x7F80
+    s.mov(0, 5); s.lsl(0, 0, 24); s.add8(0, 0x42)        # 0x05000042
+    s.mov(1, 0xFF); s.lsl(1, 1, 7)                      # 0x7F80
     s.strh0(1, 0)
     # scarica Ho-Oh e scintille
     s.addi3(0, 4, OFF_HOOH); s.bl(a["unload3d"])
