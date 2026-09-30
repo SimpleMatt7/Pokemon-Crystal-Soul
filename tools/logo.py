@@ -394,6 +394,30 @@ def build_sky(base="IPKI"):
     return sky, cols, extra
 
 
+# ------------------------------------------------ cielo dorato per Ho-Oh (D40): stessi tile del cielo azzurro,
+# colori 128-255 (usati solo dal cielo, non dal logo) rifatti su una sfumatura nei toni del cielo di HeartGold
+SKY_FIRST = 128
+GOLD_STOPS = [(0.00, (90, 16, 0)), (0.25, (140, 50, 0)), (0.50, (215, 125, 16)),
+              (0.72, (255, 190, 8)), (0.88, (255, 232, 72)), (1.00, (255, 255, 200))]
+
+
+def gold_colors(cols):
+    """Tavolozza del cielo azzurro → dorata: la luminosità di ogni colore del cielo diventa un punto della
+    sfumatura GOLD_STOPS (i colori del logo restano uguali)."""
+    lum = lambda c: 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2]  # noqa: E731
+    sky = range(SKY_FIRST, len(cols))
+    lo, hi = min(lum(cols[i]) for i in sky), max(lum(cols[i]) for i in sky)
+    out = list(cols)
+    for i in sky:
+        t = (lum(cols[i]) - lo) / (hi - lo)
+        for (t0, c0), (t1, c1) in zip(GOLD_STOPS, GOLD_STOPS[1:]):
+            if t <= t1:
+                f = (t - t0) / (t1 - t0)
+                out[i] = tuple(round(a + (b - a) * f) for a, b in zip(c0, c1))
+                break
+    return out
+
+
 def preview(path, img, cols, z=2):
     h, w = len(img), len(img[0])
     rgba = bytearray()

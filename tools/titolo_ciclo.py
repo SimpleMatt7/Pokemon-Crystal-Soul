@@ -3,10 +3,11 @@
 Il titolo parte come HeartGold (Ho-Oh). Si aggancia la chiamata a TitleScreenAnim_GetCameraNextPosition nel ciclo
 principale (TitleScreen_Main): una routine Thumb aggiunta in coda all'overlay 60 chiama la funzione originale e,
 quando il giro di telecamera di Ho-Oh finisce (cameraScene torna a 0) e la versione è ancora HG:
-  1. schermo 3D (motore A) subito bianco (MASTER_BRIGHT) + dissolvenza da bianco (BeginNormalPaletteFade, solo main)
+  1. tutti e due gli schermi subito bianchi (MASTER_BRIGHT) + dissolvenza da bianco (BeginNormalPaletteFade)
   2. scarica i modelli di Ho-Oh e delle scintille, distrugge e ricrea il gestore della memoria video 3D (le texture
      di Ho-Oh e Lugia insieme non stanno nei 128 KB del banco A), carica Lugia (20-24) e le scintille SS (41-43)
   3. gameVersion = SoulSilver, telecamera sull'inquadratura iniziale di Lugia
+  4. cielo dietro al logo: dalla tavolozza dorata (membro 4, fatta al build da logo.gold_colors) all'azzurra (2)
 La durata del titolo passa da 2340 a 2436 fotogrammi: giro di Ho-Oh (1270) + giro di Lugia (1146) + 20.
 
 Indirizzi e offset: cercati per contenuto (schemi univoci) così vale per la ROM ITA e USA; offset dei campi da
@@ -30,7 +31,9 @@ OFF_VERSION = 0x200
 ANIMDATA_IN_DATA = 0xCC
 VRAMMAN_IN_DATA = 0x08    # TitleScreenOverlayData._3dVramMan (plttWork a +4, texWork a +8)
 HEAP_TITLE = 0x1E         # HEAP_ID_TITLE_SCREEN
-FADE_MAIN_ONLY, FADE_BRIGHTNESS_IN = 3, 1
+FADE_BOTH, FADE_BRIGHTNESS_IN = 0, 1
+OFF_PLTTDATA = 0x204      # TitleScreenAnimData.plttData
+NARC_TITLEDEMO, PAL_SKY_SS, PAL_LOC_SUB_BG, PLTTBUF_SUB_BG = 0x2E, 2, 4, 1
 
 
 def H(b, k):
@@ -103,6 +106,12 @@ def locate(b):
     # dissolvenza (PROCEED_FLASH_2): mov r0,#12; str; mov r1,#1; str; mov r0,#0x1E; str; ldr r3,=bianco; mov r0,#0; mov r2,r1; BL
     k = find_unique(b, [0x200C, 0x9000, 0x2101, 0x9101, 0x201E, 0x9002, None, 0x2000, 0x1C0A], "dissolvenza")
     a["fade"] = bl_target(b, k + 18)
+    # Load2dBgGfx: str r3,[sp]; mov r0,#NARC titledemo; mov r2,#SUB_BG; str r5,[sp,#4]; BL GfGfxLoader_GXLoadPal
+    k = find_unique(b, [0x9300, 0x202E, 0x2204, 0x9501], "caricamento tavolozza")
+    a["load_pal"] = bl_target(b, k + 8)
+    # InitObjectsAndCamera: mov r1,#1; ldr r0,[r5,r0]; mov r2,#0; lsl r3,r1,#9; BL PaletteData_LoadPaletteSlotFromHardware
+    k = find_unique(b, [0x2101, 0x5828, 0x2200, 0x024B], "tavolozza dal hardware")
+    a["pltt_from_hw"] = bl_target(b, k + 8)
     return a
 
 
@@ -157,9 +166,16 @@ class Asm:
         if rest:
             self.add8(rd, rest)
 
+    def b(self, lab):
+        self.fix.append((len(self.code), None, lab)); self.h(0)
+
     def bytes(self):
         for idx, cond, lab in self.fix:
             off = (self.labels[lab] - (self.origin + 2 * idx + 4)) // 2
+            if cond is None:
+                assert -1024 <= off < 1024
+                self.code[idx] = 0xE000 | (off & 0x7FF)
+                continue
             assert -128 <= off < 128
             self.code[idx] = 0xD000 | cond << 8 | (off & 0xFF)
         return struct.pack(f"<{len(self.code)}H", *self.code)
@@ -179,15 +195,19 @@ def routine(origin, a, base):
     s.ldrr(5, 4, 6)                  # r5 = cameraScene prima
     s.bl(a["get_camera_next"])       # funzione originale (r0 = animData)
     s.ldrr(0, 4, 6)
-    s.cmp(0, 0); s.bcond(NE, "done")         # il giro è appena finito: scena tornata a 0 ...
-    s.cmp(5, 0); s.bcond(EQ, "done")         # ... da una scena diversa da 0
+    s.cmp(0, 0); s.bcond(NE, "out")          # il giro è appena finito: scena tornata a 0 ...
+    s.cmp(5, 0); s.bcond(EQ, "out")          # ... da una scena diversa da 0
     s.big(7, OFF_VERSION)
     s.ldrr(0, 4, 7)
-    s.cmp(0, 7); s.bcond(NE, "done")         # solo il primo giro (ancora HeartGold)
+    s.cmp(0, 7); s.bcond(EQ, "switch")       # solo il primo giro (ancora HeartGold)
+    s.label("out"); s.b("done")              # (il salto condizionato non arriva fino in fondo)
+    s.label("switch")
     s.mov(0, 8); s.strr(0, 4, 7)             # gameVersion = SoulSilver
-    # schermo 3D subito bianco: REG_MASTER_BRIGHT (motore A) = modalità schiarisci, intensità 16
+    # tutti e due gli schermi subito bianchi: REG_MASTER_BRIGHT dei motori A e B = schiarisci, intensità 16
     s.mov(0, 4); s.lsl(0, 0, 24); s.add8(0, 0x6C)
     s.mov(1, 0x80); s.lsl(1, 1, 7); s.add8(1, 0x10)
+    s.strh0(1, 0)
+    s.mov(2, 0x10); s.lsl(2, 2, 8); s.addr(0, 0, 2)      # 0x0400106C
     s.strh0(1, 0)
     # scarica Ho-Oh e scintille
     s.addi3(0, 4, OFF_HOOH); s.bl(a["unload3d"])
@@ -226,11 +246,20 @@ def routine(origin, a, base):
     s.big(0, OFF_POS_END); s.addr(0, 0, 4)
     s.big(1, OFF_CAMERA); s.ldrr(1, 4, 1)
     s.bl(a["cam_pos"])
-    # dissolvenza da bianco del solo schermo 3D: (MAIN_ONLY, IN, IN, bianco, 16 passi, 1, heap)
+    # cielo del logo: dal dorato (membro 4, variante HG) all'azzurro (membro 2): tavolozza nel hardware e
+    # nella copia di PaletteData (il bagliore del logo la rimanda allo schermo a ogni fotogramma)
+    s.mov(0, 0); s.strsp(0, 0)
+    s.ldri(0, 6, 0); s.strsp(0, 4)
+    s.mov(0, NARC_TITLEDEMO); s.mov(1, PAL_SKY_SS); s.mov(2, PAL_LOC_SUB_BG); s.mov(3, 0)
+    s.bl(a["load_pal"])
+    s.big(1, OFF_PLTTDATA); s.ldrr(0, 4, 1)
+    s.mov(1, PLTTBUF_SUB_BG); s.mov(2, 0); s.mov(3, 1); s.lsl(3, 3, 9)
+    s.bl(a["pltt_from_hw"])
+    # dissolvenza da bianco di tutti e due gli schermi: (BOTH, IN, IN, bianco, 16 passi, 1, heap)
     s.mov(0, 16); s.strsp(0, 0)
     s.mov(0, 1); s.strsp(0, 4)
     s.mov(0, HEAP_TITLE); s.strsp(0, 8)
-    s.mov(0, FADE_MAIN_ONLY); s.mov(1, FADE_BRIGHTNESS_IN); s.mov(2, FADE_BRIGHTNESS_IN)
+    s.mov(0, FADE_BOTH); s.mov(1, FADE_BRIGHTNESS_IN); s.mov(2, FADE_BRIGHTNESS_IN)
     s.mov(3, 0xFF); s.lsl(3, 3, 7); s.add8(3, 0x7F)     # 0x7FFF bianco
     s.bl(a["fade"])
     s.label("done")
