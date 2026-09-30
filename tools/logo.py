@@ -267,6 +267,7 @@ def local_logo(base):
 
 # zona di "Pokémon" nel logo originale della lingua (righe sotto CUT_Y, colonne fino a X_MAX): lì si usa l'originale
 POKEMON_ZONE = {"IPKI": (100, 231), "IPKE": (104, 221)}   # (CUT_Y, X_MAX); sotto CUT_Y c'è il logo disegnato
+ORIG_TM = {"IPKI": (217, 99, 228, 105), "IPKE": (205, 103, 216, 109)}   # riquadro del ™ nel logo originale (x0,y0,x1,y1)
 ORIGINAL_STYLE = True    # colori delle scritte limitati a quelli delle scritte del logo originale SS
 
 
@@ -294,6 +295,10 @@ def import_png(path, cols, orig=None, base="IPKI"):
         cut, xmax = POKEMON_ZONE[base]
         for y in range(cut):
             for x in range(xmax + 1):
+                img[y][x] = orig[y][x]
+        x0, y0, x1, y1 = ORIG_TM[base]     # ™ originale (quello del disegno viene scartato da prepara_logo)
+        for y in range(y0, y1):
+            for x in range(x0, x1):
                 img[y][x] = orig[y][x]
     return img
 
@@ -339,7 +344,7 @@ SUICUNE_POS = (2, 190)             # angolo in basso a sinistra (x sinistro, y d
 # posti liberi della tavolozza del titolo (né cielo né logo; 124-126 li usa la riga "Developed by GAME FREAK")
 FREE_SLOTS = [117, 118, 119, 120, 121, 122, 123, 127]
 EXACT_DIST = 900                   # oltre questa distanza il colore di Suicune prende un posto libero
-SUICUNE_WITH_CUSTOM_LOGO = False   # con un logo disegnato a mano Suicune si sovrappone alle lettere: per ora niente
+SUICUNE_WITH_CUSTOM_LOGO = True    # con il logo disegnato: la scritta ridotta (prepara_logo) gli lascia l'angolo
 
 
 def pokemon_front(species, base="IPKI"):
@@ -361,8 +366,9 @@ def pokemon_front(species, base="IPKI"):
 
 
 def nearest(cols, rgb):
+    """Colore più vicino fuori dal cielo (128-255): il cielo cambia colore (oro/azzurro, D40), Suicune no."""
     r, g, b = rgb
-    return min(range(1, len(cols)), key=lambda i: (cols[i][0] - r) ** 2 * 3 + (cols[i][1] - g) ** 2 * 4 + (cols[i][2] - b) ** 2 * 2)
+    return min(range(1, SKY_FIRST), key=lambda i: (cols[i][0] - r) ** 2 * 3 + (cols[i][1] - g) ** 2 * 4 + (cols[i][2] - b) ** 2 * 2)
 
 
 def build_sky(base="IPKI"):
