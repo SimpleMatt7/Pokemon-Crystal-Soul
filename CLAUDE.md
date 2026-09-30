@@ -47,6 +47,7 @@ python tools/scrpatch.py apri NNNN  # modifica uno script (poi: salva) → data/
 python tools/msg.py mostra NNNN     # testi di un archivio (a/0/2/7); modifiche in data/testi/ITA/msg_NNNN.csv
 python tools/bps.py applica ORIGINALE PATCH.bps USCITA   # applica una BPS (anche: crea)
 python tools/prepara_logo.py FILE ITA|ENG   # logo disegnato → locale/logo_titolo_<lingua>.png (serve Pillow)
+python tools/steam_art.py [--base IPKE]   # grafiche per Steam ROM Manager → out/steam/<lingua>/ (serve Pillow)
 git config core.hooksPath tools/hooks   # una volta per clone: attiva l'hook anti-ROM
 ```
 
