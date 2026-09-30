@@ -26,7 +26,7 @@ squadra è vuota 30 Ultra Ball e 10 Master Ball, poi porta sul posto. Si può us
 | Rocco (Johto) | `VAR_UNK_4130 = 2`, `VAR_UNK_40FD = 1`, starter da Elm = Cyndaquil | Silph S.p.A. di Zafferanopoli | D17/D22/D47: il menu offre solo pietra verde e blu (Chikorita, Totodile), uno alla volta; Rocco se ne va dopo il secondo |
 | Uovo Strano | uovo non ancora ricevuto (squadra non piena) | Percorso 34, due passi sotto il nonno della Pensione | D48: parlando col nonno → Uovo Strano (baby a caso tra Pichu, Cleffa, Igglybuff, Smoochum, Magby, Elekid, Tyrogue) con Stordipugno; la seconda volta fa da Pensione come sempre. Per vedere cosa nasce: camminare finché si schiude (o riscegliere la voce per un altro uovo) |
 | Squadra di prova | Typhlosion (se vuota), Totodile, Chikorita, Pidgey lv 30 | resta in cameretta | D49: salvare e lanciare `tools/verifica_nature.py`: i Pokémon nuovi devono risultare SENZA effetto della natura |
-| Esci | — | — | — |
+| (tasto B) | esce dal menu | — | il menu regge al massimo 8 voci: niente voce Esci |
 
 Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova basta riscegliere la voce.
 

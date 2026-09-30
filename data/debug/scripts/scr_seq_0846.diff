@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,138 @@
+@@ -35,12 +35,137 @@
  	ReleaseAll
  	End
  
@@ -33,8 +33,7 @@
 +	MenuItemAdd 9, 255, 5
 +	MenuItemAdd 11, 255, 6
 +	MenuItemAdd 12, 255, 7
-+	MenuItemAdd 10, 255, 8
-+	MenuExec
++	MenuExec  @ al massimo 8 voci; per uscire: B
 +	TouchscreenMenuShow
  	CloseMsg
 +	Switch VAR_SPECIAL_x8004
