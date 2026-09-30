@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,114 @@
+@@ -35,12 +35,115 @@
  	ReleaseAll
  	End
  
@@ -16,12 +16,11 @@
  	LockAll
 -	NPCMsg msg_0546_T20R0202_00002
 -	WaitButton
-+	@ pulsanti del menu (Borsa, Scheda Allenatore, Salva, Opzioni: FLAG_GOT_BAG + 0..3; Pokémon: FLAG_GOT_STARTER)
++	@ pulsanti del menu (Borsa, Scheda Allenatore, Salva, Opzioni: FLAG_GOT_BAG + 0..3)
 +	SetFlag 0x11B
 +	SetFlag 0x11C
 +	SetFlag 0x11D
 +	SetFlag 0x11E
-+	SetFlag FLAG_GOT_STARTER
 +	NPCMsg 3
 +	TouchscreenMenuHide
 +	MenuInit 1, 1, 0, 1, VAR_SPECIAL_x8004
@@ -52,6 +51,7 @@
 +	GoToIfNe _DBG_prepara_strumenti
 +	GiveMon SPECIES_TYPHLOSION, 70, 0, 0, 0, VAR_SPECIAL_RESULT
 +_DBG_prepara_strumenti:
++	SetFlag FLAG_GOT_STARTER  @ pulsante Pokémon (solo con almeno un Pokémon in squadra)
 +	GiveItemNoCheck ITEM_ULTRA_BALL, 30
 +	GiveItemNoCheck ITEM_MASTER_BALL, 10
 +	Return
@@ -114,6 +114,7 @@
 +_DBG_fine:
 +	FadeScreen 6, 1, 1, RGB_BLACK
 +	WaitFade
++	TouchscreenMenuShow  @ riattiva i pulsanti touch dopo il salto
  	ReleaseAll
  	End
  	.balign 4, 0

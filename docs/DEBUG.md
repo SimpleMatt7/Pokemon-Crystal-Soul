@@ -11,7 +11,7 @@ scorciatoie restano nel salvataggio.
 ## Menu di prova
 
 Nella cameretta del protagonista (Borgo Foglianova, 1° piano) esaminare la **console Wii** a destra del PC: compare
-un menu. La console accende anche i pulsanti del menu del gioco (Pokémon, Borsa, Scheda, **Salva**, Opzioni): la prima volta,
+un menu. La console accende anche i pulsanti del menu del gioco (Borsa, Scheda, **Salva**, Opzioni; Pokémon quando dà il primo Pokémon): la prima volta,
 subito dopo l'introduzione, esaminarla e scegliere Esci, poi **salvare in cameretta**. Con le ROM di prova successive
 basta Continua (il salvataggio vale per tutte; gli stati salvati di melonDS no, vedi sotto). Ogni voce (tranne Suicune) imposta lo stato "dopo la Lega" (`FLAG_GAME_CLEAR`), dà un Typhlosion lv 70 se la
 squadra è vuota 30 Ultra Ball e 10 Master Ball, poi porta sul posto. Si può usare subito dopo l'inizio di una partita nuova.
@@ -31,3 +31,6 @@ Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova bas
 **Stati salvati di melonDS**: valgono solo per la ROM con cui sono stati fatti. Dopo ogni ricostruzione i file
 dentro la ROM si spostano e uno stato vecchio legge dati sbagliati (testi e finestre rovinati). Usare il salvataggio
 del gioco.
+
+**Se dopo un salto i pulsanti touch non rispondono**: usare il menu col tasto X (frecce + A), oppure salvare e
+riavviare con Continua.
