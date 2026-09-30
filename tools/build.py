@@ -602,6 +602,7 @@ def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # console Windows cp1252
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-rom", action="store_true")
+    ap.add_argument("--rilascio", action="store_true", help="copia anche la patch BPS in patches/ (da versionare)")
     ap.add_argument("--base", default="IPKI", help="ROM di partenza: IPKI (ITA, default) o IPKE (USA)")
     args = ap.parse_args()
     global SRC, BUILD, NAME
@@ -639,6 +640,10 @@ def main():
     print("Patch BPS ...")
     patch = bps.create((ROOT / "work" / f"{args.base}_orig.nds").read_bytes(), rom.read_bytes())
     (OUT / f"{NAME}.bps").write_bytes(patch)
+    if args.rilascio:            # patch pubblicabile (solo differenze): patches/ è versionata
+        (ROOT / "patches").mkdir(exist_ok=True)
+        (ROOT / "patches" / f"{NAME}.bps").write_bytes(patch)
+        print(f"Copiata in patches/{NAME}.bps")
     print(f"{NAME}.bps: {len(patch)} byte")
 
 
