@@ -233,6 +233,8 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       Ho-Oh → lampo bianco → Lugia nella stessa schermata. Da provare in melonDS (se qualcosa si rompe: tag
       `checkpoint-titolo-casuale`).
    d. (Fatto, D41) Icona del banner.
+   e. (Fatto) Grafiche per Steam ROM Manager: `tools/steam_art.py` → out/steam/<lingua>/ (poster 600x900, grid 920x430,
+      hero 1920x620, logo, icona). Cielo del titolo oro/azzurro, sprite di Ho-Oh e Lugia, logo da locale/: solo uso personale.
 
 ## 11b. Revisione dei rischi (2026-09-30)
 Verificato sui file costruiti o negli script:
