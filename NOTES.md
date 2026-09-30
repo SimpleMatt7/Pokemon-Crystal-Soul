@@ -214,8 +214,13 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       originale; riga grande: "SOUL" + ala di Lugia centrati, senza "SILVER". build.py lo codifica (294 tile, <= 459)
       nei membri 1 e 0 (la mappa 0 era condivisa col logo HG, che non si usa più). Ritocchi possibili: trattino
       spurio sopra "SOUL", distanza ala/L.
-   b. Menu "oro" dopo il titolo: nel menu principale (main_menu.c, a/1/1/3) non c'è niente di dipendente dalla
-      versione; chiedere all'utente uno screenshot della schermata intesa.
+   b. (Fatto) Lo "sfondo oro" era la schermata iniziale di una nuova partita / discorso di Oak (oaks_speech.c):
+      tavolozze 1/30 (HG) di a/1/2/0 sostituite con 2/31 (SS) e spostate verso l'azzurro cristallo
+      (`data/design/tavolozze.csv`, passo apply_palettes).
+   b2. Logo rifatto a mano (idea utente: farlo ridisegnare): se esiste `locale/logo_titolo.png` (256x256, trasparente,
+      cartella ignorata da git perché contiene il marchio ufficiale) il build lo usa al posto di quello generato,
+      convertendolo alla tavolozza del logo SS (condivisa con il cielo del titolo). File di partenza per l'utente
+      in work/per_utente/.
    c. Intro: scena 1 con Lugia (risorse SS in a/2/6/2, scelte a compilazione): più delicato, per ultimo.
    d. Icona del banner.
 

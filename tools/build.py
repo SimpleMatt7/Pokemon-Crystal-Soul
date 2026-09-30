@@ -365,6 +365,33 @@ def apply_title_logo(c):
     c.log["logo (tile)"] = ntiles
 
 
+def apply_palettes(c):
+    import colorsys
+    from gfx import maybe_lz, _section
+    narcs = {}
+    for r in rows("tavolozze.csv"):
+        n = narcs.setdefault(r["narc"], Narc(r["narc"]))
+        src, lz = maybe_lz(bytes(n.files[int(r["origine"])]))
+        assert not lz, "tavolozza compressa: non prevista"
+        b = bytearray(src)
+        o = _section(b, b"TTLP")
+        size, off = struct.unpack_from("<II", b, o + 16)
+        lo, hi, dh, light = float(r["tinta_min"]), float(r["tinta_max"]), float(r["tinta_delta"]), float(r["luce"])
+        for k in range(o + 8 + off, o + 8 + off + size, 2):
+            v = u16(b, k)
+            rr, gg, bb = (v & 31) / 31, ((v >> 5) & 31) / 31, ((v >> 10) & 31) / 31
+            h, s, vv = colorsys.rgb_to_hsv(rr, gg, bb)
+            if s > 0.15 and lo <= h * 360 <= hi:
+                h = ((h * 360 + dh) % 360) / 360
+                vv = min(1.0, vv * light)
+                rr, gg, bb = colorsys.hsv_to_rgb(h, s, vv)
+                set16(b, k, round(rr * 31) | (round(gg * 31) << 5) | (round(bb * 31) << 10) | (v & 0x8000))
+        n.files[int(r["membro"])] = b
+        c.log["tavolozze"] += 1
+    for n in narcs.values():
+        n.save()
+
+
 def apply_texts(c, lang="ITA"):
     import msg
     n = Narc(msg.MSG_NARC)
@@ -434,7 +461,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_title_logo, apply_banner):
+                 apply_map_objects, apply_scripts, apply_pokedex, apply_code, apply_title_logo, apply_palettes, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))

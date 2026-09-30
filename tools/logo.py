@@ -236,6 +236,8 @@ def paste(img, piece, dx):
 
 def build_logo(base="IPKI"):
     img, cols = load_indexed(SS_LOGO, SS_PAL, base=base)
+    if LOCAL_LOGO.exists():   # logo rifatto a mano (cartella locale, non versionata)
+        return import_png(LOCAL_LOGO, cols), cols
     fill = [img[y][FILL_COL] for y in range(FILL_Y0, FILL_Y1 + 1)]  # sfumatura, letta prima di cancellare
     # riga piccola (y <= 130): via "ARGENTO"
     erase(img, 131, 103, 245, 131)
@@ -248,6 +250,29 @@ def build_logo(base="IPKI"):
     # riga piccola: "CRYSTAL" dopo "VERSIONE" (uno spazio)
     draw_word(img, "CRYSTAL", 138, 125, fill, spacing=0)
     return img, cols
+
+
+LOCAL_LOGO = Path(__file__).resolve().parent.parent / "locale" / "logo_titolo.png"
+
+
+def import_png(path, cols):
+    """Logo rifatto (PNG 256x256, trasparente dove non c'è logo) → immagine indicizzata sulla tavolozza del
+    logo SS (condivisa con il cielo del titolo: non si cambia, si usa il colore più vicino)."""
+    w, h, px = gfx.read_png(path)
+    assert (w, h) == (256, 256), f"il logo deve essere 256x256 (è {w}x{h})"
+    cache, img = {}, []
+    for y in range(h):
+        row = []
+        for x in range(w):
+            r, g, b, a = px[y * w + x]
+            if a < 128:
+                row.append(0); continue
+            k = (r >> 3, g >> 3, b >> 3)
+            if k not in cache:
+                cache[k] = min(range(1, len(cols)), key=lambda i: (cols[i][0] - r) ** 2 * 3 + (cols[i][1] - g) ** 2 * 4 + (cols[i][2] - b) ** 2 * 2)
+            row.append(cache[k])
+        img.append(row)
+    return img
 
 
 def encode(img, ncgr_orig, nscr_orig):

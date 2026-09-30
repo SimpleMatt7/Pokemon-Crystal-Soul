@@ -1,0 +1,5 @@
+# Tavolozze (NCLR) ricolorate. Si copia la tavolozza `origine` (stesso NARC) nel membro `membro`, poi ai colori con
+# tinta tra tinta_min e tinta_max (gradi HSV) si aggiunge tinta_delta e si moltiplica luminosità (V) per `luce`.
+narc,membro,origine,tinta_min,tinta_max,tinta_delta,luce,motivo
+a/1/2/0,1,2,180,280,-28,1.08,discorso di Oak / menu iniziale: azzurro cristallo al posto dell'oro (schermo principale)
+a/1/2/0,30,31,180,280,-28,1.08,discorso di Oak / menu iniziale: azzurro cristallo al posto dell'oro (schermo secondario)

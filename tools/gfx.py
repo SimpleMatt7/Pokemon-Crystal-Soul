@@ -220,3 +220,60 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def read_png(path):
+    """PNG non interlacciato, 8 bit per canale (RGB, RGBA, grigio, indicizzato) → (w, h, [(r,g,b,a)] riga per riga)."""
+    b = Path(path).read_bytes()
+    assert b[:8] == b"\x89PNG\r\n\x1a\n", "non è un PNG"
+    o, idat, plte, trns = 8, b"", None, None
+    while o < len(b):
+        n = struct.unpack(">I", b[o:o + 4])[0]
+        t, d = b[o + 4:o + 8], b[o + 8:o + 8 + n]
+        if t == b"IHDR":
+            w, h, depth, ctype, _, _, inter = struct.unpack(">IIBBBBB", d)
+        elif t == b"PLTE":
+            plte = [tuple(d[i:i + 3]) for i in range(0, len(d), 3)]
+        elif t == b"tRNS":
+            trns = d
+        elif t == b"IDAT":
+            idat += d
+        o += 12 + n
+    assert depth == 8 and inter == 0, "servono PNG a 8 bit non interlacciati"
+    ch = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}[ctype]
+    raw = zlib.decompress(idat)
+    stride = w * ch
+    prev = bytearray(stride)
+    px = []
+    i = 0
+    for _ in range(h):
+        f = raw[i]; line = bytearray(raw[i + 1:i + 1 + stride]); i += 1 + stride
+        for k in range(stride):
+            a = line[k - ch] if k >= ch else 0
+            up = prev[k]
+            c = prev[k - ch] if k >= ch else 0
+            if f == 1:
+                line[k] = (line[k] + a) & 255
+            elif f == 2:
+                line[k] = (line[k] + up) & 255
+            elif f == 3:
+                line[k] = (line[k] + (a + up) // 2) & 255
+            elif f == 4:
+                p = a + up - c
+                pa, pb, pc = abs(p - a), abs(p - up), abs(p - c)
+                line[k] = (line[k] + (a if pa <= pb and pa <= pc else up if pb <= pc else c)) & 255
+        prev = line
+        for x in range(w):
+            q = line[x * ch:(x + 1) * ch]
+            if ctype == 6:
+                px.append(tuple(q))
+            elif ctype == 2:
+                px.append((*q, 255))
+            elif ctype == 0:
+                px.append((q[0], q[0], q[0], 255))
+            elif ctype == 4:
+                px.append((q[0], q[0], q[0], q[1]))
+            else:
+                al = trns[q[0]] if trns and q[0] < len(trns) else 255
+                px.append((*plte[q[0]], al))
+    return w, h, px
