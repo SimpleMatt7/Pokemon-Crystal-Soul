@@ -12,6 +12,6 @@ scorciatoie restano nel salvataggio.
 
 | Dove | Cosa fa | Per provare |
 |---|---|---|
-| Cameretta del protagonista (Borgo Foglianova, 1° piano): esaminare l'oggetto a destra del PC | Imposta lo stato "Suicune visto sul Percorso 42" (`VAR_UNK_4092 = 2`) e porta davanti al cancello del Parco Nazionale (Percorso 36, 377,238) | D45: Suicune compare nella piazzetta; fare due passi a **sinistra** (verso il cancello) oppure scendere nel corridoio a sud: Suicune grida, scappa verso nord e sparisce. Dopo, uscendo e rientrando nel Percorso 36 non deve più esserci |
+| Cameretta del protagonista (Borgo Foglianova, 1° piano): esaminare l'oggetto a destra del PC | Imposta lo stato "Suicune visto sul Percorso 42" (`VAR_UNK_4092 = 2`) e porta nel corridoio sotto la piazzetta del cancello del Parco Nazionale (Percorso 36, 382,242) | D45: Suicune è nella piazzetta; un passo a **nord** (come arrivando giocando): punto esclamativo, Suicune grida, scappa verso nord e sparisce. Parlandoci scappa lo stesso. Dopo, uscendo e rientrando nel Percorso 36 non deve più esserci |
 
 Si può usare subito dopo l'inizio di una partita nuova (anche senza Pokémon: la piazzetta non ha erba alta).

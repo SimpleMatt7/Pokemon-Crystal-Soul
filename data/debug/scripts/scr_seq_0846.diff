@@ -5,7 +5,7 @@
  
  scr_seq_T20R0202_001:
 +	@ DEBUG (solo con build.py --debug, mai nella patch pubblica): prova dello Suicune del Percorso 36 (D45).
-+	@ Stato dopo il Percorso 42 (VAR_UNK_4092 = 2) e salto davanti al cancello del Parco Nazionale.
++	@ Stato dopo il Percorso 42 (VAR_UNK_4092 = 2) e salto nel corridoio sotto la piazzetta del cancello del Parco Nazionale (un passo a nord: parte la scena).
  	PlaySE SEQ_SE_DP_SELECT
  	LockAll
 -	NPCMsg msg_0546_T20R0202_00002
@@ -14,7 +14,7 @@
 +	SetVar VAR_UNK_4092, 2
 +	FadeScreen 6, 1, 0, RGB_BLACK
 +	WaitFade
-+	Warp MAP_ROUTE_36, 0, 377, 238, DIR_EAST
++	Warp MAP_ROUTE_36, 0, 382, 242, DIR_NORTH
 +	FadeScreen 6, 1, 1, RGB_BLACK
 +	WaitFade
  	ReleaseAll

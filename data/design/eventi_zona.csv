@@ -3,6 +3,6 @@
 # oggetto: id,sprite,flag (nasconde se impostato),script (0 = nessuno),direzione (0 su,1 giù,2 sinistra,3 destra)
 # coord:   script (numero ScrDef + 1),larghezza,altezza,var,valore (si attiva quando var == valore)
 zona,mappa,tipo,x,z,id_o_script,sprite_o_larghezza,flag_o_altezza,script_o_var,direzione_o_valore,motivo
-37,R36,oggetto,380,235,9,SPRITE_FOLLOWER_MON_STATIC_SUICUNE,0x54A,0,1,D45 Suicune davanti al cancello del Parco Nazionale (come in Cristallo)
+37,R36,oggetto,380,235,9,SPRITE_FOLLOWER_MON_STATIC_SUICUNE,0x54A,12,1,D45 Suicune davanti al cancello del Parco Nazionale (come in Cristallo); parlandoci scappa lo stesso (scr_seq_R36_011)
 37,R36,coord,380,241,12,4,1,0x4092,2,D45 entrando nella piazzetta dal corridoio a sud: scr_seq_R36_011
 37,R36,coord,375,234,12,1,7,0x4092,2,D45 uscendo dal cancello del Parco Nazionale: scr_seq_R36_011
