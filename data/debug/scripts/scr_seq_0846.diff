@@ -82,7 +82,7 @@
 +_DBG_s_r42:
 +	FadeScreen 6, 1, 0, RGB_BLACK
 +	WaitFade
-+	Warp MAP_ROUTE_42, 0, 460, 180, DIR_SOUTH
++	Warp MAP_ROUTE_42, 0, 460, 184, DIR_NORTH
 +	GoTo _DBG_fine
 +
 +_DBG_s_r36:
