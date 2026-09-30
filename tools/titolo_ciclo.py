@@ -28,6 +28,7 @@ OFF_TARGET_END = 0x1D0
 OFF_SCENE = 0x1F0
 OFF_VERSION = 0x200
 ANIMDATA_IN_DATA = 0xCC
+VRAMMAN_IN_DATA = 0x08    # TitleScreenOverlayData._3dVramMan (plttWork a +4, texWork a +8)
 HEAP_TITLE = 0x1E         # HEAP_ID_TITLE_SCREEN
 FADE_MAIN_ONLY, FADE_BRIGHTNESS_IN = 3, 1
 
@@ -91,6 +92,11 @@ def locate(b):
     a["unload3d"] = find_unique(b, [0xB5F8, 0x1C07, 0x1C3E, 0x2400, 0x1C3D, 0x3680], "scaricamento modello")
     a["vram_delete"] = find_unique(b, [0x4B01, 0x6880, 0x4718], "distruzione gestore VRAM 3D")
     a["vram_create"] = find_unique(b, [0xB510, 0xB082, 0x1C04, 0x2004, 0x2100, 0x9000, 0x9101], "creazione gestore VRAM 3D")
+    # GF_3DVramMan_Create (ARM9) e, a distanza fissa, le funzioni che inizializzano gli allocatori a lista
+    # (texture e tavolozze): verificato in apply() sul codice ARM9 quando è disponibile
+    a["vram_create_fn"] = bl_target(b, a["vram_create"] + 0x14)
+    a["tex_init"] = a["vram_create_fn"] + 0x134
+    a["pltt_init"] = a["vram_create_fn"] + 0x144
     # animazione (setup): mov r1,r5; mov r0,#0x1D; add r1,#0xB8; lsl r0,#4; ldr r1,[r1]; add r0,r5,r0; BL target
     a["cam_target"] = same_bl(b, [0x1C29, 0x201D, 0x31B8, 0x0100, 0x6809, 0x1828], 12, "telecamera: bersaglio")
     a["cam_pos"] = same_bl(b, [0x1C29, 0x206E, 0x31B8, 0x0080, 0x6809, 0x1828], 12, "telecamera: posizione")
@@ -186,10 +192,16 @@ def routine(origin, a, base):
     # scarica Ho-Oh e scintille
     s.addi3(0, 4, OFF_HOOH); s.bl(a["unload3d"])
     s.movr(0, 4); s.add8(0, OFF_SPARKLES); s.bl(a["unload3d"])
-    # gestore della memoria video 3D: distrutto e ricreato (libera le texture)
+    # memoria video 3D: si reinizializzano gli allocatori a lista (texture 1 slot da 128 KB, tavolozze 4 da 8 KB)
+    # con la stessa memoria di lavoro del gestore; distruggere e ricreare il gestore rifarebbe NNS_G3dInit
+    # (proiezione, luci, trasparenze azzerate: schermo nero)
     s.movr(6, 4); s.sub8(6, ANIMDATA_IN_DATA)   # r6 = TitleScreenOverlayData
-    s.movr(0, 6); s.bl(a["vram_delete"])
-    s.movr(0, 6); s.bl(a["vram_create"])
+    s.ldri(7, 6, VRAMMAN_IN_DATA)               # r7 = GF3DVramMan
+    s.mov(0, 1); s.strsp(0, 0)                  # useAsDefault
+    s.big(0, 0x20000); s.mov(1, 0); s.ldri(2, 7, 8); s.big(3, 128 << 4)
+    s.bl(a["tex_init"])
+    s.big(0, 4 * 0x2000); s.ldri(1, 7, 4); s.big(2, 4 * 256 << 4); s.mov(3, 1)
+    s.bl(a["pltt_init"])
     # Lugia: Load3DObjects(&hooh_lugia, 20, 21, 22, 23, 24, heapID)
     s.mov(0, 23); s.strsp(0, 0)
     s.mov(0, 24); s.strsp(0, 4)
@@ -227,9 +239,20 @@ def routine(origin, a, base):
     return s.bytes()
 
 
-def apply(ov: bytearray, base: int):
+def check_arm9(arm9, a, base):
+    """GF_3DVramMan_Create deve chiamare le due funzioni di inizializzazione dove ce le aspettiamo."""
+    c = a["vram_create_fn"] + base - 0x02000000
+    for at, want in ((0x46, a["tex_init"]), (0x7A, a["pltt_init"])):
+        got = bl_target(arm9, c + at) + 0x02000000 - base
+        if got != want:
+            raise SystemExit(f"titolo_ciclo: GF_3DVramMan_Create diverso dall'atteso (+{at:#x})")
+
+
+def apply(ov: bytearray, base: int, arm9=None):
     """Modifica l'overlay 60 (già decompresso). Ritorna (nuovo contenuto, offset della routine)."""
     a = locate(bytes(ov))
+    if arm9 is not None:
+        check_arm9(arm9, a, base)
     for k in ("fade", "cam_target", "cam_pos"):
         a[k] = a[k]                                    # già offset relativi all'overlay (anche se negativi: ARM9)
     while len(ov) % 4:

@@ -407,7 +407,7 @@ def apply_title_cycle(c):
     p = BUILD / "arm9_overlays/ov060.bin"
     b = bytearray(p.read_bytes())
     old = len(b)
-    b, _, _ = titolo_ciclo.apply(b, overlay_base(60))
+    b, _, _ = titolo_ciclo.apply(b, overlay_base(60), (BUILD / "arm9/arm9.bin").read_bytes())
     p.write_bytes(bytes(b))
     grow_overlay("ov060.bin", old, len(b))
     c.log["titolo Ho-Oh+Lugia"] += 1
