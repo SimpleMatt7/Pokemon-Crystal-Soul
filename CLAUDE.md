@@ -40,7 +40,7 @@ python tools/get_pret.py      # decomp pret (documentazione dei formati, script 
 python tools/audit.py         # report specie > 251 e matrice di ottenibilità → docs/audit.md
 python tools/items.py         # fonti degli oggetti (evolutivi, fossili, aromi) → docs/oggetti.md
 python tools/design.py        # applica data/design/*.csv in memoria e verifica (0 > 251, 251/251) → docs/design.md
-python tools/build.py         # costruisce out/PokemonCrystalNew_IPKI.nds + .bps (work/build, verifica sui file)
+python tools/build.py         # costruisce out/Pokemon Crystal Soul (ITA).nds + .bps (work/build, verifica sui file)
 python tools/build.py --base IPKE   # stessa hack sulla ROM USA
 python tools/scrasm.py --verifica   # assemblatore di script: 965/965 identici alla ROM
 python tools/scrpatch.py apri NNNN  # modifica uno script (poi: salva) → data/scripts/scr_seq_NNNN.diff

@@ -4,7 +4,7 @@ Passi:
   1. copia work/IPKI → work/build (l'estrazione originale non si tocca)
   2. applica le modifiche ai dati (NARC, script 0141, overlay 1)
   3. verifica sui file costruiti (audit rieseguito su work/build: 0 specie > 251 dove previsto)
-  4. dsrom build → out/PokemonCrystalNew_IPKI.nds e patch BPS → out/PokemonCrystalNew_IPKI.bps
+  4. dsrom build → out/Pokemon Crystal Soul (ITA).nds e patch BPS → out/Pokemon Crystal Soul (ITA).bps
 
 Prerequisiti: python tools/roundtrip.py (work/IPKI), python tools/get_pret.py.
 Uso: python tools/build.py [--no-rom]   (--no-rom: solo modifiche e verifica, senza dsrom/BPS)
@@ -27,7 +27,7 @@ SRC = ROOT / "work" / "IPKI"
 BUILD = ROOT / "work" / "build"
 DESIGN = ROOT / "data" / "design"
 OUT = ROOT / "out"
-NAME = "PokemonCrystalNew_IPKI"
+NAME = "Pokemon Crystal Soul (ITA)"
 sp = audit.sp
 LEVEL_METHODS = {"LEVEL", "LEVEL_ATK_GT_DEF", "LEVEL_ATK_EQ_DEF", "LEVEL_ATK_LT_DEF", "LEVEL_PID_LO", "LEVEL_PID_HI",
                  "LEVEL_NINJASK", "LEVEL_MALE", "LEVEL_FEMALE"}
@@ -513,7 +513,7 @@ def main():
     global SRC, BUILD, NAME
     SRC = ROOT / "work" / args.base
     BUILD = ROOT / "work" / f"build_{args.base}" if args.base != "IPKI" else BUILD
-    NAME = f"PokemonCrystalNew_{args.base}"
+    NAME = f"Pokemon Crystal Soul ({ {'IPKI': 'ITA', 'IPKE': 'ENG'}[args.base] })"
     audit.ROM = SRC / "files"
     lang = {"IPKI": "ITA", "IPKE": "ENG"}[args.base]
     if not SRC.exists():
