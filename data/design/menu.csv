@@ -2,7 +2,6 @@
 # La funzione che disegna il pulsante viene sostituita con una che restituisce FALSE (sub_02074490 dell'ARM9,
 # "return 0"): il pulsante non compare e non si può scegliere. id: 3 Pokéwalker, 4 Dono Segreto, 5 Ranger,
 # 6 Migrazione dal GBA (Parco Amici), 7 Wii, 8 Nintendo WFC, 9 messaggi Wii.
+# Decisione utente (D42): nessun pulsante nascosto, il gioco resta com'è; per nasconderne uno aggiungere
+# una riga, per esempio: 3,Pokéwalker,porterebbe specie di 3a e 4a generazione
 id,nome,motivo
-3,Pokéwalker,porterebbe specie di 3a e 4a generazione (percorsi del Pokéwalker)
-5,Collegamento a Pokémon Ranger,porterebbe Manaphy/Deoxys e altre specie oltre la 251
-6,Migrazione dal GBA,unica fonte del Parco Amici: porterebbe specie di 3a generazione
