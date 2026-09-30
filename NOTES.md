@@ -230,5 +230,20 @@ Procedura completa passo passo: **[docs/SETUP.md](docs/SETUP.md)** (software, cl
       sopravviva al ricaricamento dell'overlay (Main_RunOverlayManager scarica/ricarica a ogni cambio). Per ora: a caso.
    d. Icona del banner.
 
+## 11b. Revisione dei rischi (2026-09-30)
+Verificato sui file costruiti o negli script:
+- Parco Lotta: nessun allenatore scende sotto le specie distinte che aveva; per ogni allenatore esiste una squadra da 4
+  con specie e strumenti diversi (doppi), tranne 2 casi speciali (classe 102) che erano identici già nell'originale.
+- Allenatori (compresi doppi, rivincite, Lega e Red): numero di Pokémon invariato, specie <= 251, livelli coerenti.
+- Script: tutti i riferimenti a specie > 251 rimasti sono innocui o irraggiungibili (Sinjoh/Lati solo con eventi,
+  versi di Chatot/Deoxys, controlli su Rotom, Elm che accetta anche Togekiss); la variabile di Oak (4131) non è usata
+  altrove in modo dipendente dal vecchio valore 6.
+Da provare in gioco (non verificabile dai dati): sprite "da compagno" come oggetti delle mappe (Mew alla Torre Inclusa,
+Ditto da Copiona: il gioco originale non lo fa mai, usa sprite "statici"); lotta fatidica di Celebi (ScrCmd_686, esiste
+ma non è usata dal gioco originale) e viaggio nel passato; Pichu; Rocco/Oak con tutti e 3 gli starter.
+Limiti noti (non bloccanti): Pokédex Nazionale a 493 posti; dati "zona" del Pokédex non aggiornati per le esclusive SS
+(la mappa dell'habitat non le mostra); Pokéwalker (non emulato) e Parco Amici/migrazione GBA possono ancora portare
+specie gen 3-4 se usati.
+
 ## 12. Problemi aperti
 - Nessuno bloccante.
