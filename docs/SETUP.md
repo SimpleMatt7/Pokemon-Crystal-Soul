@@ -23,8 +23,8 @@ quindi copiare `tools/bin-cargo/bin/dsrom` in `tools/bin/dsrom`.
 ## 2. Clonare il repository
 
 ```
-git clone https://github.com/SimpleMatt7/Pokemon-Crystal-New.git
-cd Pokemon-Crystal-New
+git clone https://github.com/SimpleMatt7/Pokemon-Crystal-Soul.git
+cd Pokemon-Crystal-Soul
 git switch dev
 ```
 Alla prima operazione con GitHub, Git Credential Manager apre il browser: accedere con **SimpleMatt7**.
