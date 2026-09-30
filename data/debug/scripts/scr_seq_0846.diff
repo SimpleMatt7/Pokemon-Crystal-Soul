@@ -54,6 +54,7 @@
 +	SetFlag FLAG_GOT_STARTER  @ pulsante Pokémon (solo con almeno un Pokémon in squadra)
 +	GiveItemNoCheck ITEM_ULTRA_BALL, 30
 +	GiveItemNoCheck ITEM_MASTER_BALL, 10
++	CloseMsg  @ il messaggio hai ottenuto resta aperto finché non lo chiude chi chiama (come negli script originali)
 +	Return
 +
 +_DBG_suicune:
@@ -114,7 +115,6 @@
 +_DBG_fine:
 +	FadeScreen 6, 1, 1, RGB_BLACK
 +	WaitFade
-+	TouchscreenMenuShow  @ riattiva i pulsanti touch dopo il salto
  	ReleaseAll
  	End
  	.balign 4, 0

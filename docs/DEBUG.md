@@ -32,5 +32,3 @@ Gli stati restano nel salvataggio della ROM di prova: per ripetere una prova bas
 dentro la ROM si spostano e uno stato vecchio legge dati sbagliati (testi e finestre rovinati). Usare il salvataggio
 del gioco.
 
-**Se dopo un salto i pulsanti touch non rispondono**: usare il menu col tasto X (frecce + A), oppure salvare e
-riavviare con Continua.
