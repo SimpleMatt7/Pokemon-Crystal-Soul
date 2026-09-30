@@ -11,6 +11,18 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 > **Stato: beta.** I dati vengono verificati automaticamente a ogni build, ma una partita completa non è ancora
 > stata fatta. Segnalazioni e commenti sono benvenuti (apri una issue: scrivi dov'eri e cosa hai fatto).
 
+<p align="center">
+  <img width="190" alt="Titolo: Ho-Oh" src="https://github.com/user-attachments/assets/7b3bd10a-350c-450b-81ce-65de93a9f8c1" />
+  <img width="190" alt="Titolo: Lugia" src="https://github.com/user-attachments/assets/e14fdc9b-2246-483a-ab03-98fb75789436" />
+  <img width="190" alt="Intro" src="https://github.com/user-attachments/assets/1dbdefda-0523-40e8-9597-186f658f160b" />
+  <img width="190" alt="Starter" src="https://github.com/user-attachments/assets/58c2180c-ab8f-46d8-94cb-ba9984339ec1" />
+</p>
+<p align="center">
+  <img width="190" alt="Borgo Foglianova" src="https://github.com/user-attachments/assets/5fdbb63e-2cf6-4d55-8fd6-a967c04e5d84" />
+  <img width="190" alt="Percorso 29" src="https://github.com/user-attachments/assets/9dc3775c-1a75-40dd-9262-e9d9df050c94" />
+  <img width="190" alt="Lotta" src="https://github.com/user-attachments/assets/887fed71-369c-4d6f-8e39-4b436707a926" />
+</p>
+
 ## Novità
 
 - **Solo i Pokémon dal n. 001 al 251, tutti ottenibili.** Nessuna specie di terza o quarta generazione da nessuna parte:

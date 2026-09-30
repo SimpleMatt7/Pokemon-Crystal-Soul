@@ -11,6 +11,18 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 > **Status: beta.** The data is checked automatically on every build, but a full playthrough has not been
 > completed yet. Feedback and bug reports are welcome (open an issue: say where you were and what you did).
 
+<p align="center">
+  <img width="190" alt="Title: Ho-Oh" src="https://github.com/user-attachments/assets/7b3bd10a-350c-450b-81ce-65de93a9f8c1" />
+  <img width="190" alt="Title: Lugia" src="https://github.com/user-attachments/assets/e14fdc9b-2246-483a-ab03-98fb75789436" />
+  <img width="190" alt="Intro" src="https://github.com/user-attachments/assets/1dbdefda-0523-40e8-9597-186f658f160b" />
+  <img width="190" alt="Starter" src="https://github.com/user-attachments/assets/58c2180c-ab8f-46d8-94cb-ba9984339ec1" />
+</p>
+<p align="center">
+  <img width="190" alt="New Bark Town" src="https://github.com/user-attachments/assets/5fdbb63e-2cf6-4d55-8fd6-a967c04e5d84" />
+  <img width="190" alt="Route 29" src="https://github.com/user-attachments/assets/9dc3775c-1a75-40dd-9262-e9d9df050c94" />
+  <img width="190" alt="Battle" src="https://github.com/user-attachments/assets/887fed71-369c-4d6f-8e39-4b436707a926" />
+</p>
+
 ## Highlights
 
 - **Only #001–#251, all obtainable.** No Generation 3–4 species anywhere: wild encounters, swarms, Headbutt trees,
