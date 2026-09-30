@@ -3,4 +3,6 @@
 file,contesto,posizione,da,a,motivo
 arm9/arm9.bin,08b500f023f8fe2801d3012008bd,6,fe,f9,Pokedex_JohtoDexIsComplete: completo con 249 catturati (251 - Mew - Celebi) invece di 254
 arm9/arm9.bin,f42801d82c207047fd2801d82d207047,8,fd,f8,GetOakJohtoDexRating: messaggio di Pokédex completo sopra 248 invece di 253
-arm9_overlays/ov060.bin,07480178b32080002150,2,0178,0821,Titolo: gameVersion = SoulSilver (Lugia; cielo azzurro) al posto di gGameVersion; il resto del gioco resta HeartGold
+arm9_overlays/ov060.bin,07480178b32080002150,0,07480178,05f04cff,Titolo: al posto di ldr/ldrb di gGameVersion chiama la routine aggiunta in coda (0x5F40) che restituisce 7 (Ho-Oh) o 8 (Lugia) a caso
+arm9_overlays/ov060.bin,FINE,24384,,04480188044800880918c907c90f07317047c046060000040c010004,Routine in coda all'overlay 60 (Thumb): r1 = 7 + ((VCOUNT + TM3) & 1); bx lr. Dati: 0x04000006 VCOUNT e 0x0400010C timer 3
+arm9_overlays/ov060.bin,000202001b010000807f0000,4,1b01,807f,Titolo: scritta "Tocca per iniziare" ciano anche nella variante Ho-Oh (era arancione RGB 27/8/0)
