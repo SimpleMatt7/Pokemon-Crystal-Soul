@@ -82,6 +82,11 @@ in `data/testi/`. Full setup guide: [docs/SETUP.md](docs/SETUP.md). Project jour
 - [DSPRE](https://github.com/DS-Pokemon-Rom-Editor/DSPRE) and [melonDS](https://melonds.kuribo64.net) — inspection
   and testing.
 
+## License
+
+The scripts, tables and documentation in this repository are released under the [MIT License](LICENSE).
+This covers only the original work of this project, not Pokémon or any game data.
+
 ## Legal
 
 This is an unofficial fan project, not affiliated with or endorsed by Nintendo, Game Freak, Creatures or The

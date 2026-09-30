@@ -83,6 +83,11 @@ nuovi sono in `data/testi/`. Guida completa: [docs/SETUP.md](docs/SETUP.md). Dia
 - [ds-rom (dsrom)](https://github.com/AetiasHax/ds-rom): estrazione e ricostruzione della ROM.
 - [DSPRE](https://github.com/DS-Pokemon-Rom-Editor/DSPRE) e [melonDS](https://melonds.kuribo64.net): ispezione e prove.
 
+## Licenza
+
+Script, tabelle e documentazione di questo repository sono rilasciati con [licenza MIT](LICENSE).
+Riguarda solo il lavoro originale del progetto, non Pokémon né i dati del gioco.
+
 ## Note legali
 
 Progetto amatoriale non ufficiale, non affiliato né approvato da Nintendo, Game Freak, Creatures o The Pokémon
