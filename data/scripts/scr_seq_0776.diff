@@ -1,6 +1,36 @@
 --- a/scr_seq_0776_T06.s
 +++ b/scr_seq_0776_T06.s
-@@ -60,6 +60,5 @@
+@@ -1,3 +1,4 @@
+ #include "constants/scrcmd.h"
++#define FLAG_PCN_SUICUNE_GIRO 0x548
+ #include "fielddata/script/scr_seq/event_T06.h"
+ #include "msgdata/msg/msg_0483_T06.h"
+@@ -23,4 +24,24 @@
+ 
+ scr_seq_T06_009:
++	@ Crystal Soul (D50): dopo la Lega, se il giro di Suicune a Johto è ancora in corso, lo si chiude e si accende
++	@ l'avvistamento di Aranciopoli (senza dover ritrovare Suicune a Johto)
++	GoToIfUnset FLAG_GAME_CLEAR, _PCN_t06_fine
++	GoToIfSet FLAG_PCN_SUICUNE_GIRO, _PCN_t06_kanto
++	Compare VAR_UNK_4092, 0
++	GoToIfNe _PCN_t06_kanto
++	Compare VAR_UNK_4076, 1
++	GoToIfEq _PCN_t06_kanto
++	GoTo _PCN_t06_fine
++
++_PCN_t06_kanto:
++	ClearFlag FLAG_PCN_SUICUNE_GIRO
++	SetVar VAR_UNK_4092, 0
++	SetVar VAR_UNK_4076, 2
++	SetFlag FLAG_HIDE_CIANWOOD_SUICUNE
++	SetFlag FLAG_HIDE_ROUTE_42_SUICUNE
++	SetVar VAR_UNK_4070, 1
++	SetVar VAR_UNK_4071, 1
++	ClearFlag FLAG_HIDE_VERMILION_SUICUNE
++_PCN_t06_fine:
+ 	GoToIfUnset FLAG_UNK_189, _004B
+ 	ClearFlag FLAG_UNK_189
+@@ -60,6 +81,5 @@
  	NPCMsg msg_0483_T06_00016
  	CloseMsg
 -	ApplyMovement obj_T06_daigo, _0180

@@ -1,0 +1,51 @@
+--- a/scr_seq_0875_T24.s
++++ b/scr_seq_0875_T24.s
+@@ -1,3 +1,6 @@
+ #include "constants/scrcmd.h"
++@ Crystal Soul (D50): giro degli avvistamenti di Suicune come in Cristallo (Fiorlisopoli, Percorso 42, Percorso 36)
++@ fino alla Lega; dal secondo giro Suicune scappa senza Eusine.
++#define FLAG_PCN_SUICUNE_GIRO 0x548
+ #include "fielddata/script/scr_seq/event_T24.h"
+ #include "msgdata/msg/msg_0572_T24.h"
+@@ -100,4 +103,5 @@
+ 	ScrCmd_609
+ 	LockAll
++	GoToIfSet FLAG_PCN_SUICUNE_GIRO, _PCN_giro
+ 	ApplyMovement obj_player, _0310
+ 	WaitMovement
+@@ -158,4 +162,35 @@
+ 	WhiteOut
+ 	ReleaseAll
++_PCN_giro:
++	ApplyMovement obj_player, _0310
++	WaitMovement
++	PlayCry SPECIES_SUICUNE, 0
++	Release obj_T24_tsure_poke_static_suicune
++	ScrCmd_523 obj_T24_tsure_poke_static_suicune, 2, 90, 2, 0
++	Lock obj_T24_tsure_poke_static_suicune
++	WaitCry
++	ApplyMovement obj_T24_tsure_poke_static_suicune, _02F4
++	WaitMovement
++	ApplyMovement obj_T24_tsure_poke_static_suicune, _0338
++	ApplyMovement obj_player, _0320
++	WaitMovement
++	Wait 30, VAR_SPECIAL_RESULT
++	ToggleFollowingPokemonMovement 0
++	WaitFollowingPokemonMovement
++	FollowingPokemonMovement 55
++	ApplyMovement obj_T24_tsure_poke_static_suicune, _0300
++	ApplyMovement obj_player, _0344
++	WaitMovement
++	WaitFollowingPokemonMovement
++	ToggleFollowingPokemonMovement 1
++	FollowingPokemonMovement 48
++	HidePerson obj_T24_tsure_poke_static_suicune
++	SetFlag FLAG_HIDE_CIANWOOD_SUICUNE
++	SetVar VAR_UNK_4076, 2
++	ClearFlag FLAG_HIDE_ROUTE_42_SUICUNE
++	SetVar VAR_UNK_4092, 1
++	ReleaseAll
++	End
++
+ scr_seq_T24_003:
+ 	End

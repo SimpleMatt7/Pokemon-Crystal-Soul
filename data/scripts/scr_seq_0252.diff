@@ -1,6 +1,18 @@
 --- a/scr_seq_0252_R42.s
 +++ b/scr_seq_0252_R42.s
-@@ -222,8 +222,7 @@
+@@ -2,4 +2,5 @@
+ #include "fielddata/script/scr_seq/event_R42.h"
+ #include "msgdata/msg/msg_0399_R42.h"
++#define FLAG_PCN_SUICUNE_GIRO 0x548
+ 	.include "asm/macros/script.inc"
+ 
+@@ -199,4 +200,5 @@
+ 	ToggleFollowingPokemonMovement 1
+ 	FollowingPokemonMovement 48
++	GoToIfSet FLAG_PCN_SUICUNE_GIRO, _PCN_r42_giro  @ dal secondo giro niente Eusine (D50)
+ 	ClearFlag FLAG_HIDE_ROUTE_42_EUSINE
+ 	ShowPerson obj_R42_minaki
+@@ -222,8 +224,14 @@
  	SetFlag FLAG_HIDE_ROUTE_42_SUICUNE
  	SetFlag FLAG_HIDE_ROUTE_42_EUSINE
 -	SetVar VAR_UNK_4092, 0
@@ -9,6 +21,13 @@
 -	ClearFlag FLAG_HIDE_VERMILION_SUICUNE
 +	@ Crystal Soul: come in Cristallo Suicune si fa vedere ancora sul Percorso 36 (VAR_UNK_4092 = 2);
 +	@ sarà quello script ad accendere Aranciopoli (prima lo faceva questo)
++	SetVar VAR_UNK_4092, 2
++	ReleaseAll
++	End
++
++_PCN_r42_giro:
++	HidePerson obj_R42_tsure_poke_static_suicune
++	SetFlag FLAG_HIDE_ROUTE_42_SUICUNE
 +	SetVar VAR_UNK_4092, 2
  	ReleaseAll
  	End
