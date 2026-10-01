@@ -34,7 +34,7 @@ Alla prima operazione con GitHub, Git Credential Manager apre il browser: accede
 Solo a livello di repository (niente `--global`, così non si toccano altri account):
 ```
 git config user.name "SimpleMatt7"
-git config user.email "9123042+SimpleMatt7@users.noreply.github.com"
+git config user.email "9123042+SimpleMatt7@users.noreply.github.com"   # indirizzo privato di GitHub
 git config credential.https://github.com.username SimpleMatt7
 git config core.hooksPath tools/hooks
 ```
