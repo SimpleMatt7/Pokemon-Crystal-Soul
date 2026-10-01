@@ -31,7 +31,8 @@ def indexed_to_image(img, cols, transparent0=True):
 
 def sky(base, w, h):
     """Cielo del titolo, oro a sinistra e azzurro a destra (sfumati al centro), ingrandito per coprire w x h."""
-    img, cols, _ = logo.build_sky(base=base)
+    # cielo senza Suicune: ingrandito, il Suicune dell'angolo spunterebbe a pezzi dietro gli uccelli
+    img, cols = logo.load_indexed(logo.SKY_CHR, logo.SS_PAL, scr=logo.SKY_SCR, base=base)
     blue = indexed_to_image(img, cols, transparent0=False).convert("RGB")
     gold = indexed_to_image(img, logo.gold_colors(cols), transparent0=False).convert("RGB")
     s = max(w / 256, h / 192)
