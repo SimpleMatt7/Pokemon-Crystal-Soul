@@ -9,3 +9,19 @@
  	GoToIfGe _PCN_egg_normale
  	.short 204
  _PCN_egg_normale:
+@@ -913,7 +913,14 @@
+ 	WaitFanfare
+ 	NPCMsg 52
+ 	WaitButton
+-	CloseMsg
++	@ DEBUG: schiusa immediata (contatore dei passi a 0, poi l'animazione come nello script comune 0003)
++	MonSubtractFriendship 255, VAR_TEMP_x4001
++	FadeScreen 6, 1, 0, RGB_BLACK
++	WaitFade
++	CloseMsg
++	EggHatchAnim
++	FadeScreen 6, 1, 1, RGB_BLACK
++	WaitFade
+ 	ReleaseAll
+ 	End
+ 
