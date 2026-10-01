@@ -44,7 +44,9 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 - **Natures without effect**, as in Crystal where they did not exist: each Pokémon still shows one, but it no
   longer changes its stats.
 - **Odd Egg** as in Crystal: the Day-Care Man on Route 34 gives it once (a random baby Pokémon that knows Dizzy
-  Punch).
+  Punch, with a 14% chance of being shiny).
+- **Game Boy music from the start:** Mom gives you the GB Sounds right after the Pokégear; use it from the Bag
+  (or register it to Y) to switch between the original Gold/Silver/Crystal music and the HGSS one.
 - **Suicune as in Crystal:** it also shows up on **Route 36** in front of the National Park gate, and until the
   Pokémon League it keeps reappearing in a loop (Cianwood, Route 42, Route 36); Eusine joins only the first time.
   After the League the HGSS chase continues in Kanto as usual.

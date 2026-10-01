@@ -1,0 +1,11 @@
+--- a/scr_seq_0237_R34.s
++++ b/scr_seq_0237_R34.s
+@@ -903,7 +903,7 @@
+ 	@ D53: come in Cristallo, 14% di probabilità che l'Uovo Strano sia shiny. Il comando 204 (avanzo di Diamante/Perla)
+ 	@ è riscritto in codice.csv: rende shiny l'ultimo Pokémon della squadra, cioè questo uovo.
+ 	Random VAR_TEMP_x4002, 100
+-	Compare VAR_TEMP_x4002, 14
++	Compare VAR_TEMP_x4002, 100  @ DEBUG: Uovo Strano sempre shiny, per provarlo
+ 	GoToIfGe _PCN_egg_normale
+ 	.short 204
+ _PCN_egg_normale:

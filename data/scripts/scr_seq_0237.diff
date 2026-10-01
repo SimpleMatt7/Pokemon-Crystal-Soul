@@ -15,7 +15,7 @@
 +	ScrDef scr_seq_R34_013
  	ScrDefEnd
  
-@@ -837,2 +842,82 @@
+@@ -837,2 +842,89 @@
  	End
  	.balign 4, 0
 +
@@ -77,6 +77,13 @@
 +	SetFlag FLAG_PCN_ODD_EGG
 +	GiveEgg VAR_SPECIAL_x8004, MAPLOC(METLOC_DAY_CARE_COUPLE)
 +	SetMonMove VAR_TEMP_x4001, VAR_SPECIAL_x8005, MOVE_DIZZY_PUNCH
++	@ D53: come in Cristallo, 14% di probabilità che l'Uovo Strano sia shiny. Il comando 204 (avanzo di Diamante/Perla)
++	@ è riscritto in codice.csv: rende shiny l'ultimo Pokémon della squadra, cioè questo uovo.
++	Random VAR_TEMP_x4002, 100
++	Compare VAR_TEMP_x4002, 14
++	GoToIfGe _PCN_egg_normale
++	.short 204
++_PCN_egg_normale:
 +	BufferPlayersName 0
 +	PlayFanfare SEQ_ME_TAMAGO_GET
 +	NPCMsg 51

@@ -1,0 +1,37 @@
+--- a/scr_seq_0845_T20R0201.s
++++ b/scr_seq_0845_T20R0201.s
+@@ -2,4 +2,6 @@
+ #include "fielddata/script/scr_seq/event_T20R0201.h"
+ #include "msgdata/msg/msg_0545_T20R0201.h"
++@ Crystal Soul (D54): la mamma regala GB Sounds (musiche di Oro/Argento/Cristallo) subito dopo il Pokégear, e a chi
++@ ha già il Pokégear ma non GB Sounds la prima volta che le riparla. Testi 39-40 in data/testi/<lingua>/msg_0545.csv.
+ 	.include "asm/macros/script.inc"
+ 
+@@ -99,4 +101,14 @@
+ 
+ scr_seq_T20R0201_001:
++	GoToIfUnset FLAG_GOT_POKEGEAR, _PCN_gb_salta
++	GetItemQuantity ITEM_GB_SOUNDS, VAR_TEMP_x4002
++	Compare VAR_TEMP_x4002, 0
++	GoToIfNe _PCN_gb_salta
++	PlaySE SEQ_SE_DP_SELECT
++	LockAll
++	FacePlayer
++	GoTo _PCN_gb_dono
++
++_PCN_gb_salta:
+ 	GoToIfSet FLAG_GAME_CLEAR, _015C
+ 	Compare VAR_SCENE_ELMS_LAB, 4
+@@ -140,4 +152,12 @@
+ 	NPCMsg msg_0545_T20R0201_00013
+ 	WaitButtonOrDpad
++	GoTo _PCN_gb_dono
++
++_PCN_gb_dono:
++	BufferPlayersName 0
++	NPCMsg 39
++	GiveItemNoCheck ITEM_GB_SOUNDS, 1
++	NPCMsg 40
++	WaitButton
+ 	CloseMsg
+ 	ReleaseAll

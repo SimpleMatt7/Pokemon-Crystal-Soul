@@ -45,7 +45,9 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 - **Nature senza effetto**, come in Cristallo dove non esistevano: ogni Pokémon ne ha ancora una, ma non cambia
   più le sue statistiche.
 - **Uovo Strano** come in Cristallo: il nonno della Pensione sul Percorso 34 lo regala una volta (un baby Pokémon a
-  caso che conosce Stordipugno).
+  caso che conosce Stordipugno, shiny nel 14% dei casi).
+- **Musiche del Game Boy fin dall'inizio:** la mamma ti dà GB Sounds subito dopo il Pokégear; usalo dalla Borsa (o
+  registralo sul tasto Y) per passare dalle musiche originali di Oro/Argento/Cristallo a quelle di HGSS e viceversa.
 - **Suicune come in Cristallo:** si fa vedere anche sul **Percorso 36** davanti al cancello del Parco Nazionale, e
   fino alla Lega continua a ricomparire a giro (Fiorlisopoli, Percorso 42, Percorso 36); Eusine c'è solo la prima
   volta. Dopo la Lega la caccia di HGSS prosegue a Kanto come sempre.
