@@ -25,7 +25,7 @@ import struct
 
 from titolo_ciclo import Asm, EQ, NE, H, bl_target, find_unique
 
-FLAG = 0x54B              # FLAG_PCN_ESP_SQUADRA (FLAG_UNK_54B: non usato da nessuno script)
+FLAG = 0x54F              # FLAG_PCN_ESP_SQUADRA (FLAG_UNK_54F: libero, vedi l'elenco dei flag nostri in NOTES)
 MSG_SPENTA = 129          # msg_0010: 129 spenta, 130 accesa (testi aggiunti in data/testi/<lingua>/msg_0010.csv)
 ITEM = 432                # ITEM_POINT_CARD
 ICON_FROM = 216           # ITEM_EXP_SHARE

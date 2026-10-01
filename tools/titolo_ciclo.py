@@ -1,6 +1,9 @@
-"""Titolo: Ho-Oh per un giro completo di telecamera, lampo bianco, poi Lugia per il suo giro (D39).
+"""Titolo: un uccello per un giro completo di telecamera, lampo bianco, poi l'altro per il suo giro (D39, D59).
 
-Il titolo parte come HeartGold (Ho-Oh). Si aggancia la chiamata a TitleScreenAnim_GetCameraNextPosition nel ciclo
+Il primo è scelto a caso a ogni avvio del titolo (D59: 7 = Ho-Oh o 8 = Lugia, al posto della lettura di
+gGameVersion in TitleScreen_Init; la scelta si ricorda in una parola in coda alla routine e il passaggio avviene una
+volta sola). Il testo qui sotto descrive il passaggio Ho-Oh → Lugia; quello Lugia → Ho-Oh è simmetrico (modelli 25-29
+e scintille 38-40, cielo dorato, scritta arancio nel colore 2 usato dalla variante SS). Si aggancia la chiamata a TitleScreenAnim_GetCameraNextPosition nel ciclo
 principale (TitleScreen_Main): una routine Thumb aggiunta in coda all'overlay 60 chiama la funzione originale e,
 quando il giro di telecamera di Ho-Oh finisce (cameraScene torna a 0) e la versione è ancora HG:
   1. tutti e due gli schermi subito bianchi (MASTER_BRIGHT) + dissolvenza da bianco (BeginNormalPaletteFade)
@@ -34,7 +37,7 @@ VRAMMAN_IN_DATA = 0x08    # TitleScreenOverlayData._3dVramMan (plttWork a +4, te
 HEAP_TITLE = 0x1E         # HEAP_ID_TITLE_SCREEN
 FADE_BOTH, FADE_BRIGHTNESS_IN = 0, 1
 OFF_PLTTDATA = 0x204      # TitleScreenAnimData.plttData
-NARC_TITLEDEMO, PAL_SKY_SS, PAL_LOC_SUB_BG, PLTTBUF_SUB_BG = 0x2E, 2, 4, 1
+NARC_TITLEDEMO, PAL_SKY_SS, PAL_SKY_HG, PAL_LOC_SUB_BG, PLTTBUF_SUB_BG = 0x2E, 2, 4, 4, 1
 
 
 def H(b, k):
@@ -113,6 +116,9 @@ def locate(b):
     # InitObjectsAndCamera: mov r1,#1; ldr r0,[r5,r0]; mov r2,#0; lsl r3,r1,#9; BL PaletteData_LoadPaletteSlotFromHardware
     k = find_unique(b, [0x2101, 0x5828, 0x2200, 0x024B], "tavolozza dal hardware")
     a["pltt_from_hw"] = bl_target(b, k + 8)
+    # TitleScreen_Init: ldr r0,=gGameVersion; ldrb r1,[r0]; mov r0,#0xB3; lsl r0,#2; str r1,[r4,r0] (animData.gameVersion)
+    k = find_unique(b, [0x4807, 0x7801, 0x20B3, 0x0080, 0x5021], "lettura di gGameVersion")
+    a["version_load"] = k
     return a
 
 
@@ -185,66 +191,63 @@ class Asm:
 EQ, NE = 0, 1
 
 
-def routine(origin, a, base):
-    """Codice della routine all'offset `origin` dell'overlay (indirizzi ARM9 assoluti convertiti in offset)."""
-    rel = lambda addr: addr - base if addr > 0x02000000 else addr  # noqa: E731
-    s = Asm(origin)
-    s.h(0xB5F0)                      # push {r4-r7, lr}
-    s.h(0xB083)                      # sub sp, #12
-    s.movr(4, 0)                     # r4 = animData
-    s.big(6, OFF_SCENE)
-    s.ldrr(5, 4, 6)                  # r5 = cameraScene prima
-    s.bl(a["get_camera_next"])       # funzione originale (r0 = animData)
-    s.ldrr(0, 4, 6)
-    s.cmp(0, 0); s.bcond(NE, "out")          # il giro è appena finito: scena tornata a 0 ...
-    s.cmp(5, 0); s.bcond(EQ, "out")          # ... da una scena diversa da 0
-    s.big(7, OFF_VERSION)
-    s.ldrr(0, 4, 7)
-    s.cmp(0, 7); s.bcond(EQ, "switch")       # solo il primo giro (ancora HeartGold)
-    s.label("out"); s.b("done")              # (il salto condizionato non arriva fino in fondo)
-    s.label("switch")
-    s.mov(0, 8); s.strr(0, 4, 7)             # gameVersion = SoulSilver
+# variante di arrivo: modelli (tex, nsbca, nsbta, nsbtp, nsbma), scintille (tex, nsbca, nsbtp), tavolozza del cielo,
+# colore della scritta "Tocca per iniziare" (posto della tavolozza 2 principale usato dalla variante di partenza)
+TO_LUGIA = dict(ver=8, model=(20, 21, 22, 23, 24), sparkles=(41, 42, 43), sky=PAL_SKY_SS,
+                text_addr=0x42, text_color=0x7F80)      # il testo HG usa il colore 1: diventa ciano RGB(0,28,31)
+TO_HOOH = dict(ver=7, model=(25, 26, 27, 29, 28), sparkles=(38, 39, 40), sky=PAL_SKY_HG,
+               text_addr=0x44, text_color=0x011B)       # il testo SS usa il colore 2: diventa arancio RGB(27,8,0)
+
+
+def adr(s, rd, lab, refs):
+    """add rd, pc, #off verso un'etichetta più avanti, allineata a 4 (risolta in routine())."""
+    refs.append((len(s.code), rd, lab)); s.h(0)
+
+
+def switch_to(s, a, v):
+    """Passaggio all'altra variante (r4 = animData, r6 = TitleScreenOverlayData, r7 = OFF_VERSION)."""
+    s.mov(0, v["ver"]); s.strr(0, 4, 7)
     # tutti e due gli schermi subito bianchi: REG_MASTER_BRIGHT dei motori A e B = schiarisci, intensità 16
     s.mov(0, 4); s.lsl(0, 0, 24); s.add8(0, 0x6C)
     s.mov(1, 0x80); s.lsl(1, 1, 7); s.add8(1, 0x10)
     s.strh0(1, 0)
     s.mov(2, 0x10); s.lsl(2, 2, 8); s.addr(0, 0, 2)      # 0x0400106C
     s.strh0(1, 0)
-    # "Tocca per iniziare": il testo HG usa il colore 1 della tavolozza 2 dello schermo principale (arancio
-    # RGB(27,8,0), title_screen.c); con Lugia diventa il ciano di SoulSilver RGB(0,28,31) = 0x7F80
-    s.mov(0, 5); s.lsl(0, 0, 24); s.add8(0, 0x42)        # 0x05000042
-    s.mov(1, 0xFF); s.lsl(1, 1, 7)                      # 0x7F80
+    # "Tocca per iniziare" (title_screen.c: HG scrive col colore 1, SS col colore 2 della tavolozza 2 principale)
+    s.mov(0, 5); s.lsl(0, 0, 24); s.add8(0, v["text_addr"])
+    s.big(1, v["text_color"])
     s.strh0(1, 0)
-    # scarica Ho-Oh e scintille
+    # scarica uccello e scintille
     s.addi3(0, 4, OFF_HOOH); s.bl(a["unload3d"])
     s.movr(0, 4); s.add8(0, OFF_SPARKLES); s.bl(a["unload3d"])
     # memoria video 3D: si reinizializzano gli allocatori a lista (texture 1 slot da 128 KB, tavolozze 4 da 8 KB)
     # con la stessa memoria di lavoro del gestore; distruggere e ricreare il gestore rifarebbe NNS_G3dInit
-    # (proiezione, luci, trasparenze azzerate: schermo nero)
-    s.movr(6, 4); s.sub8(6, ANIMDATA_IN_DATA)   # r6 = TitleScreenOverlayData
+    # (proiezione, luci, trasparenze azzerate: schermo nero, provato)
     s.ldri(7, 6, VRAMMAN_IN_DATA)               # r7 = GF3DVramMan
     s.mov(0, 1); s.strsp(0, 0)                  # useAsDefault
     s.big(0, 0x20000); s.mov(1, 0); s.ldri(2, 7, 8); s.big(3, 128 << 4)
     s.bl(a["tex_init"])
     s.big(0, 4 * 0x2000); s.ldri(1, 7, 4); s.big(2, 4 * 256 << 4); s.mov(3, 1)
     s.bl(a["pltt_init"])
-    # Lugia: Load3DObjects(&hooh_lugia, 20, 21, 22, 23, 24, heapID)
-    s.mov(0, 23); s.strsp(0, 0)
-    s.mov(0, 24); s.strsp(0, 4)
+    # uccello: Load3DObjects(&hooh_lugia, tex, nsbca, nsbta, nsbtp, nsbma, heapID)
+    tex, ca, ta, tp, ma = v["model"]
+    s.mov(0, tp); s.strsp(0, 0)
+    s.mov(0, ma); s.strsp(0, 4)
     s.ldri(0, 6, 0); s.strsp(0, 8)
-    s.addi3(0, 4, OFF_HOOH); s.mov(1, 20); s.mov(2, 21); s.mov(3, 22)
+    s.addi3(0, 4, OFF_HOOH); s.mov(1, tex); s.mov(2, ca); s.mov(3, ta)
     s.bl(a["load3d"])
-    # scintille SS: Load3DObjects(&sparkles, 41, 42, -1, 43, -1, heapID)
-    s.mov(0, 43); s.strsp(0, 0)
+    # scintille: Load3DObjects(&sparkles, tex, nsbca, -1, nsbtp, -1, heapID)
+    tex, ca, tp = v["sparkles"]
+    s.mov(0, tp); s.strsp(0, 0)
     s.mov(0, 0); s.sub8(0, 1); s.strsp(0, 4); s.movr(3, 0)
     s.ldri(0, 6, 0); s.strsp(0, 8)
-    s.movr(0, 4); s.add8(0, OFF_SPARKLES); s.mov(1, 41); s.mov(2, 42)
+    s.movr(0, 4); s.add8(0, OFF_SPARKLES); s.mov(1, tex); s.mov(2, ca)
     s.bl(a["load3d"])
     # animazioni in corsa (Load3DObjects le mette ferme)
     s.mov(0, 2)
     s.big(1, OFF_SUBSTATE_H); s.strr(0, 4, 1)
     s.big(1, OFF_SUBSTATE_S); s.strr(0, 4, 1)
-    # telecamera: inquadratura iniziale di Lugia
+    # telecamera: inquadratura iniziale (dipende dalla versione appena scritta)
     s.movr(0, 4); s.bl(a["set_camera_initial"])
     s.big(0, OFF_TARGET_END); s.addr(0, 0, 4)
     s.big(1, OFF_CAMERA); s.ldrr(1, 4, 1)
@@ -252,11 +255,11 @@ def routine(origin, a, base):
     s.big(0, OFF_POS_END); s.addr(0, 0, 4)
     s.big(1, OFF_CAMERA); s.ldrr(1, 4, 1)
     s.bl(a["cam_pos"])
-    # cielo del logo: dal dorato (membro 4, variante HG) all'azzurro (membro 2): tavolozza nel hardware e
-    # nella copia di PaletteData (il bagliore del logo la rimanda allo schermo a ogni fotogramma)
+    # cielo del logo: tavolozza nel hardware e nella copia di PaletteData (il bagliore del logo la rimanda allo
+    # schermo a ogni fotogramma)
     s.mov(0, 0); s.strsp(0, 0)
     s.ldri(0, 6, 0); s.strsp(0, 4)
-    s.mov(0, NARC_TITLEDEMO); s.mov(1, PAL_SKY_SS); s.mov(2, PAL_LOC_SUB_BG); s.mov(3, 0)
+    s.mov(0, NARC_TITLEDEMO); s.mov(1, v["sky"]); s.mov(2, PAL_LOC_SUB_BG); s.mov(3, 0)
     s.bl(a["load_pal"])
     s.big(1, OFF_PLTTDATA); s.ldrr(0, 4, 1)
     s.mov(1, PLTTBUF_SUB_BG); s.mov(2, 0); s.mov(3, 1); s.lsl(3, 3, 9)
@@ -268,10 +271,63 @@ def routine(origin, a, base):
     s.mov(0, FADE_BOTH); s.mov(1, FADE_BRIGHTNESS_IN); s.mov(2, FADE_BRIGHTNESS_IN)
     s.mov(3, 0xFF); s.lsl(3, 3, 7); s.add8(3, 0x7F)     # 0x7FFF bianco
     s.bl(a["fade"])
+
+
+def routine(origin, a, base):
+    """Codice aggiunto all'offset `origin` dell'overlay. Ritorna (byte, offset della scelta, offset del ciclo)."""
+    s, refs = Asm(origin), []
+    # scelta della versione iniziale (al posto di ldr r0,=gGameVersion; ldrb r1,[r0] in TitleScreen_Init):
+    # r1 = 7 (Ho-Oh) o 8 (Lugia) a caso con VCOUNT + timer 3 (D59, come D33), ricordata in start_ver
+    pick = s.pos()
+    s.mov(0, 4); s.lsl(0, 0, 24); s.add8(0, 6)          # 0x04000006 VCOUNT
+    s.h(0x8801)                                        # ldrh r1,[r0]
+    s.add8(0, 0xFF); s.add8(0, 0x07)                   # 0x0400010C timer 3
+    s.h(0x8800)                                        # ldrh r0,[r0]
+    s.addr(1, 1, 0)
+    s.lsl(1, 1, 31); s.h(0x0FC9)                       # lsr r1,r1,#31
+    s.add8(1, 7)
+    adr(s, 0, "start_ver", refs)
+    s.h(0x7001)                                        # strb r1,[r0]
+    s.h(0x4770)                                        # bx lr
+    # ciclo: al posto di BL TitleScreenAnim_GetCameraNextPosition
+    loop = s.pos()
+    s.h(0xB5F0)                      # push {r4-r7, lr}
+    s.h(0xB083)                      # sub sp, #12
+    s.movr(4, 0)                     # r4 = animData
+    s.big(6, OFF_SCENE)
+    s.ldrr(5, 4, 6)                  # r5 = cameraScene prima
+    s.bl(a["get_camera_next"])       # funzione originale (r0 = animData)
+    s.ldrr(0, 4, 6)
+    s.cmp(0, 0); s.bcond(NE, "out")          # il giro è appena finito: scena tornata a 0 ...
+    s.cmp(5, 0); s.bcond(EQ, "out")          # ... da una scena diversa da 0
+    s.big(7, OFF_VERSION)
+    s.ldrr(0, 4, 7)
+    adr(s, 1, "start_ver", refs)
+    s.h(0x7809)                              # ldrb r1,[r1]
+    s.h(0x4288)                              # cmp r0,r1: solo il primo giro (ancora la variante di partenza)
+    s.bcond(NE, "out")
+    s.movr(6, 4); s.sub8(6, ANIMDATA_IN_DATA)   # r6 = TitleScreenOverlayData
+    s.cmp(0, 7); s.bcond(EQ, "lugia")
+    s.b("hooh")
+    s.label("out"); s.b("done")              # (i salti condizionati non arrivano fino in fondo)
+    s.label("lugia")
+    switch_to(s, a, TO_LUGIA)
+    s.b("done")
+    s.label("hooh")
+    switch_to(s, a, TO_HOOH)
     s.label("done")
     s.h(0xB003)                      # add sp, #12
     s.h(0xBDF0)                      # pop {r4-r7, pc}
-    return s.bytes()
+    if len(s.code) % 2:
+        s.h(0x46C0)
+    s.label("start_ver"); s.h(0); s.h(0)
+    code = bytearray(s.bytes())
+    for idx, rd, lab in refs:
+        pc = (origin + 2 * idx + 4) & ~3
+        off = s.labels[lab] - pc
+        assert 0 <= off < 1024 and off % 4 == 0, off
+        struct.pack_into("<H", code, 2 * idx, 0xA000 | rd << 8 | off // 4)
+    return bytes(code), pick, loop
 
 
 def check_arm9(arm9, a, base):
@@ -293,10 +349,11 @@ def apply(ov: bytearray, base: int, arm9=None):
     while len(ov) % 4:
         ov.append(0)
     origin = len(ov)
-    code = routine(origin, a, base)
+    code, pick, loop = routine(origin, a, base)
     ov += code
-    # aggancio: BL alla routine al posto di BL GetCameraNextPosition
-    off = origin - (a["hook"] + 4)
-    struct.pack_into("<HH", ov, a["hook"], 0xF000 | ((off >> 12) & 0x7FF), 0xF800 | ((off >> 1) & 0x7FF))
+    # agganci: BL al ciclo al posto di BL GetCameraNextPosition; BL alla scelta al posto di ldr/ldrb gGameVersion
+    for at, target in ((a["hook"], loop), (a["version_load"], pick)):
+        off = target - (at + 4)
+        struct.pack_into("<HH", ov, at, 0xF000 | ((off >> 12) & 0x7FF), 0xF800 | ((off >> 1) & 0x7FF))
     struct.pack_into("<I", ov, a["duration_lit"], TITLE_DURATION)
     return ov, origin, a

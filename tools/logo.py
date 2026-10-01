@@ -340,7 +340,8 @@ def encode(img, ncgr_orig, nscr_orig):
 SKY_CHR, SKY_SCR = 36, 37          # cielo azzurro (SS), tavolozza SS_PAL (la stessa del logo)
 POKEGRA = "a/0/0/4"                # sprite dei Pokémon: 6 file per specie (retro f/m, fronte f/m, tavolozze)
 SUICUNE = 245
-SUICUNE_POS = (2, 190)             # angolo in basso a sinistra (x sinistro, y del fondo), specchiato verso il logo
+SUICUNE_POS = (2, 190)             # angolo in basso a sinistra (x sinistro, y del fondo)
+SUICUNE_MIRROR = False             # False: come lo sprite originale, guarda a destra (richiesta utente, D59)
 # posti liberi della tavolozza del titolo (né cielo né logo; 124-126 li usa la riga "Developed by GAME FREAK")
 FREE_SLOTS = [117, 118, 119, 120, 121, 122, 123, 127]
 EXACT_DIST = 900                   # oltre questa distanza il colore di Suicune prende un posto libero
@@ -396,7 +397,7 @@ def build_sky(base="IPKI"):
         for x in range(xs[0], xs[-1] + 1):
             v = mon[y][x]
             if v:
-                sky[top + y - ys[0]][x0 + (xs[-1] - x)] = cmap[v]   # specchiato
+                sky[top + y - ys[0]][x0 + ((xs[-1] - x) if SUICUNE_MIRROR else (x - xs[0]))] = cmap[v]
     return sky, cols, extra
 
 
