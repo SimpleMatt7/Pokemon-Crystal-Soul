@@ -49,4 +49,12 @@ le musiche passano a quelle di Oro/Argento/Cristallo, e di nuovo a quelle di HGS
 
 ## Esp. Squadra (D56)
 
-Nel kit c'è l'Esp. Squadra (strumenti chiave). Borsa → Usa: deve dire accesa/spenta e cambiare a ogni uso (anche registrata sul tasto Y). Accesa, sconfiggendo un Pokémon: chi ha lottato riceve i Punti Esp. interi, gli altri della squadra la metà (un messaggio per ciascuno); i Pokémon esausti e le Uova niente. Spenta: solo chi ha lottato, come prima.
+Nel kit c'è l'Esp. Squadra (strumenti chiave). Borsa → Usa: deve dire accesa/spenta e cambiare a ogni uso (anche registrata sul tasto Y). Accesa, sconfiggendo un Pokémon: chi ha lottato riceve i Punti Esp. interi (con messaggio), gli altri della squadra la metà senza messaggio (si vedono solo gli aumenti di livello e le mosse nuove); i Pokémon esausti e le Uova niente. Per controllare i Punti Esp. degli altri: riepilogo del Pokémon prima e dopo la lotta. Spenta: solo chi ha lottato, come prima.
+
+## Velocità del testo (D57)
+
+Solo nelle partite nuove: Opzioni → Veloc. testo deve essere già su 3. I salvataggi esistenti tengono la loro impostazione.
+
+## Assistente di Elm (D56)
+
+Partita nuova: uscendo dal laboratorio con lo starter l'assistente dà 5 Pozioni e poi l'Esp. Squadra, con la spiegazione.

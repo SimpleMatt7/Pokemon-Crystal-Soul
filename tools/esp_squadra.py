@@ -13,7 +13,8 @@ Lotta (overlay 12), stile moderno: accesa, chi lotta riceve il 100% e il resto d
 - Task_GetExp: ogni Pokémon della squadra viene considerato (ciclo di scelta) e riceve partyGainedExp (controllo
   "tiene Condividi Esp."); chi ha lottato riceve gainedExp + partyGainedExp = Esp. intera. Uovo Fortunato, lotte con
   allenatori e Pokémon scambiati restano come prima (l'effetto vero dello strumento non viene toccato lì).
-Le Uova restano escluse. Spenta: tutto come nel gioco originale (anche il Condividi Esp. tenuto).
+Le Uova restano escluse. Per chi non ha lottato niente messaggio "ha guadagnato N Punti Esp." (come nei giochi
+recenti); gli aumenti di livello e le mosse nuove si vedono ancora. Spenta: tutto come nel gioco originale (anche il Condividi Esp. tenuto).
 
 Il codice nuovo sta nella ARM9 al posto di ScrCmd_062 (scorrimento del riquadro di testo) e della sua funzione
 d'appoggio: comando che nessuno script usa (verificato sugli script della decomp, identici alla ROM), raggiunto solo
@@ -101,6 +102,11 @@ def locate(arm9, ov12, ov12_base):
     # Task_GetExp, Esp. ai portatori: ldr r0,[sp,#0x18]; cmp r0,#0x33; bne; ldr r0,[sp,#0x24]; add r0,#0xA0
     k = find_unique(ov12, [0x9806, 0x2833, 0xD106, 0x9809, 0x30A0], "Esp. ai portatori")
     a["site_share"] = k
+    # Task_GetExp, messaggio "ha guadagnato N Punti Esp.": ldr r0,[sp,#0x38]; cmp r0,#0; beq; mov r1,#0x11; add r0,sp,#0xB4
+    k = find_unique(ov12, [0x980E, 0x2800, 0xD018, 0x2111, 0xA82D, 0x7041], "messaggio Punti Esp.")
+    assert H(ov12, k + 0x30) == 0xB036 and H(ov12, k + 0x36) == 0xBDF8, "Task_GetExp: epilogo inatteso"
+    find_unique(ov12, [0x2001, 0x4008, 0x9011, 0x6820, 0x1C39], "Task_GetExp: lato in [sp+0x44]")
+    a["site_msg"] = k
     return a
 
 
@@ -164,6 +170,29 @@ def routines(a):
     s.h(0xBD00)                                  # pop {pc}
     s.label("share_ret")
     s.h(0x4770)                                  # bx lr
+    # msg(): nel chiamante r4 = GetterWork, r5 = posto in squadra, [sp+0x38] = Esp. guadagnati, [sp+0x44] = lato.
+    # Esp. 0 → Z = 1 (come prima). Esp. Squadra accesa e Pokémon che non ha lottato: niente messaggio, si passa
+    # subito a STATE_GET_EXP_GAUGE (3), che per chi non è in campo va al controllo del livello (aumenti di livello e
+    # mosse nuove si vedono ancora); si esce direttamente da Task_GetExp col suo epilogo. Altrimenti Z = 0.
+    fn["msg"] = s.pos()
+    s.h(0x980E)                                  # ldr r0,[sp,#0x38]
+    s.cmp(0, 0); s.bcond(EQ, "msg_ret")
+    s.h(0xB500)                                  # push {lr}
+    s.bl(fn["on"])
+    s.h(0xBC02); s.h(0x468E)                     # pop {r1}; mov lr,r1
+    s.cmp(0, 0); s.bcond(EQ, "msg_loud")
+    s.ldri(0, 4, 4)                              # ctx
+    s.h(0x9911)                                  # ldr r1,[sp,#0x44]
+    s.lsl(1, 1, 2); s.addr(0, 0, 1); s.add8(0, 0xA4)
+    s.ldri(0, 0, 0)                              # ctx->unk_A4[lato]: chi ha lottato
+    s.h(0x40E8)                                  # lsr r0,r5
+    s.lsl(0, 0, 31); s.bcond(NE, "msg_loud")
+    s.mov(0, 3); s.h(0x62A0)                     # data->state = STATE_GET_EXP_GAUGE
+    s.h(0xB036); s.h(0xBDF8)                     # add sp,#0xD8; pop {r3-r7,pc}
+    s.label("msg_loud")
+    s.mov(0, 1); s.cmp(0, 0)                     # Z = 0
+    s.label("msg_ret")
+    s.h(0x4770)                                  # bx lr
     code = s.bytes()
     assert len(code) <= a["free_len"], len(code)
     return code, fn
@@ -198,7 +227,8 @@ def apply(arm9: bytearray, ov12: bytearray, ov12_base: int):
     arm9[i + 8 * ITEM + 2:i + 8 * ITEM + 6] = arm9[i + 8 * ICON_FROM + 2:i + 8 * ICON_FROM + 6]
     # overlay 12
     for site, target in (("site_cnt", fn["attr_cnt"]), ("site_sel", fn["attr_sel"]),
-                         ("site_div1", fn["div"]), ("site_div2", fn["div"]), ("site_share", fn["share"])):
+                         ("site_div1", fn["div"]), ("site_div2", fn["div"]), ("site_share", fn["share"]),
+                         ("site_msg", fn["msg"])):
         at = a[site]
         ov12[at:at + 4] = bl_bytes(ov12_base + at, target)
     return a, fn, len(code)

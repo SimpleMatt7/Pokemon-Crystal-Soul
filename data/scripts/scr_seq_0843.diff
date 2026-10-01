@@ -1,0 +1,12 @@
+--- a/scr_seq_0843_T20R0101.s
++++ b/scr_seq_0843_T20R0101.s
+@@ -523,4 +523,9 @@
+ 	SetVar VAR_SPECIAL_x8005, 5
+ 	CallStd std_obtain_item_verbose
++	@ Crystal Soul (D56): anche l'Esp. Squadra (Scheda Punti rinominata), con la spiegazione (testo 106 aggiunto)
++	SetVar VAR_SPECIAL_x8004, ITEM_POINT_CARD
++	SetVar VAR_SPECIAL_x8005, 1
++	CallStd std_obtain_item_verbose
++	NPCMsg 106
+ 	CloseMsg
+ 	SetVar VAR_SCENE_ELMS_LAB, 2
