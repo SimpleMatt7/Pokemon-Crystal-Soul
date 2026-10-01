@@ -39,7 +39,8 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
   Zafferanopoli (post-game) regala i due starter di Johto che non hai scelto da Elm, al posto di quelli di Hoenn.
 - **Mitici senza eventi:** dopo la Lega Pokémon, **Mew** ti aspetta alla Torre Inclusa e **Celebi** al santuario del
   Bosco di Lecci (la storia del viaggio nel tempo funziona). Si può sbloccare anche **Pichu Spunzorecchio**.
-- **Pokédex di Johto = le 251**, rinumerate, con diploma raggiungibile.
+- **Pokédex di Johto = le 251**, rinumerate, con diploma raggiungibile; anche il **diploma del Pokédex Nazionale**
+  si ottiene con le 251 (Mew e Celebi non servono, come nel gioco originale).
 - **Fossili:** Kabuto (Domofossile) alle Rovine d'Alfa come in SoulSilver; nella Grotta Falesia Helixfossile/Ambra Antica.
 - **Nature senza effetto**, come in Cristallo dove non esistevano: ogni Pokémon ne ha ancora una, ma non cambia
   più le sue statistiche.

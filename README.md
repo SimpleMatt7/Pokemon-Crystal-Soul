@@ -38,7 +38,8 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
   (post-game) gives the two Johto starters you did not pick from Elm, instead of the Hoenn starters.
 - **Mythicals without events:** after the Pokémon League, **Mew** waits in the Embedded Tower and **Celebi** at the
   Ilex Forest shrine (the time-travel story works). **Spiky-eared Pichu** can be unlocked too.
-- **Johto Pokédex = the 251**, renumbered, with a reachable completion diploma.
+- **Johto Pokédex = the 251**, renumbered, with a reachable completion diploma; the **National Pokédex diploma**
+  is also awarded once all 251 are caught (Mew and Celebi are not required, as in the original game).
 - **Fossils:** Kabuto (Dome Fossil) from the Ruins of Alph as in SoulSilver; Cliff Cave gives Helix Fossil/Old Amber.
 - **Natures without effect**, as in Crystal where they did not exist: each Pokémon still shows one, but it no
   longer changes its stats.
