@@ -18,7 +18,7 @@ import logo  # noqa: E402
 from prepara_logo import remove_white  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-HO_OH, LUGIA = 250, 249
+HO_OH, LUGIA, SUICUNE = 250, 249, 245
 SIZES = {"poster": (600, 900), "grid": (920, 430), "hero": (1920, 620)}   # nomi come in Steam ROM Manager
 
 
@@ -92,10 +92,14 @@ def compose(base, kind, lg):
         ho, lu = sprite(base, HO_OH, 6, mirror=True), sprite(base, LUGIA, 6)
         paste_shadow(c, ho, (w * 27 // 100 - ho.width // 2, (h - ho.height) // 2), blur=16)
         paste_shadow(c, lu, (w * 73 // 100 - lu.width // 2, (h - lu.height) // 2), blur=16)
+        su = sprite(base, SUICUNE, 5)                    # al centro, tra i due (guarda a destra come nel titolo)
+        paste_shadow(c, su, ((w - su.width) // 2, h - su.height - 40), blur=14)
     elif kind == "poster":
         ho, lu = sprite(base, HO_OH, 4, mirror=True), sprite(base, LUGIA, 4)
-        paste_shadow(c, ho, (w // 4 - ho.width // 2 - 20, h - ho.height - 70))
-        paste_shadow(c, lu, (w * 3 // 4 - lu.width // 2 + 20, h - lu.height - 70))
+        paste_shadow(c, ho, (w // 4 - ho.width // 2 - 20, h - ho.height - 140))
+        paste_shadow(c, lu, (w * 3 // 4 - lu.width // 2 + 20, h - lu.height - 140))
+        su = sprite(base, SUICUNE, 3)                    # davanti, al centro in basso
+        paste_shadow(c, su, ((w - su.width) // 2, h - su.height - 15))
         l2 = fit(lg, w - 60)
         paste_shadow(c, l2, ((w - l2.width) // 2, 70))
     else:                        # grid (orizzontale)
