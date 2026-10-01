@@ -14,7 +14,7 @@ Nella cameretta del protagonista (Borgo Foglianova, 1° piano) esaminare la **co
 un menu. La console accende anche i pulsanti del menu del gioco (Borsa, Scheda, **Salva**, Opzioni; Pokémon quando dà il primo Pokémon): la prima volta,
 subito dopo l'introduzione, esaminarla e scegliere Esci, poi **salvare in cameretta**. Con le ROM di prova successive
 basta Continua (il salvataggio vale per tutte; gli stati salvati di melonDS no, vedi sotto). Ogni voce (tranne Suicune) imposta lo stato "dopo la Lega" (`FLAG_GAME_CLEAR`), dà un Typhlosion lv 70 se la
-squadra è vuota 30 Ultra Ball e 10 Master Ball, poi porta sul posto. Si può usare subito dopo l'inizio di una partita nuova.
+squadra è vuota 30 Ultra Ball e 10 Master Ball, la MT10 (D55) e l'Esp. Squadra (D56), poi porta sul posto. Si può usare subito dopo l'inizio di una partita nuova.
 
 | Voce | Stato impostato | Arrivo | Cosa provare |
 |---|---|---|---|
@@ -46,3 +46,7 @@ senza natura. I Pokémon creati o saliti di livello con la ROM nuova devono risu
 In una partita nuova: dopo aver ricevuto lo starter da Elm, parlare con la mamma (piano terra): Pokégear, poi GB Sounds.
 Con un salvataggio che ha già il Pokégear: la prima volta che si parla con la mamma arriva GB Sounds. Usarlo dalla Borsa:
 le musiche passano a quelle di Oro/Argento/Cristallo, e di nuovo a quelle di HGSS.
+
+## Esp. Squadra (D56)
+
+Nel kit c'è l'Esp. Squadra (strumenti chiave). Borsa → Usa: deve dire accesa/spenta e cambiare a ogni uso (anche registrata sul tasto Y). Accesa, sconfiggendo un Pokémon: chi ha lottato riceve i Punti Esp. interi, gli altri della squadra la metà (un messaggio per ciascuno); i Pokémon esausti e le Uova niente. Spenta: solo chi ha lottato, come prima.

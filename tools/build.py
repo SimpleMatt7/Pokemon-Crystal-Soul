@@ -448,6 +448,16 @@ def apply_title_cycle(c):
     c.log["titolo Ho-Oh+Lugia"] += 1
 
 
+def apply_exp_all(c):
+    """Esp. Squadra (D56): Scheda Punti come interruttore, Esp. a tutta la squadra (tools/esp_squadra.py)."""
+    import esp_squadra
+    pa, po = BUILD / "arm9/arm9.bin", BUILD / "arm9_overlays/ov012.bin"
+    arm9, ov12 = bytearray(pa.read_bytes()), bytearray(po.read_bytes())
+    esp_squadra.apply(arm9, ov12, overlay_base(12))
+    pa.write_bytes(bytes(arm9)); po.write_bytes(bytes(ov12))
+    c.log["Esp. Squadra"] += 1
+
+
 def apply_intro(c):
     """Scena 1 dell'intro: Ho-Oh poi Lugia (tools/intro.py) nei membri 23-26 di a/2/6/2."""
     import intro
@@ -665,7 +675,7 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_zone_events, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
+                 apply_map_objects, apply_zone_events, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_exp_all, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
         step(c)
     apply_texts(c, lang)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
