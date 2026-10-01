@@ -74,9 +74,9 @@ La patch contiene solo le differenze rispetto al gioco originale.
 ## Limiti noti
 
 - Il Pokédex Nazionale ha ancora 493 posti (riempirai solo i primi 251).
-- Le funzioni che si collegano ad altri giochi (Pokéwalker, Parco Amici con la migrazione dal GBA, Pokémon Ranger,
-  scambi o GTS con giochi non modificati, Dono Segreto) sono rimaste come nell'originale: se le usi possono entrare
-  specie oltre la 251. Giocando da soli, no.
+- Pokéwalker, Migrazione dal GBA (quindi il Parco Amici resta vuoto), collegamento a Pokémon Ranger e Dono Segreto sono
+  tolti dal menu principale, perché porterebbero specie oltre la 251. Gli scambi (locali, Wi-Fi, GTS) restano: con
+  giochi non modificati possono ancora entrare altre specie; tra copie di Crystal Soul nessun problema.
 - Gli eventi nuovi (giro di Suicune, Uovo Strano, Mew, Celebi e il viaggio nel tempo, Pichu, starter di Rocco e Oak)
   sono stati provati uno per uno con una versione di prova, ma non ancora in una partita completa. Salva prima di
   affrontarli.

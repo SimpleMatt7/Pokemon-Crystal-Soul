@@ -72,9 +72,9 @@ The patch contains only the differences from the original game.
 ## Known limitations
 
 - The National Pokédex still has 493 slots (you will only ever fill the first 251).
-- Features that connect to other games — Pokéwalker, Pal Park (migration from GBA), Pokémon Ranger, trades or GTS with
-  unmodified games, Mystery Gift — are left untouched: if you use them, species above #251 can come in. Playing on
-  your own, they cannot.
+- Pokéwalker, Migration from GBA (so the Pal Park stays empty), Pokémon Ranger connection and Mystery Gift are removed
+  from the main menu, since they would bring in species above #251. Trades (local, Wi-Fi, GTS) are kept: trading
+  with unmodified games can still bring in other species; trading between copies of Crystal Soul is fine.
 - The new events (Suicune loop, Odd Egg, Mew, Celebi and time travel, Pichu, Steven/Oak starters) have been tested
   one by one with a test build, but not yet in a full playthrough. Save before them.
 - The English version is built from the same data as the Italian one, but it has had less in-game testing.
