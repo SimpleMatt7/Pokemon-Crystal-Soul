@@ -707,8 +707,10 @@ def main():
     (OUT / f"{NAME}.bps").write_bytes(patch)
     if args.rilascio:            # patch pubblicabile (solo differenze): patches/ è versionata
         (ROOT / "patches").mkdir(exist_ok=True)
-        (ROOT / "patches" / f"{NAME}.bps").write_bytes(patch)
-        print(f"Copiata in patches/{NAME}.bps")
+        # nome senza spazi né parentesi: lo stesso che GitHub dà agli allegati delle release
+        pub = f"Pokemon.Crystal.Soul.{ {'IPKI': 'ITA', 'IPKE': 'ENG'}[args.base] }.bps"
+        (ROOT / "patches" / pub).write_bytes(patch)
+        print(f"Copiata in patches/{pub}")
     print(f"{NAME}.bps: {len(patch)} byte")
 
 

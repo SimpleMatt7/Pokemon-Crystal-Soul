@@ -28,7 +28,8 @@ tutte ottenibili in una singola partita, grafica HGSS. Stato, decisioni e prossi
 - `data/` — tabelle nostre (`species.csv`: ID→costante, dalla decomp pret). `data/design/`: tabelle di design
   della fase 3 (sostituzioni, selvatici, evoluzioni, oggetti, eventi); generatori `tools/design_subs.py`, `tools/design_wild.py`.
 - `docs/` — `SETUP.md` (setup da zero su un altro PC), `DEBUG.md` (ROM di prova e scorciatoie).
-- `patches/` — patch BPS pubblicate (`build.py --rilascio`, una per lingua). `README.md` (inglese) e `README.it.md`
+- `patches/` — patch BPS pubblicate (`build.py --rilascio`, una per lingua: `Pokemon.Crystal.Soul.ITA.bps` / `.ENG.bps`,
+  stessi nomi degli allegati delle release di GitHub, che tolgono spazi e parentesi). `README.md` (inglese) e `README.it.md`
   (italiano) sono la pagina pubblica: aggiornarli quando cambia qualcosa di visibile al giocatore.
 
 ## Comandi utili

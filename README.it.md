@@ -73,14 +73,14 @@ Ti serve un **dump tuo** del gioco originale. Questo repository non contiene ROM
 
 | Patch | Gioco originale | SHA-1 del `.nds` originale |
 |---|---|---|
-| [`patches/Pokemon Crystal Soul (ITA).bps`](patches/) | Pokémon Oro HeartGold (ITA), IPKI | `6b7f9bff57eb58bc8d6e48e9e5c370719458c721` |
-| [`patches/Pokemon Crystal Soul (ENG).bps`](patches/) | Pokémon HeartGold (USA), IPKE | `4fcded0e2713dc03929845de631d0932ea2b5a37` |
+| [`Pokemon.Crystal.Soul.ITA.bps`](https://github.com/SimpleMatt7/Pokemon-Crystal-Soul/releases) | Pokémon Oro HeartGold (ITA), IPKI | `6b7f9bff57eb58bc8d6e48e9e5c370719458c721` |
+| [`Pokemon.Crystal.Soul.ENG.bps`](https://github.com/SimpleMatt7/Pokemon-Crystal-Soul/releases) | Pokémon HeartGold (USA), IPKE | `4fcded0e2713dc03929845de631d0932ea2b5a37` |
 
 1. Controlla che il tuo `.nds` abbia lo SHA-1 qui sopra (lo controlla anche la patch, che rifiuta un file diverso).
 2. Applica la `.bps` con un qualsiasi programma per patch BPS, per esempio
    [Rom Patcher JS](https://www.marcrobledo.com/RomPatcher.js/) (nel browser) o [Flips](https://github.com/Alcaro/Flips),
    oppure con questo repository:
-   `python tools/bps.py applica ORIGINALE.nds "patches/Pokemon Crystal Soul (ITA).bps" USCITA.nds`
+   `python tools/bps.py applica ORIGINALE.nds patches/Pokemon.Crystal.Soul.ITA.bps USCITA.nds`
 3. Gioca il `.nds` risultante con un emulatore (provato con **melonDS**) o su console. Inizia una **nuova partita**.
 
 La patch contiene solo le differenze rispetto al gioco originale.
