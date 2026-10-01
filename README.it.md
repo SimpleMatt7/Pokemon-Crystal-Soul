@@ -36,21 +36,21 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 - **Le esclusive di SoulSilver** (Vulpix, Meowth, Ledyba, Teddiursa, Delibird, Skarmory e le loro evoluzioni) sono
   selvatiche dove si trovano in SoulSilver.
 - **Tutti gli starter:** il Prof. Oak (dopo Rosso) ti lascia prendere tutti e tre gli starter di Kanto; Rocco a
-  Zafferanopoli (post-game) regala Chikorita, Cyndaquil e Totodile al posto di quelli di Hoenn.
+  Zafferanopoli (post-game) regala i due starter di Johto che non hai scelto da Elm, al posto di quelli di Hoenn.
 - **Mitici senza eventi:** dopo la Lega Pokémon, **Mew** ti aspetta alla Torre Inclusa e **Celebi** al santuario del
   Bosco di Lecci (la storia del viaggio nel tempo funziona). Si può sbloccare anche **Pichu Spunzorecchio**.
 - **Pokédex di Johto = le 251**, rinumerate, con diploma raggiungibile.
 - **Fossili:** Kabuto (Domofossile) alle Rovine d'Alfa come in SoulSilver; nella Grotta Falesia Helixfossile/Ambra Antica.
 - **Nature senza effetto**, come in Cristallo dove non esistevano: ogni Pokémon ne ha ancora una, ma non cambia
   più le sue statistiche.
-- **Mantenuti da HGSS:** mosse, abilità, divisione fisico/speciale, Pokémon che ti seguono, grafica e musica.
 - **Uovo Strano** come in Cristallo: il nonno della Pensione sul Percorso 34 lo regala una volta (un baby Pokémon a
   caso che conosce Stordipugno).
-- **Suicune come in Cristallo:** oltre alla caccia di HGSS, Suicune si fa vedere anche sul **Percorso 36** davanti
-  al cancello del Parco Nazionale, subito dopo il Percorso 42, e fino alla Lega continua a ricomparire a giro (Fiorlisopoli, Percorso 42,
-  Percorso 36) come in Cristallo.
+- **Suicune come in Cristallo:** si fa vedere anche sul **Percorso 36** davanti al cancello del Parco Nazionale, e
+  fino alla Lega continua a ricomparire a giro (Fiorlisopoli, Percorso 42, Percorso 36); Eusine c'è solo la prima
+  volta. Dopo la Lega la caccia di HGSS prosegue a Kanto come sempre.
 - **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e poi Lugia (cielo oro e cielo
   azzurro) e Suicune nell'angolo, intro con entrambi gli uccelli, icona azzurro cristallo nel menu del DS.
+- **Mantenuti da HGSS:** mosse, abilità, divisione fisico/speciale, Pokémon che ti seguono, grafica, musica e trama.
 
 ## Come giocare
 
@@ -76,8 +76,10 @@ La patch contiene solo le differenze rispetto al gioco originale.
 - Le funzioni che si collegano ad altri giochi (Pokéwalker, Parco Amici con la migrazione dal GBA, Pokémon Ranger,
   scambi o GTS con giochi non modificati, Dono Segreto) sono rimaste come nell'originale: se le usi possono entrare
   specie oltre la 251. Giocando da soli, no.
-- Non ancora provati in una partita completa: gli eventi del post-game (Mew, Celebi e il viaggio nel tempo, Pichu,
-  starter di Rocco e Oak). Salva prima di affrontarli.
+- Gli eventi nuovi (giro di Suicune, Uovo Strano, Mew, Celebi e il viaggio nel tempo, Pichu, starter di Rocco e Oak)
+  sono stati provati uno per uno con una versione di prova, ma non ancora in una partita completa. Salva prima di
+  affrontarli.
+- La versione inglese è costruita dagli stessi dati di quella italiana, ma è stata provata meno in gioco.
 
 ## Costruire la hack dai sorgenti
 
@@ -89,6 +91,7 @@ python tools/get_tools.py     # scarica dsrom 0.8.0 (hash verificato)
 python tools/roundtrip.py     # estrae la ROM in work/
 python tools/get_pret.py      # decompilazione pret (documentazione dei formati, script)
 python tools/build.py         # versione italiana → out/  (inglese: --base IPKE)
+python tools/build.py --debug # versione di prova con scorciatoie agli eventi nuovi (mai pubblicata): docs/DEBUG.md
 ```
 
 Il design è in tabelle leggibili (`data/design/*.csv`), le modifiche agli script sono diff (`data/scripts/`), i testi

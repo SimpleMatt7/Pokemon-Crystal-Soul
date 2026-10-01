@@ -35,21 +35,21 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 - **SoulSilver exclusives** (Vulpix, Meowth, Ledyba, Teddiursa, Delibird, Skarmory and their evolutions) appear in
   the wild where they live in SoulSilver.
 - **Every starter:** Professor Oak (after Red) lets you take all three Kanto starters; Steven in Saffron City
-  (post-game) gives Chikorita, Cyndaquil and Totodile instead of the Hoenn starters.
+  (post-game) gives the two Johto starters you did not pick from Elm, instead of the Hoenn starters.
 - **Mythicals without events:** after the Pokémon League, **Mew** waits in the Embedded Tower and **Celebi** at the
   Ilex Forest shrine (the time-travel story works). **Spiky-eared Pichu** can be unlocked too.
 - **Johto Pokédex = the 251**, renumbered, with a reachable completion diploma.
 - **Fossils:** Kabuto (Dome Fossil) from the Ruins of Alph as in SoulSilver; Cliff Cave gives Helix Fossil/Old Amber.
 - **Natures without effect**, as in Crystal where they did not exist: each Pokémon still shows one, but it no
   longer changes its stats.
-- **Kept from HGSS:** moves, abilities, the physical/special split, walking Pokémon, graphics and music.
 - **Odd Egg** as in Crystal: the Day-Care Man on Route 34 gives it once (a random baby Pokémon that knows Dizzy
   Punch).
-- **Suicune as in Crystal:** besides the HGSS chase, Suicune also shows up on **Route 36** in front of the National
-  Park gate, right after Route 42, and until the Pokémon League it keeps reappearing in a loop (Cianwood, Route 42,
-  Route 36) as in Crystal.
+- **Suicune as in Crystal:** it also shows up on **Route 36** in front of the National Park gate, and until the
+  Pokémon League it keeps reappearing in a loop (Cianwood, Route 42, Route 36); Eusine joins only the first time.
+  After the League the HGSS chase continues in Kanto as usual.
 - **New presentation:** "Crystal Soul" logo, title screen with Ho-Oh then Lugia (golden and blue skies) and
   Suicune in the corner, intro with both birds, crystal-blue DS menu icon.
+- **Kept from HGSS:** moves, abilities, the physical/special split, walking Pokémon, graphics, music and story.
 
 ## How to play
 
@@ -74,8 +74,9 @@ The patch contains only the differences from the original game.
 - Features that connect to other games — Pokéwalker, Pal Park (migration from GBA), Pokémon Ranger, trades or GTS with
   unmodified games, Mystery Gift — are left untouched: if you use them, species above #251 can come in. Playing on
   your own, they cannot.
-- Not tested yet in a full playthrough: the post-game events (Mew, Celebi and time travel, Pichu, Steven/Oak
-  starters). Save before them.
+- The new events (Suicune loop, Odd Egg, Mew, Celebi and time travel, Pichu, Steven/Oak starters) have been tested
+  one by one with a test build, but not yet in a full playthrough. Save before them.
+- The English version is built from the same data as the Italian one, but it has had less in-game testing.
 
 ## Building from source
 
@@ -87,6 +88,7 @@ python tools/get_tools.py     # downloads dsrom 0.8.0 (hash-verified)
 python tools/roundtrip.py     # extracts the ROM into work/
 python tools/get_pret.py      # pret decompilation (format documentation, scripts)
 python tools/build.py         # Italian version → out/  (English: --base IPKE)
+python tools/build.py --debug # test build with shortcuts to the new events (never published): docs/DEBUG.md
 ```
 
 The design lives in readable tables (`data/design/*.csv`), script changes as diffs (`data/scripts/`), new texts
