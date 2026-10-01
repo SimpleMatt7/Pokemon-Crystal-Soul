@@ -50,9 +50,18 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 - **Suicune as in Crystal:** it also shows up on **Route 36** in front of the National Park gate, and until the
   Pokémon League it keeps reappearing in a loop (Cianwood, Route 42, Route 36); Eusine joins only the first time.
   After the League the HGSS chase continues in Kanto as usual.
-- **New presentation:** "Crystal Soul" logo, title screen with Ho-Oh then Lugia (golden and blue skies) and
-  Suicune in the corner, intro with both birds, crystal-blue DS menu icon.
-- **Reusable TMs:** teaching a TM no longer uses it up (as in later generations).
+- **New presentation:** "Crystal Soul" logo, title screen with Ho-Oh and Lugia one after the other (the first one is
+  random; golden and blue skies) and Suicune in the corner, intro with both birds, crystal-blue DS menu icon.
+- **Modern conveniences:**
+  - **Reusable TMs:** teaching a TM no longer uses it up.
+  - **Exp. All:** a key item from Professor Elm's aide (with the Potions, at the start). Turn it on or off from the
+    Bag or the Y button. When on, the Pokémon that battled get full Exp. Points and the rest of the team gets half,
+    without a message for each one (level-ups and new moves are still shown).
+  - **HMs without using a move slot:** Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb and
+    Headbutt work if any Pokémon in your party *can learn* the move (badges still required). Fly appears in the
+    party menu of any Pokémon that can learn it.
+  - **Fast text** by default in a new game (still changeable in Options).
+  - **"L=A R=B" button option:** in that mode R works as B (hold R to run).
 - **Kept from HGSS:** moves, abilities, the physical/special split, walking Pokémon, graphics, music and story.
 
 ## How to play

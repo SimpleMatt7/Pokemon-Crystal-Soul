@@ -51,9 +51,19 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 - **Suicune come in Cristallo:** si fa vedere anche sul **Percorso 36** davanti al cancello del Parco Nazionale, e
   fino alla Lega continua a ricomparire a giro (Fiorlisopoli, Percorso 42, Percorso 36); Eusine c'è solo la prima
   volta. Dopo la Lega la caccia di HGSS prosegue a Kanto come sempre.
-- **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e poi Lugia (cielo oro e cielo
-  azzurro) e Suicune nell'angolo, intro con entrambi gli uccelli, icona azzurro cristallo nel menu del DS.
-- **MT riutilizzabili:** insegnare una MT non la consuma più (come nelle generazioni successive).
+- **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e Lugia uno dopo l'altro (il primo
+  a caso; cielo oro e cielo azzurro) e Suicune nell'angolo, intro con entrambi gli uccelli, icona azzurro cristallo
+  nel menu del DS.
+- **Comodità moderne:**
+  - **MT riutilizzabili:** insegnare una MT non la consuma più.
+  - **Esp. Squadra:** strumento chiave che ti dà l'assistente del Prof. Elm (con le Pozioni, all'inizio). Si accende
+    e si spegne dalla Borsa o col tasto Y. Accesa, chi ha lottato prende tutti i Punti Esp. e il resto della squadra
+    la metà, senza un messaggio per ciascuno (aumenti di livello e mosse nuove si vedono ancora).
+  - **MN senza occupare mosse:** Taglio, Surf, Forza, Spaccaroccia, Cascata, Mulinello, Scalaroccia e Bottintesta
+    funzionano se un Pokémon in squadra *può imparare* la mossa (servono sempre le medaglie). Volo compare nel menu
+    Pokémon di chi può impararlo.
+  - **Testo veloce** di serie in una partita nuova (si cambia sempre dalle Opzioni).
+  - **Opzione pulsanti "L=A R=B":** in quella modalità R fa da B (tieni premuto R per correre).
 - **Mantenuti da HGSS:** mosse, abilità, divisione fisico/speciale, Pokémon che ti seguono, grafica, musica e trama.
 
 ## Come giocare
