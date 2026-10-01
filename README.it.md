@@ -27,7 +27,8 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
 
 - **Solo i Pokémon dal n. 001 al 251, tutti ottenibili.** Nessuna specie di terza o quarta generazione da nessuna parte:
   incontri selvatici, sciami, alberi da Bottintesta, Zona Safari, Gara Pigliamosche, allenatori (Capipalestra,
-  Superquattro, rivincite, Rosso), Parco Lotta, Pokéathlon, scambi con i personaggi.
+  Superquattro, rivincite, Rosso), Parco Lotta, Pokéathlon, scambi con i personaggi, allevamento (gli Aromi che
+  fanno nascere i baby di terza e quarta generazione, come Azurill o Happiny, non si trovano).
 - **Nessuno scambio necessario.** Kadabra, Machoke, Graveler e Haunter si evolvono al **livello 37**; Onix e
   Scyther (Metalcoperta), Seadra (Squama Drago), Slowpoke e Poliwhirl (Roccia di Re) e Porygon (Upgrade) si evolvono
   **usando lo strumento come una pietra evolutiva**. Tolte le evoluzioni verso specie di quarta generazione.

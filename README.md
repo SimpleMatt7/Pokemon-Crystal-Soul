@@ -27,7 +27,8 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 
 - **Only #001–#251, all obtainable.** No Generation 3–4 species anywhere: wild encounters, swarms, Headbutt trees,
   Safari Zone, Bug-Catching Contest, trainers (Gym Leaders, Elite Four, rematches, Red), Battle Frontier,
-  Pokéathlon, in-game trades.
+  Pokéathlon, in-game trades, breeding (the incenses that hatch Generation 3–4 babies such as Azurill or Happiny
+  can't be found).
 - **No trades needed.** Kadabra, Machoke, Graveler and Haunter evolve at **level 37**; Onix and Scyther (Metal Coat),
   Seadra (Dragon Scale), Slowpoke and Poliwhirl (King's Rock) and Porygon (Up-Grade) evolve by **using the item like
   an evolution stone**. Evolutions into Generation 4 species are removed.
