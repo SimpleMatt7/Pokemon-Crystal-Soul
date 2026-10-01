@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,164 @@
+@@ -35,12 +35,165 @@
  	ReleaseAll
  	End
  
@@ -96,6 +96,7 @@
 +	@ tools/pokedex_sav.py (prima di usare questa voce)
 +	Call _DBG_prepara
 +	GivePokedex
++	SetFlag FLAG_GOT_POKEDEX  @ pulsante del Pokédex nel menu (GivePokedex non lo accende)
 +	NatDexFlagAction 1, VAR_SPECIAL_RESULT
 +	ClearFlag FLAG_SAW_JOHTO_DEX_CERTIFICATE
 +	ClearFlag FLAG_SAW_NATIONAL_DEX_CERTIFICATE
