@@ -448,6 +448,16 @@ def apply_title_cycle(c):
     c.log["titolo Ho-Oh+Lugia"] += 1
 
 
+def apply_free_hms(c):
+    """MN senza occupare mosse (D60, tools/mn_libere.py). Prima di apply_exp_all (usa la voce di ScrCmd_062)."""
+    import mn_libere
+    pa = BUILD / "arm9/arm9.bin"
+    arm9 = bytearray(pa.read_bytes())
+    mn_libere.apply(arm9, (BUILD / "arm9_overlays/ov001.bin").read_bytes(), overlay_base(1))
+    pa.write_bytes(bytes(arm9))
+    c.log["MN libere"] += 1
+
+
 def apply_exp_all(c):
     """Esp. Squadra (D56): Scheda Punti come interruttore, Esp. a tutta la squadra (tools/esp_squadra.py)."""
     import esp_squadra
@@ -648,6 +658,28 @@ def verify(c):
     return left
 
 
+def store_uncompressed(c):
+    """ARM9 e overlay modificati salvati non compressi (D61): il gioco li carica uguale (salta solo la
+    decompressione), e la patch BPS contiene solo i byte cambiati invece di tutto il file compresso da quel punto in
+    poi (con la compressione ogni modifica sparsa faceva crescere la patch di centinaia di KB)."""
+    y = BUILD / "arm9/arm9.yaml"
+    t = y.read_text()
+    if (BUILD / "arm9/arm9.bin").read_bytes() != (SRC / "arm9/arm9.bin").read_bytes():
+        assert t.count("compressed: true") == 1
+        y.write_text(t.replace("compressed: true", "compressed: false"))
+        c.log["non compressi"] += 1
+    y = BUILD / "arm9_overlays/overlays.yaml"
+    t = y.read_text()
+    for f in sorted((BUILD / "arm9_overlays").glob("ov*.bin")):
+        if f.read_bytes() == (SRC / "arm9_overlays" / f.name).read_bytes():
+            continue
+        ov = int(f.stem[2:])
+        t, n = re.subn(rf"(- id: {ov}\n(?:    .*\n)*?    compressed: )true", r"\g<1>false", t)
+        assert n == 1, f.name
+        c.log["non compressi"] += 1
+    y.write_text(t)
+
+
 def main():
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # console Windows cp1252
     ap = argparse.ArgumentParser()
@@ -675,9 +707,10 @@ def main():
 
     c = Ctx()
     for step in (apply_evolutions, apply_wild, apply_simple, apply_trainers, apply_trades, apply_frontier, apply_items,
-                 apply_map_objects, apply_zone_events, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_exp_all, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
+                 apply_map_objects, apply_zone_events, apply_scripts, apply_pokedex, apply_dex_areas, apply_code, apply_free_hms, apply_exp_all, apply_title_cycle, apply_intro, apply_copies, apply_title_logo, apply_palettes, apply_menu, apply_banner):
         step(c)
     apply_texts(c, lang)
+    store_uncompressed(c)
     print("Modifiche:", ", ".join(f"{k} {v}" for k, v in c.log.items()))
     left = verify(c)
     print("Verifica sui file costruiti (specie > 251 rimaste):", dict(left))

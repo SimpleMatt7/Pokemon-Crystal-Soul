@@ -14,7 +14,7 @@ Nella cameretta del protagonista (Borgo Foglianova, 1° piano) esaminare la **co
 un menu. La console accende anche i pulsanti del menu del gioco (Borsa, Scheda, **Salva**, Opzioni; Pokémon quando dà il primo Pokémon): la prima volta,
 subito dopo l'introduzione, esaminarla e scegliere Esci, poi **salvare in cameretta**. Con le ROM di prova successive
 basta Continua (il salvataggio vale per tutte; gli stati salvati di melonDS no, vedi sotto). Ogni voce (tranne Suicune) imposta lo stato "dopo la Lega" (`FLAG_GAME_CLEAR`), dà un Typhlosion lv 70 se la
-squadra è vuota 30 Ultra Ball e 10 Master Ball, la MT10 (D55) e l'Esp. Squadra (D56), poi porta sul posto. Si può usare subito dopo l'inizio di una partita nuova.
+squadra è vuota 30 Ultra Ball e 10 Master Ball, la MT10 (D55), l'Esp. Squadra (D56), tutte le 16 medaglie e (la prima volta, se c'è posto) un Pidgeot lv 40 (D60), poi porta sul posto. Si può usare subito dopo l'inizio di una partita nuova.
 
 | Voce | Stato impostato | Arrivo | Cosa provare |
 |---|---|---|---|
@@ -58,3 +58,7 @@ Solo nelle partite nuove: Opzioni → Veloc. testo deve essere già su 3. I salv
 ## Assistente di Elm (D56)
 
 Partita nuova: uscendo dal laboratorio con lo starter l'assistente dà 5 Pozioni e poi l'Esp. Squadra, con la spiegazione.
+
+## MN senza mosse (D60)
+
+Con un Pokémon che *può imparare* la MN ma non la conosce (Typhlosion: Taglio, Forza, Spaccaroccia, Scalaroccia; Pidgeot: Volo): davanti a un albero/masso/parete/acqua il gioco deve proporre la mossa. Menu Pokémon del Pidgeot: deve comparire Volo. Bottintesta: davanti a un albero da Bottintesta con un Pokémon che il maestro del Bosco di Lecci potrebbe istruire.

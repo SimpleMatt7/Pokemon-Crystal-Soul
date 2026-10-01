@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,167 @@
+@@ -35,12 +35,190 @@
  	ReleaseAll
  	End
  
@@ -60,6 +60,29 @@
 +	GiveItemNoCheck ITEM_MASTER_BALL, 10
 +	GiveItemNoCheck ITEM_TM10, 1  @ D55: per provare le MT riutilizzabili
 +	GiveItemNoCheck ITEM_POINT_CARD, 1  @ D56: Esp. Squadra (Scheda Punti rinominata)
++	GiveBadge BADGE_ZEPHYR  @ D60: tutte le medaglie, per provare le MN
++	GiveBadge BADGE_HIVE
++	GiveBadge BADGE_PLAIN
++	GiveBadge BADGE_FOG
++	GiveBadge BADGE_STORM
++	GiveBadge BADGE_MINERAL
++	GiveBadge BADGE_GLACIER
++	GiveBadge BADGE_RISING
++	GiveBadge BADGE_BOULDER
++	GiveBadge BADGE_CASCADE
++	GiveBadge BADGE_THUNDER
++	GiveBadge BADGE_RAINBOW
++	GiveBadge BADGE_SOUL
++	GiveBadge BADGE_MARSH
++	GiveBadge BADGE_VOLCANO
++	GiveBadge BADGE_EARTH
++	GoToIfSet 0x547, _DBG_prepara_fine  @ D60: un Pidgeot (non conosce Volo) una volta sola; flag libero (D27), solo qui
++	GetPartyCount VAR_SPECIAL_RESULT
++	Compare VAR_SPECIAL_RESULT, 6
++	GoToIfGe _DBG_prepara_fine
++	GiveMon SPECIES_PIDGEOT, 40, 0, 0, 0, VAR_SPECIAL_RESULT
++	SetFlag 0x547
++_DBG_prepara_fine:
 +	CloseMsg  @ il messaggio hai ottenuto resta aperto finché non lo chiude chi chiama (come negli script originali)
 +	Return
 +
