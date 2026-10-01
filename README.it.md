@@ -53,6 +53,7 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
   volta. Dopo la Lega la caccia di HGSS prosegue a Kanto come sempre.
 - **Presentazione nuova:** logo "Crystal Soul", schermata del titolo con Ho-Oh e poi Lugia (cielo oro e cielo
   azzurro) e Suicune nell'angolo, intro con entrambi gli uccelli, icona azzurro cristallo nel menu del DS.
+- **MT riutilizzabili:** insegnare una MT non la consuma più (come nelle generazioni successive).
 - **Mantenuti da HGSS:** mosse, abilità, divisione fisico/speciale, Pokémon che ti seguono, grafica, musica e trama.
 
 ## Come giocare

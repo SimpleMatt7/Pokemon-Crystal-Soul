@@ -52,6 +52,7 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
   After the League the HGSS chase continues in Kanto as usual.
 - **New presentation:** "Crystal Soul" logo, title screen with Ho-Oh then Lugia (golden and blue skies) and
   Suicune in the corner, intro with both birds, crystal-blue DS menu icon.
+- **Reusable TMs:** teaching a TM no longer uses it up (as in later generations).
 - **Kept from HGSS:** moves, abilities, the physical/special split, walking Pokémon, graphics, music and story.
 
 ## How to play
