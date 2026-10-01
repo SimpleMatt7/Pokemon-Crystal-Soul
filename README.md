@@ -12,9 +12,9 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
 > completed yet. Feedback and bug reports are welcome (open an issue: say where you were and what you did).
 
 <p align="center">
-  <img width="190" alt="Title: Ho-Oh" src="https://github.com/user-attachments/assets/ebf75db8-4b31-4838-a7ae-b63db017e849" />
+  <img width="190" alt="Title: Ho-Oh" src="https://github.com/user-attachments/assets/18016320-c22b-48cf-8334-0975d92451ea" />
   <img width="190" alt="Title: Lugia" src="https://github.com/user-attachments/assets/2af44e05-ea03-4cf8-871b-d3859a07943f" />
-  <img width="190" alt="Intro" src="https://github.com/user-attachments/assets/18016320-c22b-48cf-8334-0975d92451ea" />
+  <img width="190" alt="Intro" src="https://github.com/user-attachments/assets/ebf75db8-4b31-4838-a7ae-b63db017e849" />
   <img width="190" alt="Starter" src="https://github.com/user-attachments/assets/58c2180c-ab8f-46d8-94cb-ba9984339ec1" />
 </p>
 <p align="center">
