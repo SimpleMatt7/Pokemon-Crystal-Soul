@@ -1,5 +1,5 @@
 """MN senza occupare mosse (D60): sul campo basta un Pokémon in squadra che *può imparare* la MN (o Bottintesta dal
-maestro del Bosco di Lecci); nel menu Pokémon compare Volo per chi può impararlo.
+maestro del Bosco di Lecci); nel menu Pokémon compaiono Volo e Flash (MT70, D63) per chi può impararli.
 
 Sul campo il gioco cerca "un Pokémon che conosce la mossa" in due funzioni (ARM9), con lo stesso blocco di quattro
 confronti GetMonData(MOVE1..4) == mossa:
@@ -28,8 +28,9 @@ from titolo_ciclo import Asm, EQ, NE, H, find_unique, find_all
 from esp_squadra import bl_any, bl_bytes, ARM9
 
 CS = 2
-MOVE_FLY, MOVE_HEADBUTT = 19, 29
-HM_FIRST, HM_FLY = 92, 93
+MOVE_FLY, MOVE_HEADBUTT, MOVE_FLASH = 19, 29, 148
+HM_FIRST, HM_FLY, TM_FLASH = 92, 93, 69
+MENU_EXTRA = ((MOVE_FLY, HM_FLY), (MOVE_FLASH, TM_FLASH))    # mosse da campo nel menu per chi può impararle
 TUTOR_HEADBUTT = 3                     # MOVE_TUTOR_NPC_HEADBUTT
 CMD_FREE, CMD_656, CMD_SLOT = 563, 656, 141
 HM_MOVES = (15, 19, 57, 70, 250, 249, 127, 431)   # Taglio, Volo, Surf, Forza, Mulinello, Spaccaroccia, Cascata, Scalaroccia
@@ -127,20 +128,24 @@ def routines(a):
     s.cmp(6, 4); s.bcond(CS, "fine")
     s.h(0x4770)                                  # bx lr: mossa successiva
     s.label("fine")
-    s.cmp(4, 4); s.bcond(CS, "uscita")
-    s.h(0x9802); s.mov(1, HM_FLY); s.bl(a["tmhm_compat"])     # ldr r0,[sp,#8]
-    s.cmp(0, 0); s.bcond(EQ, "uscita")
-    s.mov(0, MOVE_FLY); s.bl(a["field_effect_id"]); s.movr(7, 0)
-    s.mov(1, 0)
-    s.label("cerca")
-    s.h(0x42A9); s.bcond(CS, "aggiungi")         # cmp r1,r5
-    s.h(0x9A01); s.h(0x5C52)                     # ldr r2,[sp,#4]; ldrb r2,[r2,r1]
-    s.h(0x42BA); s.bcond(EQ, "uscita")           # cmp r2,r7: Volo c'è già
-    s.add8(1, 1); s.b("cerca")
-    s.label("aggiungi")
-    s.h(0x9901); s.h(0x554F)                     # ldr r1,[sp,#4]; strb r7,[r1,r5]
-    s.add8(5, 1)
-    s.h(0x9800); s.mov(1, MOVE_FLY); s.movr(2, 4); s.bl(a["add_field_move"])
+    for n, (move, tmhm) in enumerate(MENU_EXTRA):     # Volo (MN02), poi Flash (MT70, D63)
+        nxt = f"extra{n + 1}"
+        s.cmp(4, 4); s.bcond(CS, "uscita")           # i 4 posti per le mosse da campo sono pieni
+        s.h(0x9802); s.mov(1, tmhm); s.bl(a["tmhm_compat"])       # ldr r0,[sp,#8]
+        s.cmp(0, 0); s.bcond(EQ, nxt)
+        s.mov(0, move); s.bl(a["field_effect_id"]); s.movr(7, 0)
+        s.mov(1, 0)
+        s.label(f"cerca{n}")
+        s.h(0x42A9); s.bcond(CS, f"aggiungi{n}")     # cmp r1,r5
+        s.h(0x9A01); s.h(0x5C52)                     # ldr r2,[sp,#4]; ldrb r2,[r2,r1]
+        s.h(0x42BA); s.bcond(EQ, nxt)                # cmp r2,r7: c'è già (la conosce)
+        s.add8(1, 1); s.b(f"cerca{n}")
+        s.label(f"aggiungi{n}")
+        s.h(0x9901); s.h(0x554F)                     # ldr r1,[sp,#4]; strb r7,[r1,r5]
+        s.add8(5, 1)
+        s.h(0x9800); s.mov(1, move); s.movr(2, 4); s.bl(a["add_field_move"])
+        s.add8(4, 1)                                 # un posto in meno
+        s.label(nxt)
     s.label("uscita")
     s.movr(0, 5); s.h(0xB003); s.h(0xBDF0)       # mov r0,r5; add sp,#12; pop {r4-r7,pc}
     if len(s.code) % 2:

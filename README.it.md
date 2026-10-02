@@ -61,8 +61,8 @@ Disponibile in **italiano** (da *Pokémon Oro HeartGold*, IPKI) e in **inglese**
     e si spegne dalla Borsa o col tasto Y. Accesa, chi ha lottato prende tutti i Punti Esp. e il resto della squadra
     la metà, senza un messaggio per ciascuno (aumenti di livello e mosse nuove si vedono ancora).
   - **MN senza occupare mosse:** Taglio, Surf, Forza, Spaccaroccia, Cascata, Mulinello, Scalaroccia e Bottintesta
-    funzionano se un Pokémon in squadra *può imparare* la mossa (servono sempre le medaglie). Volo compare nel menu
-    Pokémon di chi può impararlo.
+    funzionano se un Pokémon in squadra *può imparare* la mossa (servono sempre le medaglie). Volo e Flash compaiono
+    nel menu Pokémon di chi può impararli.
   - **Testo veloce** di serie in una partita nuova (si cambia sempre dalle Opzioni).
   - **Opzione pulsanti "L=A R=B":** in quella modalità R fa da B (tieni premuto R per correre).
 - **Mantenuti da HGSS:** mosse, abilità, divisione fisico/speciale, Pokémon che ti seguono, grafica, musica e trama.
