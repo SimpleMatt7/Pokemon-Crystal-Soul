@@ -1,6 +1,6 @@
 --- a/scr_seq_0846_T20R0202.s
 +++ b/scr_seq_0846_T20R0202.s
-@@ -35,12 +35,190 @@
+@@ -35,12 +35,199 @@
  	ReleaseAll
  	End
  
@@ -76,6 +76,15 @@
 +	GiveBadge BADGE_MARSH
 +	GiveBadge BADGE_VOLCANO
 +	GiveBadge BADGE_EARTH
++	GiveItemNoCheck ITEM_HM01, 1  @ D64: le MN (tranne la MN06, per provare che senza non funziona), MT70 Flash e MT28 Fossa
++	GiveItemNoCheck ITEM_HM02, 1
++	GiveItemNoCheck ITEM_HM03, 1
++	GiveItemNoCheck ITEM_HM04, 1
++	GiveItemNoCheck ITEM_HM05, 1
++	GiveItemNoCheck ITEM_HM07, 1
++	GiveItemNoCheck ITEM_HM08, 1
++	GiveItemNoCheck ITEM_TM70, 1
++	GiveItemNoCheck ITEM_TM28, 1
 +	GoToIfSet 0x547, _DBG_prepara_fine  @ D60: un Pidgeot (non conosce Volo) una volta sola; flag libero (D27), solo qui
 +	GetPartyCount VAR_SPECIAL_RESULT
 +	Compare VAR_SPECIAL_RESULT, 6

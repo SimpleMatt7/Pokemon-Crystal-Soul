@@ -62,3 +62,7 @@ Partita nuova: uscendo dal laboratorio con lo starter l'assistente dà 5 Pozioni
 ## MN senza mosse (D60)
 
 Con un Pokémon che *può imparare* la MN ma non la conosce (Typhlosion: Taglio, Forza, Spaccaroccia, Scalaroccia; Pidgeot: Volo): davanti a un albero/masso/parete/acqua il gioco deve proporre la mossa. Menu Pokémon del Pidgeot: deve comparire Volo. Flash (D63): nel menu di un Pokémon che può impararla, per esempio il Pichu della voce omonima. Bottintesta: davanti a un albero da Bottintesta con un Pokémon che il maestro del Bosco di Lecci potrebbe istruire.
+
+## MN nella Borsa (D64)
+
+Il kit dà le MN tranne la MN06, la MT70 e la MT28. Con Typhlosion (non conosce le MN): albero → Taglio proposto; masso da spaccare → **non** proposto (manca la MN06); menu del Pidgeot → Volo; menu di un Pokémon che può imparare Flash o Fossa → compaiono. In una partita normale, prima di ricevere una MN la mossa non deve essere proposta.

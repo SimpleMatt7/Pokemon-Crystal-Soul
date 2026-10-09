@@ -59,8 +59,9 @@ Available in **Italian** (from *Pokémon Oro HeartGold*, IPKI) and **English** (
     Bag or the Y button. When on, the Pokémon that battled get full Exp. Points and the rest of the team gets half,
     without a message for each one (level-ups and new moves are still shown).
   - **HMs without using a move slot:** Cut, Surf, Strength, Rock Smash, Waterfall, Whirlpool, Rock Climb and
-    Headbutt work if any Pokémon in your party *can learn* the move (badges still required). Fly and Flash appear
-    in the party menu of any Pokémon that can learn them.
+    Headbutt work if any Pokémon in your party *can learn* the move, once you own the HM (Headbutt: once you have
+    HM01) and the badge. Fly, Flash and Dig appear in the party menu of any Pokémon that can learn them, if the
+    HM/TM is in your Bag.
   - **Fast text** by default in a new game (still changeable in Options).
   - **"L=A R=B" button option:** in that mode R works as B (hold R to run).
 - **Kept from HGSS:** moves, abilities, the physical/special split, walking Pokémon, graphics, music and story.
